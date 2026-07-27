@@ -1,149 +1,148 @@
-# EZVIZ Vacuum – Home Assistant integráció
+# EZVIZ Vacuum for Home Assistant
 
-Ez az integráció lehetővé teszi, hogy egy támogatott EZVIZ robotporszívó
-állapotát megjelenítsd a Home Assistantban.
+This integration lets you display the status of a supported EZVIZ robot vacuum
+in Home Assistant.
 
-A telepítés után a Home Assistantban többek között láthatod:
+After installation, you can see:
 
-- a robotporszívó aktuális állapotát;
-- az akkumulátor töltöttségét;
-- hogy a porszívó töltődik-e és elérhető-e;
-- az aktuális takarítási feladatot;
-- a beállított szívóerőt és vízmennyiséget;
-- az aktív térkép nevét;
-- a kefék, a HEPA-szűrő, a felmosó és a szenzorok hátralévő értékeit;
-- az EZVIZ valós idejű értesítési kapcsolatának állapotát.
+- the current activity of the robot vacuum;
+- battery level;
+- charging and online status;
+- the current cleaning task;
+- the configured fan speed and water level;
+- the name of the active map;
+- remaining values reported for the brushes, HEPA filter, mop, and sensors;
+- the status of the EZVIZ real-time notification connection.
 
 > [!IMPORTANT]
-> Ez jelenleg egy állapotfigyelő, csak olvasható integráció. A takarítás
-> elindítása, szüneteltetése, a dokkolás és más vezérlési műveletek még nem
-> támogatottak.
+> This is currently a read-only monitoring integration. Starting or pausing a
+> cleaning task, returning the vacuum to its dock, and other control operations
+> are not yet supported.
 
-## Támogatott készülék
+## Supported device
 
-Az első támogatott és célzott modell:
+The first targeted model is:
 
 - **EZVIZ RE5 Plus**
-- eszköztípus: `CS-RE5P-TWT`
-- eszközkategória: `SweepingRobot`
-- alkategória: `RE5P`
+- device type: `CS-RE5P-TWT`
+- device category: `SweepingRobot`
+- device subcategory: `RE5P`
 
-Más EZVIZ robotporszívók is megjelenhetnek, ha ugyanazt az adatstruktúrát
-használják, de ezek működése még nincs igazolva.
+Other EZVIZ robot vacuums may appear if they use the same data structure, but
+their compatibility has not yet been confirmed.
 
-## Mire van szükség?
+## Requirements
 
-- működő Home Assistant rendszerre;
-- telepített [HACS](https://hacs.xyz/) kiegészítőre;
-- internetkapcsolatra;
-- arra az EZVIZ-fiókra, amelyhez a robotporszívó hozzá van rendelve.
+- a working Home Assistant installation;
+- [HACS](https://hacs.xyz/) installed in Home Assistant;
+- an internet connection;
+- the EZVIZ account to which the robot vacuum is assigned.
 
-Az integráció az EZVIZ felhőszolgáltatását használja, ezért internetkapcsolat
-nélkül nem tudja frissíteni a porszívó állapotát.
+This integration uses the EZVIZ cloud service. It cannot update the vacuum
+status without an internet connection.
 
-## Telepítés HACS segítségével
+## Installation with HACS
 
-Az integráció egyelőre HACS egyéni tárolóként telepíthető.
+The integration is currently available as a HACS custom repository.
 
-1. Nyisd meg a Home Assistantban a **HACS** oldalt.
-2. Válaszd az **Integrations** menüpontot.
-3. A jobb felső sarokban nyisd meg a hárompontos menüt.
-4. Válaszd a **Custom repositories** lehetőséget.
-5. A repository mezőbe másold be:
+1. Open **HACS** in Home Assistant.
+2. Select **Integrations**.
+3. Open the three-dot menu in the top-right corner.
+4. Select **Custom repositories**.
+5. Enter the following repository URL:
 
    ```text
    https://github.com/KAkos06/ha-ezviz-vacuum
    ```
 
-6. A kategóriánál válaszd az **Integration** lehetőséget.
-7. Kattints az **Add** gombra.
-8. Keresd meg az **EZVIZ Vacuum** integrációt, majd telepítsd.
-9. A telepítés után indítsd újra a Home Assistantot.
+6. Select **Integration** as the repository type.
+7. Click **Add**.
+8. Find **EZVIZ Vacuum** in HACS and install it.
+9. Restart Home Assistant after the installation.
 
-## Az integráció beállítása
+## Configuration
 
-Az újraindítás után:
+After restarting Home Assistant:
 
-1. Nyisd meg a **Beállítások → Eszközök és szolgáltatások** oldalt.
-2. Kattints az **Integráció hozzáadása** gombra.
-3. Keresd meg az **EZVIZ Vacuum** integrációt.
-4. Add meg az EZVIZ-fiókod adatait:
+1. Open **Settings → Devices & services**.
+2. Click **Add integration**.
+3. Search for **EZVIZ Vacuum**.
+4. Enter your EZVIZ account details:
 
-   - **E-mail-cím:** az EZVIZ alkalmazásban használt fiók;
-   - **Jelszó:** az EZVIZ-fiók jelszava;
-   - **Régió:** Magyarország és a legtöbb európai fiók esetén `eu`.
+   - **Email address:** the account used in the EZVIZ mobile app;
+   - **Password:** your EZVIZ account password;
+   - **Region:** use `eu` for Hungary and most European accounts.
 
-5. Sikeres bejelentkezés után az integráció automatikusan megkeresi a fiókhoz
-   tartozó támogatott robotporszívókat.
+5. After a successful login, the integration automatically searches the
+   account for supported robot vacuums.
 
-Minden megtalált robotporszívó külön eszközként jelenik meg a Home Assistantban.
+Each discovered robot vacuum is added to Home Assistant as a separate device.
 
-## Létrejövő entitások
+## Entities
 
-Az elérhető adatoktól függően az integráció az alábbi entitásokat hozza létre.
+Depending on the data reported by your vacuum, the integration creates the
+following entities.
 
-### Robotporszívó
+### Robot vacuum
 
-- aktuális aktivitás, például tétlen, takarít, szünetel, visszatér vagy dokkolt;
-- elérhetőség;
-- aktuális szívóerő;
-- esetleges hibaállapot.
+- current activity, such as idle, cleaning, paused, returning, or docked;
+- availability;
+- current fan speed;
+- reported error state.
 
-### Szenzorok
+### Sensors
 
-- akkumulátor töltöttsége;
-- aktuális feladat állapota;
-- szívóerő;
-- vízmennyiség;
-- térkép neve;
-- HEPA-szűrő hátralévő értéke;
-- főkefe hátralévő értéke;
-- oldalkefe hátralévő értéke;
-- felmosó hátralévő értéke;
-- szenzortisztítás hátralévő értéke;
-- utolsó valós idejű értesítés időpontja;
-- az EZVIZ értesítési kapcsolat állapota.
+- battery level;
+- current task state;
+- fan speed;
+- water level;
+- map name;
+- HEPA filter remaining value;
+- main brush remaining value;
+- side brush remaining value;
+- mop remaining value;
+- sensor cleaning remaining value;
+- time of the last real-time notification;
+- EZVIZ notification connection status.
 
-### Kapcsolók állapotát jelző szenzorok
+### Binary sensors
 
-- töltés;
-- online állapot;
-- valós idejű értesítési kapcsolat;
-- szőnyeg-turbó mód;
-- pihenő mód.
+- charging;
+- online status;
+- real-time notification connection;
+- carpet turbo mode;
+- rest mode.
 
 > [!NOTE]
-> A fogyóeszközökhöz kapott hátralévő számértékek mértékegységét az EZVIZ nem
-> dokumentálja egyértelműen. Emiatt az integráció ezeket mértékegység nélküli,
-> nyers értékként jeleníti meg.
+> EZVIZ does not clearly document the unit used for the consumable `rest`
+> values. The integration therefore displays them as raw values without a unit.
 
-## Milyen gyorsan frissülnek az állapotok?
+## How quickly are states updated?
 
-Az integráció kétféle frissítést használ:
+The integration uses two update methods:
 
-1. **EZVIZ valós idejű értesítések:** ha az EZVIZ felhő értesítést küld a
-   porszívó állapotváltozásáról, az integráció rövid időn belül lekéri az új
-   állapotot.
-2. **Biztonsági időszakos frissítés:** ha nem érkezik valós idejű értesítés,
-   az integráció rendszeresen lekéri az állapotot az EZVIZ felhőből.
+1. **EZVIZ real-time notifications:** when the EZVIZ cloud sends a notification
+   about a state change, the integration requests the latest vacuum state
+   shortly afterward.
+2. **Fallback polling:** if no real-time notification is received, the
+   integration periodically requests the current state from the EZVIZ cloud.
 
-Ehhez nincs szükség saját MQTT szerverre vagy Mosquitto telepítésére. Az
-integráció közvetlenül az EZVIZ felhő értesítési szolgáltatásához kapcsolódik.
+You do not need your own MQTT broker or a Mosquitto installation. The
+integration connects directly to the EZVIZ cloud notification service.
 
-Az RE5 Plus esetében még nem igazolt, hogy az EZVIZ minden egyes
-állapotváltozásról küld értesítést. Ha nem érkezik ilyen értesítés, az
-integráció továbbra is működik az időszakos lekérdezéssel.
+It has not yet been confirmed that the RE5 Plus sends an EZVIZ notification for
+every possible state change. If no notification is received, the integration
+continues to work through periodic polling.
 
-## Kézi telepítés HACS nélkül
+## Manual installation
 
-1. Töltsd le a repository tartalmát.
-2. Másold a `custom_components/ezviz_vacuum` mappát a Home Assistant
-   konfigurációs könyvtárának `custom_components` mappájába.
-3. Indítsd újra a Home Assistantot.
-4. Add hozzá az integrációt a
-   **Beállítások → Eszközök és szolgáltatások** oldalon.
+1. Download the contents of this repository.
+2. Copy the `custom_components/ezviz_vacuum` directory into the
+   `custom_components` directory inside your Home Assistant configuration.
+3. Restart Home Assistant.
+4. Add **EZVIZ Vacuum** from **Settings → Devices & services**.
 
-A végeredménynek így kell kinéznie:
+The resulting directory structure should look like this:
 
 ```text
 config/
@@ -154,19 +153,18 @@ config/
         └── ...
 ```
 
-## Ha nem sikerül a beállítás
+## Troubleshooting
 
-Ellenőrizd a következőket:
+Check the following if configuration fails:
 
-- ugyanazzal az e-mail-címmel és jelszóval be tudsz-e jelentkezni az EZVIZ
-  mobilalkalmazásba;
-- a robotporszívó megjelenik-e és online állapotú-e az EZVIZ alkalmazásban;
-- a régió `eu` értékre van-e állítva;
-- újraindítottad-e a Home Assistantot a HACS-telepítés után;
-- nem adtad-e már hozzá korábban ugyanazt az EZVIZ-fiókot.
+- verify that the same email address and password work in the EZVIZ mobile app;
+- make sure the robot vacuum is visible and online in the EZVIZ app;
+- use `eu` as the region for a European account;
+- restart Home Assistant after installing the integration through HACS;
+- make sure the same EZVIZ account has not already been added.
 
-Részletesebb naplózáshoz add hozzá ezt a Home Assistant
-`configuration.yaml` fájljához:
+To enable detailed logging, add the following to your Home Assistant
+`configuration.yaml`:
 
 ```yaml
 logger:
@@ -175,42 +173,41 @@ logger:
     custom_components.ezviz_vacuum: debug
 ```
 
-A módosítás után indítsd újra a Home Assistantot.
+Restart Home Assistant after changing the logging configuration.
 
-Hibajelentésnél hasznos információ:
+When reporting a problem, include:
 
-- Home Assistant verzió;
-- integráció verzió;
-- robotporszívó pontos modellje és firmware-verziója;
-- használt régió;
-- az integráció letöltött, kitakart diagnosztikája;
-- a hibához kapcsolódó debug naplórészlet.
+- Home Assistant version;
+- integration version;
+- exact robot vacuum model and firmware version;
+- selected region;
+- downloaded and redacted integration diagnostics;
+- relevant debug log lines.
 
-Soha ne küldj jelszót, tokenfájlt, teljes sorozatszámot, hitelesítési kódot vagy
-teljes nyers API-választ hibajelentésben.
+Never publish your password, token file, full serial number, authentication
+code, or a complete raw API response.
 
-## Jelenlegi korlátozások
+## Current limitations
 
-- A robotporszívó vezérlése még nem támogatott.
-- Az integráció használatához internetkapcsolat szükséges.
-- Az EZVIZ nem dokumentált felhő API-jára támaszkodik.
-- Egy későbbi EZVIZ API-változás átmenetileg működésképtelenné teheti.
-- Túl gyakori lekérdezés esetén az EZVIZ ideiglenesen korlátozhatja a fiókot.
-- A többfaktoros hitelesítést igénylő bejelentkezés jelenleg nem támogatott.
-- Az RE5 Plus valós idejű értesítéseinek teljes lefedettsége még ellenőrzésre
-  szorul.
+- Vacuum control is not yet supported.
+- An internet connection is required.
+- The integration relies on a private, undocumented EZVIZ cloud API.
+- A future EZVIZ API change may temporarily break the integration.
+- EZVIZ may temporarily limit an account after too many requests.
+- Login flows requiring multi-factor authentication are not currently
+  supported.
+- Complete real-time notification coverage for the RE5 Plus still needs to be
+  confirmed.
 
-## Adatvédelem
+## Privacy
 
-Az EZVIZ bejelentkezési adatokat a Home Assistant konfigurációs bejegyzése
-tárolja. A Home Assistant konfigurációs könyvtárát és biztonsági mentéseit ennek
-megfelelően védd.
+Your EZVIZ credentials are stored in the Home Assistant configuration entry.
+Protect your Home Assistant configuration directory and backups accordingly.
 
-Az integráció diagnosztikai kimenete kitakarja többek között a bejelentkezési
-adatokat, tokeneket, munkamenet-azonosítókat, sorozatszámokat, hálózati címeket
-és titkos kulcsokat.
+Integration diagnostics redact credentials, tokens, session identifiers,
+serial numbers, network addresses, and secret keys.
 
-## Jogi nyilatkozat
+## Legal notice
 
 This project is an unofficial community integration and is not affiliated with,
 endorsed by, or supported by EZVIZ.
