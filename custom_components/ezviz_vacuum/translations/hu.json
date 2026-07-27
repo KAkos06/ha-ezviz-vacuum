@@ -1,0 +1,64 @@
+{
+  "title": "EZVIZ Vacuum",
+  "config": {
+    "step": {
+      "user": {
+        "title": "EZVIZ-fiók",
+        "description": "Jelentkezz be az EZVIZ robotporszívók automatikus felismeréséhez.",
+        "data": {
+          "username": "E-mail-cím",
+          "password": "Jelszó",
+          "region": "Régió"
+        }
+      },
+      "reauth_confirm": {
+        "title": "EZVIZ újbóli hitelesítése",
+        "description": "Add meg az EZVIZ-fiók jelenlegi jelszavát.",
+        "data": {"password": "Jelszó"}
+      }
+    },
+    "error": {
+      "cannot_connect": "Nem sikerült kapcsolódni az EZVIZ szolgáltatáshoz.",
+      "invalid_auth": "Hibás EZVIZ bejelentkezési adatok.",
+      "no_supported_devices": "A fiókban nem található támogatott EZVIZ robotporszívó.",
+      "unknown": "Ismeretlen hiba történt."
+    },
+    "abort": {
+      "already_configured": "Ez az EZVIZ-fiók már be van állítva.",
+      "reauth_successful": "A hitelesítés megújítása sikerült.",
+      "reauth_failed": "A konfigurációs bejegyzés már nem létezik."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "EZVIZ Vacuum beállítások",
+        "data": {"region": "Régió"}
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery": {"name": "Akkumulátor"},
+      "task_state": {"name": "Feladat állapota"},
+      "fan_speed": {"name": "Szívóerő"},
+      "water_quantity": {"name": "Vízmennyiség"},
+      "map_name": {"name": "Térkép"},
+      "hepa_remaining": {"name": "HEPA hátralévő érték"},
+      "main_brush_remaining": {"name": "Főkefe hátralévő érték"},
+      "side_brush_remaining": {"name": "Oldalkefe hátralévő érték"},
+      "mop_remaining": {"name": "Felmosó hátralévő érték"},
+      "sensor_cleaning_remaining": {"name": "Szenzortisztítás hátralévő érték"},
+      "last_mqtt_event": {"name": "Utolsó MQTT-esemény"},
+      "mqtt_connection": {"name": "MQTT-kapcsolat"}
+    },
+    "binary_sensor": {
+      "charging": {"name": "Töltés"},
+      "online": {"name": "Online"},
+      "mqtt_connected": {"name": "MQTT csatlakoztatva"},
+      "carpet_turbo_enabled": {"name": "Szőnyeg turbó"},
+      "rest_mode_enabled": {"name": "Pihenő mód"}
+    }
+  }
+}
+

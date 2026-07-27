@@ -1,0 +1,16 @@
+{
+  "domain": "ezviz_vacuum",
+  "name": "EZVIZ Vacuum",
+  "codeowners": [
+    "@KAkos06"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/KAkos06/ha-ezviz-vacuum",
+  "issue_tracker": "https://github.com/KAkos06/ha-ezviz-vacuum/issues",
+  "iot_class": "cloud_polling",
+  "requirements": [
+    "pyezvizapi==1.0.5.0"
+  ],
+  "version": "0.1.0"
+}
+

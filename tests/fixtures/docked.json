@@ -1,0 +1,47 @@
+{
+  "ABC123456": {
+    "deviceInfos": {
+      "deviceSerial": "ABC123456",
+      "name": "Bözsi",
+      "deviceType": "CS-RE5P-TWT",
+      "deviceCategory": "SweepingRobot",
+      "deviceSubCategory": "RE5P",
+      "version": "v1.2.3",
+      "status": 1
+    },
+    "STATUS": {"globalStatus": 1},
+    "FEATURE_INFO": {
+      "0": {
+        "SweepingRobot": {
+          "PowerMgr": {"SurplusPower": 100},
+          "SweeperTaskMgr": {
+            "CurrentTask": {
+              "exception": "",
+              "taskState": "",
+              "ID": 0,
+              "inCharging": 1
+            }
+          },
+          "SweeperMapMgr": {
+            "MapBasicProperty": [
+              {"mapID": 3, "mapName": "Lakás", "inUse": 1}
+            ],
+            "StdCleanCfg": [
+              {"fanMode": "super", "waterQuantity": "middle", "mapID": 3}
+            ]
+          },
+          "SweeperConsumable": {
+            "SensorWorkingTime": {"rest": 166, "used": 14},
+            "HepaWorkingTime": {"rest": 136, "used": 14},
+            "EdgeBrushWorkingTime": {"rest": 286, "used": 14},
+            "RotatingBrushWorkingTime": {"rest": 286, "used": 14},
+            "MopWorkingTime": {"rest": 137, "used": 13}
+          },
+          "SweeperMgr": {"RestMode": 0},
+          "SweeperCleanTask": {"CarpetTurboCleanSwitch": 1}
+        }
+      }
+    }
+  }
+}
+

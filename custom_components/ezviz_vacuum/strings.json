@@ -1,0 +1,68 @@
+{
+  "title": "EZVIZ Vacuum",
+  "config": {
+    "step": {
+      "user": {
+        "title": "EZVIZ account",
+        "description": "Sign in to discover EZVIZ robot vacuums.",
+        "data": {
+          "username": "Email address",
+          "password": "Password",
+          "region": "Region"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate EZVIZ",
+        "description": "Enter the current password for your EZVIZ account.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the EZVIZ service.",
+      "invalid_auth": "Invalid EZVIZ credentials.",
+      "no_supported_devices": "No supported EZVIZ robot vacuum was found in this account.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This EZVIZ account is already configured.",
+      "reauth_successful": "Reauthentication was successful.",
+      "reauth_failed": "The configuration entry no longer exists."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "EZVIZ Vacuum options",
+        "data": {
+          "region": "Region"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery": {"name": "Battery"},
+      "task_state": {"name": "Task state"},
+      "fan_speed": {"name": "Fan speed"},
+      "water_quantity": {"name": "Water quantity"},
+      "map_name": {"name": "Map"},
+      "hepa_remaining": {"name": "HEPA remaining"},
+      "main_brush_remaining": {"name": "Main brush remaining"},
+      "side_brush_remaining": {"name": "Side brush remaining"},
+      "mop_remaining": {"name": "Mop remaining"},
+      "sensor_cleaning_remaining": {"name": "Sensor cleaning remaining"},
+      "last_mqtt_event": {"name": "Last MQTT event"},
+      "mqtt_connection": {"name": "MQTT connection"}
+    },
+    "binary_sensor": {
+      "charging": {"name": "Charging"},
+      "online": {"name": "Online"},
+      "mqtt_connected": {"name": "MQTT connected"},
+      "carpet_turbo_enabled": {"name": "Carpet turbo"},
+      "rest_mode_enabled": {"name": "Rest mode"}
+    }
+  }
+}
+

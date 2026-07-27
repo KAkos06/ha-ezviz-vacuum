@@ -1,0 +1,26 @@
+{
+  "ABC123456": {
+    "deviceInfos": {
+      "name": "Bözsi",
+      "deviceType": "CS-RE5P-TWT",
+      "deviceCategory": "SweepingRobot",
+      "status": true
+    },
+    "FEATURE_INFO": {
+      "0": {
+        "SweepingRobot": {
+          "PowerMgr": {"SurplusPower": "72"},
+          "SweeperTaskMgr": {
+            "CurrentTask": {
+              "exception": "",
+              "taskState": "cleaning",
+              "ID": "42",
+              "inCharging": false
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
