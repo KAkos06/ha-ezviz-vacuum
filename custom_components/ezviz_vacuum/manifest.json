@@ -6,8 +6,8 @@
   ],
   "config_flow": true,
   "documentation": "https://github.com/KAkos06/ha-ezviz-vacuum",
-  "issue_tracker": "https://github.com/KAkos06/ha-ezviz-vacuum/issues",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/KAkos06/ha-ezviz-vacuum/issues",
   "requirements": [
     "pyezvizapi==1.0.5.0"
   ],
