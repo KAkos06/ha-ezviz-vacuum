@@ -89,9 +89,7 @@ class EzvizVacuumConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 errors["base"] = "unknown"
             except Exception as err:  # Defensive boundary for an undocumented API.
-                _LOGGER.debug(
-                    "Unexpected setup failure (%s)", type(err).__name__
-                )
+                _LOGGER.debug("Unexpected setup failure (%s)", type(err).__name__)
                 errors["base"] = "unknown"
             else:
                 return self.async_create_entry(

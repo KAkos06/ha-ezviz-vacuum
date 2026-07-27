@@ -42,3 +42,14 @@ async def test_mqtt_event_is_debounced(hass) -> None:
     assert api.refresh.call_count == 2
     assert coordinator.last_mqtt_event == event.received_at
     await coordinator.async_shutdown()
+
+
+async def test_unsupported_mqtt_does_not_fail_setup(hass) -> None:
+    api = MagicMock()
+    api.start_mqtt.side_effect = AttributeError("legacy API")
+    coordinator = EzvizVacuumCoordinator(hass, api)
+
+    await coordinator.async_start_mqtt()
+
+    assert coordinator.mqtt_connected is False
+    assert coordinator._reconnect_task is None

@@ -20,7 +20,7 @@ def test_login_and_refresh_use_real_library_surface(client_class) -> None:
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
-def test_mqtt_callback_is_normalized(client_class) -> None:
+def test_modern_mqtt_callback_is_normalized(client_class) -> None:
     paho = MagicMock()
     paho.is_connected.return_value = True
     mqtt = client_class.return_value.get_mqtt_client.return_value
@@ -33,3 +33,26 @@ def test_mqtt_callback_is_normalized(client_class) -> None:
     assert events[0].serial == "ABC123456"
     assert events[0].event_type == "7"
     mqtt.connect.assert_called_once_with()
+
+
+@patch("custom_components.ezviz_vacuum.api.MQTTClient")
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_legacy_mqtt_callback_is_normalized(client_class, mqtt_class) -> None:
+    client = client_class.return_value
+    client.get_mqtt_client = None
+    client._token = {"username": "internal-user"}
+    mqtt = mqtt_class.return_value
+    paho = MagicMock()
+    paho.is_connected.return_value = True
+    mqtt.mqtt_client = paho
+    events = []
+
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+    api.start_mqtt(events.append, lambda error: None)
+
+    mqtt.run.assert_called_once_with()
+    message = MagicMock()
+    message.payload = b'{"ext":"unused,now,ABC123456,unused,vacuum_state"}'
+    mqtt.on_message(None, None, message)
+    assert events[0].serial == "ABC123456"
+    assert events[0].event_type == "vacuum_state"

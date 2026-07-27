@@ -78,6 +78,15 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             _LOGGER.warning("EZVIZ MQTT connection failed: %s", err)
             self._schedule_reconnect()
             return
+        except Exception as err:  # MQTT is optional; REST setup must still succeed.
+            _LOGGER.warning(
+                "EZVIZ MQTT is unavailable with the loaded library (%s); "
+                "continuing with REST polling",
+                type(err).__name__,
+            )
+            self.mqtt_connected = False
+            self.update_interval = MQTT_DISCONNECTED_POLL_INTERVAL
+            return
         self.mqtt_connected = self.api.is_mqtt_connected()
         self.update_interval = (
             DEFAULT_POLL_INTERVAL

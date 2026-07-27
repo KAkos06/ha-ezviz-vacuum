@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from collections.abc import Callable
+from contextlib import suppress
 from typing import Any
 
-from pyezvizapi import EzvizClient
+from pyezvizapi import EzvizClient, MQTTClient
 from pyezvizapi.exceptions import (
     EzvizAuthTokenExpired,
     HTTPError,
@@ -40,6 +42,7 @@ class EzvizVacuumApi:
             account=username, password=password, url=region.lower()
         )
         self._mqtt: Any | None = None
+        self._mqtt_legacy = False
         self._mqtt_connected = False
         self._disconnect_callback: Callable[[Exception | None], None] | None = None
 
@@ -97,8 +100,56 @@ class EzvizVacuumApi:
             callback(parse_mqtt_event(raw))
 
         try:
-            self._mqtt = self._client.get_mqtt_client(_message)
-            self._mqtt.connect()
+            mqtt_factory = getattr(self._client, "get_mqtt_client", None)
+            if callable(mqtt_factory):
+                self._mqtt_legacy = False
+                self._mqtt = mqtt_factory(_message)
+                self._mqtt.connect()
+            else:
+                self._mqtt_legacy = True
+                token = getattr(self._client, "_token", None)
+                if not isinstance(token, dict):
+                    raise EzvizVacuumError(
+                        "The loaded pyezvizapi version does not expose an MQTT token"
+                    )
+                self._mqtt = MQTTClient(token)
+
+                def _legacy_message(client: Any, userdata: Any, message: Any) -> None:
+                    del client, userdata
+                    try:
+                        decoded = json.loads(message.payload)
+                        ext = decoded.get("ext")
+                        if isinstance(ext, str):
+                            fields = ext.split(",")
+                            serial = fields[2] if len(fields) > 2 else None
+                            event_type = fields[4] if len(fields) > 4 else None
+                        elif isinstance(ext, dict):
+                            serial = ext.get("device_serial")
+                            event_type = ext.get("alert_type_code")
+                        else:
+                            serial = None
+                            event_type = None
+                    except (AttributeError, TypeError, ValueError) as err:
+                        _LOGGER.debug(
+                            "Could not decode legacy MQTT packet (%s)",
+                            type(err).__name__,
+                        )
+                        return
+                    _message(
+                        {
+                            "ext": {
+                                "device_serial": serial,
+                                "alert_type_code": event_type,
+                            },
+                            "legacy_message": True,
+                        }
+                    )
+
+                # Legacy MQTTClient.start() blocks forever. run() performs
+                # registration and starts paho's background network loop.
+                self._mqtt.on_message = _legacy_message
+                self._mqtt.run()
+
             paho = self._mqtt.mqtt_client
             if paho is not None:
                 original_connect = paho.on_connect
@@ -131,16 +182,30 @@ class EzvizVacuumApi:
         """Stop MQTT and its paho background thread."""
 
         mqtt, self._mqtt = self._mqtt, None
+        legacy, self._mqtt_legacy = self._mqtt_legacy, False
         self._disconnect_callback = None
         self._mqtt_connected = False
         if mqtt is not None:
             try:
                 mqtt.stop()
-            except (PyEzvizError, OSError, ValueError, RuntimeError) as err:
+            except (
+                PyEzvizError,
+                AttributeError,
+                OSError,
+                ValueError,
+                RuntimeError,
+            ) as err:
                 _LOGGER.debug(
                     "Could not stop EZVIZ push cleanly (%s)",
                     type(err).__name__,
                 )
+            finally:
+                paho = getattr(mqtt, "mqtt_client", None)
+                if legacy and paho is not None:
+                    with suppress(
+                        AttributeError, OSError, ValueError, RuntimeError
+                    ):
+                        paho.disconnect()
         self._client.mqtt_client = None
 
     def is_mqtt_connected(self) -> bool:
