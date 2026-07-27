@@ -20,6 +20,7 @@ def _fixture(name: str):
 
 def test_parse_docked_and_consumables() -> None:
     vacuum = parse_vacuum_devices(_fixture("docked.json"))["ABC123456"]
+    assert vacuum.available is True
     assert vacuum.name == "Bözsi"
     assert vacuum.battery_level == 100
     assert vacuum.charging is True
@@ -28,7 +29,19 @@ def test_parse_docked_and_consumables() -> None:
     assert vacuum.hepa and vacuum.hepa.remaining == 136
     assert vacuum.main_brush and vacuum.main_brush.used == 14
     assert vacuum.carpet_turbo_enabled is True
-    assert vacuum.rest_mode_enabled is False
+    assert vacuum.rest_mode_enabled is True
+
+
+def test_explicit_offline_status_wins_over_global_status() -> None:
+    response = _fixture("docked.json")
+    device = response["ABC123456"]
+    device["STATUS"]["optionals"]["OnlineStatus"] = 0
+    device["deviceInfos"]["status"] = 1
+    device["STATUS"]["globalStatus"] = 1
+
+    vacuum = parse_vacuum_devices(response)["ABC123456"]
+
+    assert vacuum.available is False
 
 
 def test_parse_cleaning_and_types() -> None:

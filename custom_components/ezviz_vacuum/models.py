@@ -87,6 +87,18 @@ def _boolean(value: Any) -> bool | None:
     return None
 
 
+def _setting_boolean(value: Any) -> bool | None:
+    """Parse either a direct switch value or an EZVIZ setting object."""
+
+    data = _mapping(value)
+    if data:
+        for key in ("enabled", "enable", "status", "switch"):
+            if key in data:
+                return _boolean(data[key])
+        return None
+    return _boolean(value)
+
+
 def _text(value: Any) -> str | None:
     return str(value) if value not in (None, "") else None
 
@@ -116,13 +128,19 @@ def _robot_data(raw_device: Mapping[str, Any]) -> Mapping[str, Any]:
 
 def _available(raw_device: Mapping[str, Any], info: Mapping[str, Any]) -> bool:
     status = _mapping(raw_device.get("STATUS"))
+    status_options = _mapping(status.get("optionals"))
     connection = _mapping(raw_device.get("CONNECTION"))
+
+    # Sweeping robots can report STATUS.globalStatus=0 while they are online.
+    # Prefer the explicit online flags returned by the device information API.
     for value in (
-        status.get("globalStatus"),
-        status.get("status"),
+        status_options.get("OnlineStatus"),
         connection.get("localStatus"),
         connection.get("status"),
         info.get("status"),
+        raw_device.get("status"),
+        status.get("status"),
+        status.get("globalStatus"),
     ):
         parsed = _boolean(value)
         if parsed is not None:
@@ -177,8 +195,10 @@ def parse_single_vacuum(
         side_brush=_consumable(consumables.get("EdgeBrushWorkingTime")),
         mop=_consumable(consumables.get("MopWorkingTime")),
         sensors=_consumable(consumables.get("SensorWorkingTime")),
-        carpet_turbo_enabled=_boolean(clean_task.get("CarpetTurboCleanSwitch")),
-        rest_mode_enabled=_boolean(sweeper_mgr.get("RestMode")),
+        carpet_turbo_enabled=_setting_boolean(
+            clean_task.get("CarpetTurboCleanSwitch")
+        ),
+        rest_mode_enabled=_setting_boolean(sweeper_mgr.get("RestMode")),
     )
 
 
