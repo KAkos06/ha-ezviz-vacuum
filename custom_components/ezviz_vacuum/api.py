@@ -290,7 +290,7 @@ class EzvizVacuumApi:
             serial,
             "SweeperMapMgr",
             "StdCleanCfg",
-            {"value": config},
+            {"value": [config]},
         )
 
     def _put_iot_value(

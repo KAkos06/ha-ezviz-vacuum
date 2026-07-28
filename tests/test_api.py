@@ -138,7 +138,7 @@ def test_clean_config_controls_preserve_all_other_fields(
         "PUT",
         "/v3/iot-feature/feature/ABC123456/SweepingRobot/0/"
         "SweeperMapMgr/StdCleanCfg",
-        json_body={"value": expected},
+        json_body={"value": [expected]},
     )
     client.set_iot_feature.assert_not_called()
     assert original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"][
