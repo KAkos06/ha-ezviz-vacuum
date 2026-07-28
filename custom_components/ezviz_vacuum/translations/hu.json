@@ -73,6 +73,7 @@
         "state": {
           "off": "Nincs felmosás",
           "none": "Nincs felmosás",
+          "dry": "Nincs felmosás",
           "close": "Nincs felmosás",
           "closed": "Nincs felmosás",
           "low": "Alacsony fokozat",

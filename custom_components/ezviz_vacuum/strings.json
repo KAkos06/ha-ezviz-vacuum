@@ -77,6 +77,7 @@
         "state": {
           "off": "No mopping",
           "none": "No mopping",
+          "dry": "No mopping",
           "close": "No mopping",
           "closed": "No mopping",
           "low": "Low level",
