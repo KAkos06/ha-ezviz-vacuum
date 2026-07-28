@@ -16,6 +16,7 @@ from pyezvizapi.exceptions import (
     InvalidURL,
     PyEzvizError,
 )
+from requests.exceptions import RequestException
 
 from .models import MqttEvent, VacuumData, parse_mqtt_event, parse_vacuum_devices
 
@@ -23,6 +24,8 @@ _LOGGER = logging.getLogger(__name__)
 
 ROBOT_RESOURCE = "SweepingRobot"
 ROBOT_LOCAL_INDEX = "0"
+IOT_ACTION_ENDPOINT = "/v3/iot-feature/action/"
+IOT_FEATURE_ENDPOINT = "/v3/iot-feature/feature/"
 FAN_SPEEDS = ("quiet", "normal", "strong", "super")
 WATER_QUANTITIES = ("low", "middle", "high")
 
@@ -66,7 +69,7 @@ class EzvizVacuumApi:
             )
         ):
             return EzvizVacuumAuthError("EZVIZ authentication failed")
-        if isinstance(err, (InvalidHost, InvalidURL, HTTPError)):
+        if isinstance(err, (InvalidHost, InvalidURL, HTTPError, RequestException)):
             return EzvizVacuumConnectionError("Could not connect to EZVIZ")
         return EzvizVacuumError("Unexpected EZVIZ API error")
 
@@ -75,7 +78,7 @@ class EzvizVacuumApi:
 
         try:
             self._client.login()
-        except PyEzvizError as err:
+        except (PyEzvizError, RequestException) as err:
             raise self._translate_error(err) from err
 
     def get_vacuums(self) -> dict[str, VacuumData]:
@@ -83,7 +86,7 @@ class EzvizVacuumApi:
 
         try:
             return parse_vacuum_devices(self._client.get_device_infos())
-        except PyEzvizError as err:
+        except (PyEzvizError, RequestException) as err:
             raise self._translate_error(err) from err
 
     def refresh(self) -> dict[str, VacuumData]:
@@ -240,17 +243,13 @@ class EzvizVacuumApi:
     def return_to_base(self, serial: str) -> None:
         """Send the robot back to its charging dock."""
 
-        try:
-            self._client.set_iot_action(
-                serial,
-                ROBOT_RESOURCE,
-                ROBOT_LOCAL_INDEX,
-                "SweeperTaskMgr",
-                "RechargeCtrl",
-                {"value": {"action": "start"}},
-            )
-        except PyEzvizError as err:
-            raise self._translate_error(err) from err
+        self._put_iot_value(
+            IOT_ACTION_ENDPOINT,
+            serial,
+            "SweeperTaskMgr",
+            "RechargeCtrl",
+            {"value": {"action": "start"}},
+        )
 
     def set_fan_speed(self, serial: str, fan_speed: str) -> None:
         """Set the fan mode while preserving the rest of StdCleanCfg."""
@@ -271,17 +270,13 @@ class EzvizVacuumApi:
     def set_carpet_turbo(self, serial: str, enabled: bool) -> None:
         """Enable or disable automatic carpet boost."""
 
-        try:
-            self._client.set_iot_feature(
-                serial,
-                ROBOT_RESOURCE,
-                ROBOT_LOCAL_INDEX,
-                "SweeperCleanTask",
-                "CarpetTurboCleanSwitch",
-                {"value": {"enabled": int(enabled)}},
-            )
-        except PyEzvizError as err:
-            raise self._translate_error(err) from err
+        self._put_iot_value(
+            IOT_FEATURE_ENDPOINT,
+            serial,
+            "SweeperCleanTask",
+            "CarpetTurboCleanSwitch",
+            {"value": {"enabled": int(enabled)}},
+        )
 
     def _set_clean_config_value(
         self, serial: str, key: str, value: str
@@ -290,24 +285,72 @@ class EzvizVacuumApi:
 
         config = self._get_standard_clean_config(serial)
         config[key] = value
+        self._put_iot_value(
+            IOT_FEATURE_ENDPOINT,
+            serial,
+            "SweeperMapMgr",
+            "StdCleanCfg",
+            {"value": config},
+        )
+
+    def _put_iot_value(
+        self,
+        endpoint: str,
+        serial: str,
+        domain_id: str,
+        item_id: str,
+        payload: dict[str, Any],
+    ) -> None:
+        """Write an IoT value through the authenticated requests session.
+
+        pyezvizapi's public IoT setters currently prepare requests manually and
+        reuse that prepared request after reauthentication. Its regular JSON
+        transport always uses the session's current authentication state.
+        """
+
+        path = (
+            f"{endpoint}{serial.upper()}/{ROBOT_RESOURCE}/"
+            f"{ROBOT_LOCAL_INDEX}/{domain_id}/{item_id}"
+        )
         try:
-            self._client.set_iot_feature(
-                serial,
-                ROBOT_RESOURCE,
-                ROBOT_LOCAL_INDEX,
-                "SweeperMapMgr",
-                "StdCleanCfg",
-                {"value": config},
+            response = self._client._request_json(  # noqa: SLF001
+                "PUT", path, json_body=payload
             )
-        except PyEzvizError as err:
+        except (PyEzvizError, RequestException) as err:
             raise self._translate_error(err) from err
+
+        if not isinstance(response, Mapping):
+            raise EzvizVacuumError("EZVIZ returned an invalid command response")
+        meta = response.get("meta")
+        code = meta.get("code") if isinstance(meta, Mapping) else None
+        if isinstance(code, (int, str)):
+            try:
+                if int(code) == 200:
+                    return
+            except ValueError:
+                pass
+
+        device_code: Any = None
+        if isinstance(meta, Mapping):
+            more_info = meta.get("moreInfo")
+            if isinstance(more_info, Mapping):
+                device_meta = more_info.get("deviceMeta")
+                if isinstance(device_meta, Mapping):
+                    device_code = device_meta.get("code")
+
+        details = [f"API code {code!s}" if code is not None else "missing API code"]
+        if device_code is not None:
+            details.append(f"device code {device_code!s}")
+        raise EzvizVacuumError(
+            f"EZVIZ rejected the vacuum command ({', '.join(details)})"
+        )
 
     def _get_standard_clean_config(self, serial: str) -> dict[str, Any]:
         """Return a mutable copy of the current StdCleanCfg object."""
 
         try:
             devices = self._client.get_device_infos()
-        except PyEzvizError as err:
+        except (PyEzvizError, RequestException) as err:
             raise self._translate_error(err) from err
 
         if not isinstance(devices, Mapping):
