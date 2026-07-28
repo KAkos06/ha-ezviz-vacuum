@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from contextlib import suppress
 from typing import Any
 
@@ -20,6 +20,11 @@ from pyezvizapi.exceptions import (
 from .models import MqttEvent, VacuumData, parse_mqtt_event, parse_vacuum_devices
 
 _LOGGER = logging.getLogger(__name__)
+
+ROBOT_RESOURCE = "SweepingRobot"
+ROBOT_LOCAL_INDEX = "0"
+FAN_SPEEDS = ("quiet", "normal", "strong", "super")
+WATER_QUANTITIES = ("low", "middle", "high")
 
 
 class EzvizVacuumError(Exception):
@@ -112,7 +117,7 @@ class EzvizVacuumApi:
                     raise EzvizVacuumError(
                         "The loaded pyezvizapi version does not expose an MQTT token"
                     )
-                self._mqtt = MQTTClient(token)
+                self._mqtt = MQTTClient(token)  # type: ignore[call-arg]
 
                 def _legacy_message(client: Any, userdata: Any, message: Any) -> None:
                     del client, userdata
@@ -147,8 +152,8 @@ class EzvizVacuumApi:
 
                 # Legacy MQTTClient.start() blocks forever. run() performs
                 # registration and starts paho's background network loop.
-                self._mqtt.on_message = _legacy_message
-                self._mqtt.run()
+                self._mqtt.on_message = _legacy_message  # type: ignore[attr-defined]
+                self._mqtt.run()  # type: ignore[attr-defined]
 
             paho = self._mqtt.mqtt_client
             if paho is not None:
@@ -233,7 +238,115 @@ class EzvizVacuumApi:
         raise NotImplementedError
 
     def return_to_base(self, serial: str) -> None:
-        raise NotImplementedError
+        """Send the robot back to its charging dock."""
+
+        try:
+            self._client.set_iot_action(
+                serial,
+                ROBOT_RESOURCE,
+                ROBOT_LOCAL_INDEX,
+                "SweeperTaskMgr",
+                "RechargeCtrl",
+                {"value": {"action": "start"}},
+            )
+        except PyEzvizError as err:
+            raise self._translate_error(err) from err
 
     def set_fan_speed(self, serial: str, fan_speed: str) -> None:
-        raise NotImplementedError
+        """Set the fan mode while preserving the rest of StdCleanCfg."""
+
+        if fan_speed not in FAN_SPEEDS:
+            raise EzvizVacuumError(f"Unsupported fan speed: {fan_speed}")
+        self._set_clean_config_value(serial, "fanMode", fan_speed)
+
+    def set_water_quantity(self, serial: str, water_quantity: str) -> None:
+        """Set the mop water level while preserving the rest of StdCleanCfg."""
+
+        if water_quantity not in WATER_QUANTITIES:
+            raise EzvizVacuumError(
+                f"Unsupported water quantity: {water_quantity}"
+            )
+        self._set_clean_config_value(serial, "waterQuantity", water_quantity)
+
+    def set_carpet_turbo(self, serial: str, enabled: bool) -> None:
+        """Enable or disable automatic carpet boost."""
+
+        try:
+            self._client.set_iot_feature(
+                serial,
+                ROBOT_RESOURCE,
+                ROBOT_LOCAL_INDEX,
+                "SweeperCleanTask",
+                "CarpetTurboCleanSwitch",
+                {"value": {"enabled": int(enabled)}},
+            )
+        except PyEzvizError as err:
+            raise self._translate_error(err) from err
+
+    def _set_clean_config_value(
+        self, serial: str, key: str, value: str
+    ) -> None:
+        """Read, update, and write the complete standard cleaning config."""
+
+        config = self._get_standard_clean_config(serial)
+        config[key] = value
+        try:
+            self._client.set_iot_feature(
+                serial,
+                ROBOT_RESOURCE,
+                ROBOT_LOCAL_INDEX,
+                "SweeperMapMgr",
+                "StdCleanCfg",
+                {"value": config},
+            )
+        except PyEzvizError as err:
+            raise self._translate_error(err) from err
+
+    def _get_standard_clean_config(self, serial: str) -> dict[str, Any]:
+        """Return a mutable copy of the current StdCleanCfg object."""
+
+        try:
+            devices = self._client.get_device_infos()
+        except PyEzvizError as err:
+            raise self._translate_error(err) from err
+
+        if not isinstance(devices, Mapping):
+            raise EzvizVacuumError("EZVIZ returned an invalid device response")
+
+        raw_device = devices.get(serial)
+        if not isinstance(raw_device, Mapping):
+            raw_device = next(
+                (
+                    device
+                    for device_serial, device in devices.items()
+                    if isinstance(device_serial, str)
+                    and device_serial.casefold() == serial.casefold()
+                    and isinstance(device, Mapping)
+                ),
+                None,
+            )
+        if not isinstance(raw_device, Mapping):
+            raise EzvizVacuumError("EZVIZ vacuum was not found")
+
+        feature_info = raw_device.get("FEATURE_INFO")
+        if not isinstance(feature_info, Mapping):
+            raise EzvizVacuumError("Standard cleaning configuration is unavailable")
+        channel = feature_info.get(ROBOT_LOCAL_INDEX)
+        if isinstance(channel, Mapping):
+            robot = channel.get(ROBOT_RESOURCE)
+        else:
+            robot = feature_info.get(ROBOT_RESOURCE)
+        if not isinstance(robot, Mapping):
+            raise EzvizVacuumError("Standard cleaning configuration is unavailable")
+        map_manager = robot.get("SweeperMapMgr")
+        if not isinstance(map_manager, Mapping):
+            raise EzvizVacuumError("Standard cleaning configuration is unavailable")
+        clean_config = map_manager.get("StdCleanCfg")
+        if isinstance(clean_config, list):
+            clean_config = next(
+                (item for item in clean_config if isinstance(item, Mapping)),
+                None,
+            )
+        if not isinstance(clean_config, Mapping):
+            raise EzvizVacuumError("Standard cleaning configuration is unavailable")
+        return dict(clean_config)

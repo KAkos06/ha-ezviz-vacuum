@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 DOMAIN = "ezviz_vacuum"
-PLATFORMS = ["vacuum", "sensor", "binary_sensor"]
+PLATFORMS = ["vacuum", "sensor", "binary_sensor", "select", "switch"]
 
 CONF_REGION = "region"
 DEFAULT_REGION = "eu"

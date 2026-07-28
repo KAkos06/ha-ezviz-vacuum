@@ -102,6 +102,19 @@
       "carpet_turbo_enabled": {"name": "Automatic carpet boost"},
       "rest_mode_enabled": {"name": "Rest period enabled"},
       "rest_mode_active": {"name": "Rest period active"}
+    },
+    "select": {
+      "water_quantity_control": {
+        "name": "Water quantity control",
+        "state": {
+          "low": "Low",
+          "middle": "Medium",
+          "high": "High"
+        }
+      }
+    },
+    "switch": {
+      "carpet_turbo_control": {"name": "Automatic carpet boost control"}
     }
   }
 }

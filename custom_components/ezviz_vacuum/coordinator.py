@@ -7,6 +7,7 @@ import logging
 import random
 from datetime import datetime
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -28,10 +29,16 @@ _LOGGER = logging.getLogger(__name__)
 class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
     """Coordinate REST state with MQTT-triggered refreshes."""
 
-    def __init__(self, hass: HomeAssistant, api: EzvizVacuumApi) -> None:
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        api: EzvizVacuumApi,
+        config_entry: ConfigEntry,
+    ) -> None:
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name=DOMAIN,
             update_interval=DEFAULT_POLL_INTERVAL,
         )
@@ -177,6 +184,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
 
         self._stopping = True
         self._mqtt_started = False
+        await super().async_shutdown()
         for task in (self._debounce_task, self._reconnect_task):
             if task and not task.done():
                 task.cancel()

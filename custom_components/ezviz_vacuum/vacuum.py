@@ -1,4 +1,4 @@
-"""Read-only vacuum platform."""
+"""Vacuum platform."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import EzvizVacuumRuntimeData
+from .api import FAN_SPEEDS
 from .entity import EzvizVacuumEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,15 +39,17 @@ async def async_setup_entry(
 ) -> None:
     coordinator = entry.runtime_data.coordinator
     async_add_entities(
-        EzvizReadOnlyVacuum(coordinator, serial) for serial in coordinator.data
+        EzvizVacuum(coordinator, serial) for serial in coordinator.data
     )
 
 
-class EzvizReadOnlyVacuum(EzvizVacuumEntity, StateVacuumEntity):
-    """A state-only vacuum; no unverified commands are exposed."""
+class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
+    """An EZVIZ robot vacuum with verified controls."""
 
     _attr_name = None
-    _attr_supported_features = VacuumEntityFeature(0)
+    _attr_supported_features = (
+        VacuumEntityFeature.RETURN_HOME | VacuumEntityFeature.FAN_SPEED
+    )
 
     def __init__(self, coordinator, serial: str) -> None:
         super().__init__(coordinator, serial)
@@ -77,7 +80,19 @@ class EzvizReadOnlyVacuum(EzvizVacuumEntity, StateVacuumEntity):
 
     @property
     def fan_speed_list(self) -> list[str]:
-        return []
+        return list(FAN_SPEEDS)
+
+    async def async_return_to_base(self, **kwargs) -> None:
+        del kwargs
+        await self._async_execute_command(
+            self.coordinator.api.return_to_base, self.serial
+        )
+
+    async def async_set_fan_speed(self, fan_speed: str, **kwargs) -> None:
+        del kwargs
+        await self._async_execute_command(
+            self.coordinator.api.set_fan_speed, self.serial, fan_speed
+        )
 
     @property
     def extra_state_attributes(self) -> dict[str, str]:

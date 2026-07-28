@@ -130,10 +130,7 @@ def rest_mode_window(
     if start < end:
         start_date = today if current_time < end else today + timedelta(days=1)
     elif start > end:
-        if current_time < end:
-            start_date = today - timedelta(days=1)
-        else:
-            start_date = today
+        start_date = today - timedelta(days=1) if current_time < end else today
     else:
         start_date = (
             today if current_time >= start else today - timedelta(days=1)

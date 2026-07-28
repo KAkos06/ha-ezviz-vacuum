@@ -1,7 +1,7 @@
 # EZVIZ Vacuum for Home Assistant
 
-This integration lets you display the status of a supported EZVIZ robot vacuum
-in Home Assistant.
+This integration lets you monitor and control verified functions of a supported
+EZVIZ robot vacuum in Home Assistant.
 
 After installation, you can see:
 
@@ -10,14 +10,15 @@ After installation, you can see:
 - charging and online status;
 - the current cleaning task;
 - the configured fan speed and water level;
+- controls for fan speed, water level, and automatic carpet boost;
+- a return-to-dock command;
 - the name of the active map;
 - remaining values reported for the brushes, HEPA filter, mop, and sensors;
 - the status of the EZVIZ real-time notification connection.
 
 > [!IMPORTANT]
-> This is currently a read-only monitoring integration. Starting or pausing a
-> cleaning task, returning the vacuum to its dock, and other control operations
-> are not yet supported.
+> Starting, pausing, and resuming a cleaning task are not yet supported because
+> their cloud commands have not been verified for the targeted model.
 
 ## Supported device
 
@@ -87,8 +88,14 @@ following entities.
 
 - current activity, such as idle, cleaning, paused, returning, or docked;
 - availability;
-- current fan speed;
+- current fan speed and fan-speed control;
+- return-to-dock control;
 - reported error state.
+
+### Controls
+
+- water quantity: low, medium, or high;
+- automatic carpet boost: on or off.
 
 ### Sensors
 
@@ -191,7 +198,7 @@ code, or a complete raw API response.
 
 ## Current limitations
 
-- Vacuum control is not yet supported.
+- Starting, pausing, and resuming cleaning are not yet supported.
 - An internet connection is required.
 - The integration relies on a private, undocumented EZVIZ cloud API.
 - A future EZVIZ API change may temporarily break the integration.

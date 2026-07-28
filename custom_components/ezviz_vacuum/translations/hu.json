@@ -98,6 +98,21 @@
       "carpet_turbo_enabled": {"name": "Automatikus szőnyegturbó"},
       "rest_mode_enabled": {"name": "Pihenőidő engedélyezve"},
       "rest_mode_active": {"name": "Pihenőidő aktív"}
+    },
+    "select": {
+      "water_quantity_control": {
+        "name": "Vízmennyiség vezérlése",
+        "state": {
+          "low": "Alacsony",
+          "middle": "Közepes",
+          "high": "Magas"
+        }
+      }
+    },
+    "switch": {
+      "carpet_turbo_control": {
+        "name": "Automatikus szőnyegturbó vezérlése"
+      }
     }
   }
 }

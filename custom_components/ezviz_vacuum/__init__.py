@@ -46,7 +46,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: EzvizVacuumConfigEntry) 
         await api_close(hass, api)
         raise ConfigEntryNotReady from err
 
-    coordinator = EzvizVacuumCoordinator(hass, api)
+    coordinator = EzvizVacuumCoordinator(hass, api, entry)
     try:
         await coordinator.async_config_entry_first_refresh()
     except Exception:

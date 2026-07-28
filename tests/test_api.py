@@ -1,8 +1,40 @@
 """API adapter tests."""
 
+from copy import deepcopy
 from unittest.mock import MagicMock, patch
 
-from custom_components.ezviz_vacuum.api import EzvizVacuumApi
+import pytest
+from pyezvizapi.exceptions import HTTPError
+
+from custom_components.ezviz_vacuum.api import (
+    EzvizVacuumApi,
+    EzvizVacuumConnectionError,
+    EzvizVacuumError,
+)
+
+
+def _raw_device(clean_config=None):
+    return {
+        "FEATURE_INFO": {
+            "0": {
+                "SweepingRobot": {
+                    "SweeperMapMgr": {
+                        "StdCleanCfg": [
+                            clean_config
+                            or {
+                                "fanMode": "normal",
+                                "waterQuantity": "middle",
+                                "cleanTimes": 1,
+                                "cleanConfigType": "universal",
+                                "mapID": 3,
+                                "futureField": {"preserve": True},
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
@@ -56,3 +88,111 @@ def test_legacy_mqtt_callback_is_normalized(client_class, mqtt_class) -> None:
     mqtt.on_message(None, None, message)
     assert events[0].serial == "ABC123456"
     assert events[0].event_type == "vacuum_state"
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_return_to_base_uses_verified_action_and_wrapper(client_class) -> None:
+    client = client_class.return_value
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    api.return_to_base("ABC123456")
+
+    client.set_iot_action.assert_called_once_with(
+        "ABC123456",
+        "SweepingRobot",
+        "0",
+        "SweeperTaskMgr",
+        "RechargeCtrl",
+        {"value": {"action": "start"}},
+    )
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+@pytest.mark.parametrize(
+    ("method_name", "field", "new_value"),
+    [
+        ("set_fan_speed", "fanMode", "super"),
+        ("set_water_quantity", "waterQuantity", "high"),
+    ],
+)
+def test_clean_config_controls_preserve_all_other_fields(
+    client_class, method_name, field, new_value
+) -> None:
+    client = client_class.return_value
+    original = _raw_device()
+    original_config = deepcopy(
+        original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"][
+            "StdCleanCfg"
+        ][0]
+    )
+    client.get_device_infos.return_value = {"ABC123456": original}
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    getattr(api, method_name)("ABC123456", new_value)
+
+    expected = deepcopy(original_config)
+    expected[field] = new_value
+    client.set_iot_feature.assert_called_once_with(
+        "ABC123456",
+        "SweepingRobot",
+        "0",
+        "SweeperMapMgr",
+        "StdCleanCfg",
+        {"value": expected},
+    )
+    assert original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"][
+        "StdCleanCfg"
+    ][0] == original_config
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_carpet_turbo_uses_verified_feature_and_wrapper(client_class) -> None:
+    client = client_class.return_value
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    api.set_carpet_turbo("ABC123456", True)
+
+    client.set_iot_feature.assert_called_once_with(
+        "ABC123456",
+        "SweepingRobot",
+        "0",
+        "SweeperCleanTask",
+        "CarpetTurboCleanSwitch",
+        {"value": {"enabled": 1}},
+    )
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_invalid_setting_does_not_read_or_write(client_class) -> None:
+    client = client_class.return_value
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    with pytest.raises(EzvizVacuumError):
+        api.set_fan_speed("ABC123456", "turbo-plus")
+    with pytest.raises(EzvizVacuumError):
+        api.set_water_quantity("ABC123456", "maximum")
+
+    client.get_device_infos.assert_not_called()
+    client.set_iot_feature.assert_not_called()
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_missing_clean_config_does_not_write(client_class) -> None:
+    client = client_class.return_value
+    client.get_device_infos.return_value = {"ABC123456": {}}
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    with pytest.raises(EzvizVacuumError):
+        api.set_fan_speed("ABC123456", "normal")
+
+    client.set_iot_feature.assert_not_called()
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_command_errors_are_translated(client_class) -> None:
+    client = client_class.return_value
+    client.set_iot_action.side_effect = HTTPError
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    with pytest.raises(EzvizVacuumConnectionError):
+        api.return_to_base("ABC123456")
