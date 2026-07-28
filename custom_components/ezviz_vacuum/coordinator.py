@@ -15,10 +15,10 @@ from .api import EzvizVacuumApi, EzvizVacuumAuthError, EzvizVacuumError
 from .const import (
     DEFAULT_POLL_INTERVAL,
     DOMAIN,
-    MQTT_DISCONNECTED_POLL_INTERVAL,
     MQTT_RECONNECT_INITIAL_SECONDS,
     MQTT_RECONNECT_MAX_SECONDS,
     MQTT_REFRESH_DEBOUNCE_SECONDS,
+    MQTT_UNROUTED_REFRESH_MIN_SECONDS,
 )
 from .models import MqttEvent, VacuumData, masked_serial
 
@@ -33,14 +33,16 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=MQTT_DISCONNECTED_POLL_INTERVAL,
+            update_interval=DEFAULT_POLL_INTERVAL,
         )
         self.api = api
         self.mqtt_connected = False
         self.last_mqtt_event: datetime | None = None
         self._known_serials: set[str] = set()
+        self._last_unrouted_refresh: datetime | None = None
         self._debounce_task: asyncio.Task[None] | None = None
         self._reconnect_task: asyncio.Task[None] | None = None
+        self._mqtt_started = False
         self._stopping = False
 
     async def _async_update_data(self) -> dict[str, VacuumData]:
@@ -52,17 +54,16 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             raise UpdateFailed(str(err)) from err
         self._known_serials.update(devices)
         self.mqtt_connected = self.api.is_mqtt_connected()
-        self.update_interval = (
-            DEFAULT_POLL_INTERVAL
-            if self.mqtt_connected
-            else MQTT_DISCONNECTED_POLL_INTERVAL
-        )
+        self.update_interval = DEFAULT_POLL_INTERVAL
+        if self._mqtt_started and not self.mqtt_connected:
+            self._schedule_reconnect()
         return devices
 
     async def async_start_mqtt(self) -> None:
         """Start MQTT without blocking Home Assistant's event loop."""
 
         self._stopping = False
+        self._mqtt_started = True
 
         def _event(event: MqttEvent) -> None:
             self.hass.loop.call_soon_threadsafe(self.async_handle_mqtt_event, event)
@@ -76,6 +77,8 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             )
         except EzvizVacuumError as err:
             _LOGGER.warning("EZVIZ MQTT connection failed: %s", err)
+            self.mqtt_connected = False
+            self.update_interval = DEFAULT_POLL_INTERVAL
             self._schedule_reconnect()
             return
         except Exception as err:  # MQTT is optional; REST setup must still succeed.
@@ -84,15 +87,14 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                 "continuing with REST polling",
                 type(err).__name__,
             )
+            self._mqtt_started = False
             self.mqtt_connected = False
-            self.update_interval = MQTT_DISCONNECTED_POLL_INTERVAL
+            self.update_interval = DEFAULT_POLL_INTERVAL
             return
         self.mqtt_connected = self.api.is_mqtt_connected()
-        self.update_interval = (
-            DEFAULT_POLL_INTERVAL
-            if self.mqtt_connected
-            else MQTT_DISCONNECTED_POLL_INTERVAL
-        )
+        self.update_interval = DEFAULT_POLL_INTERVAL
+        if not self.mqtt_connected:
+            self._schedule_reconnect()
 
     def async_handle_mqtt_event(self, event: MqttEvent) -> None:
         """Filter and debounce an event already transferred to the HA loop."""
@@ -105,6 +107,17 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         self.mqtt_connected = True
         self.update_interval = DEFAULT_POLL_INTERVAL
         self.last_mqtt_event = event.received_at
+        if not event.serial:
+            if (
+                self._last_unrouted_refresh is not None
+                and (
+                    event.received_at - self._last_unrouted_refresh
+                ).total_seconds()
+                < MQTT_UNROUTED_REFRESH_MIN_SECONDS
+            ):
+                _LOGGER.debug("Rate-limiting MQTT event without a device serial")
+                return
+            self._last_unrouted_refresh = event.received_at
         _LOGGER.debug(
             "MQTT packet received: type=%s serial=%s keys=%s",
             event.event_type,
@@ -129,7 +142,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         if self._stopping:
             return
         self.mqtt_connected = False
-        self.update_interval = MQTT_DISCONNECTED_POLL_INTERVAL
+        self.update_interval = DEFAULT_POLL_INTERVAL
         _LOGGER.debug("EZVIZ MQTT disconnected: %s", error or "connection lost")
         # Paho reconnects automatically. A delayed health check restarts the
         # registration only if that built-in reconnect does not recover.
@@ -163,6 +176,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         """Cancel tasks and stop paho before unloading."""
 
         self._stopping = True
+        self._mqtt_started = False
         for task in (self._debounce_task, self._reconnect_task):
             if task and not task.done():
                 task.cancel()

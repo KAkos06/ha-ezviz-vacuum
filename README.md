@@ -124,15 +124,17 @@ The integration uses two update methods:
 1. **EZVIZ real-time notifications:** when the EZVIZ cloud sends a notification
    about a state change, the integration requests the latest vacuum state
    shortly afterward.
-2. **Fallback polling:** if no real-time notification is received, the
-   integration periodically requests the current state from the EZVIZ cloud.
+2. **Fallback polling:** the integration requests the current state from the
+   EZVIZ cloud every 60 seconds, including while real-time notifications are
+   connected.
 
 You do not need your own MQTT broker or a Mosquitto installation. The
 integration connects directly to the EZVIZ cloud notification service.
 
-It has not yet been confirmed that the RE5 Plus sends an EZVIZ notification for
-every possible state change. If no notification is received, the integration
-continues to work through periodic polling.
+The RE5 Plus does not appear to send an EZVIZ notification for every setting
+change. Fan speed, water quantity, and rest-period changes may therefore take
+up to approximately one minute to appear. Cleaning, docking, charging, and
+error events use real-time notifications when the EZVIZ cloud provides them.
 
 ## Manual installation
 
