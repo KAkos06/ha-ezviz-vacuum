@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, time, timedelta
 from typing import Any
 
 from .const import SUPPORTED_CATEGORY
@@ -46,6 +46,8 @@ class VacuumData:
     sensors: ConsumableData | None
     carpet_turbo_enabled: bool | None
     rest_mode_enabled: bool | None
+    rest_mode_start: str | None
+    rest_mode_end: str | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -101,6 +103,71 @@ def _setting_boolean(value: Any) -> bool | None:
 
 def _text(value: Any) -> str | None:
     return str(value) if value not in (None, "") else None
+
+
+def _clock_time(value: Any) -> time | None:
+    text = _text(value)
+    if text is None:
+        return None
+    try:
+        return time.fromisoformat(text)
+    except ValueError:
+        return None
+
+
+def rest_mode_window(
+    data: VacuumData, current_datetime: datetime
+) -> tuple[datetime, datetime] | None:
+    """Return the current or next device-local rest period as datetimes."""
+
+    start = _clock_time(data.rest_mode_start)
+    end = _clock_time(data.rest_mode_end)
+    if start is None or end is None:
+        return None
+
+    current_time = current_datetime.time()
+    today = current_datetime.date()
+    if start < end:
+        start_date = today if current_time < end else today + timedelta(days=1)
+    elif start > end:
+        if current_time < end:
+            start_date = today - timedelta(days=1)
+        else:
+            start_date = today
+    else:
+        start_date = (
+            today if current_time >= start else today - timedelta(days=1)
+        )
+
+    end_date = start_date if start < end else start_date + timedelta(days=1)
+    timezone = current_datetime.tzinfo
+    return (
+        datetime.combine(start_date, start, tzinfo=timezone),
+        datetime.combine(end_date, end, tzinfo=timezone),
+    )
+
+
+def rest_mode_is_active(data: VacuumData, current_time: time) -> bool | None:
+    """Return whether the configured rest period is active at the given time."""
+
+    if data.rest_mode_enabled is False:
+        return False
+    if data.rest_mode_enabled is None:
+        return None
+
+    start = _clock_time(data.rest_mode_start)
+    end = _clock_time(data.rest_mode_end)
+    if start is None or end is None:
+        return None
+
+    current = (current_time.hour, current_time.minute, current_time.second)
+    start_value = (start.hour, start.minute, start.second)
+    end_value = (end.hour, end.minute, end.second)
+    if start_value == end_value:
+        return True
+    if start_value < end_value:
+        return start_value <= current < end_value
+    return current >= start_value or current < end_value
 
 
 def _consumable(value: Any) -> ConsumableData | None:
@@ -169,6 +236,7 @@ def parse_single_vacuum(
     clean_cfg = _first_mapping(map_mgr.get("StdCleanCfg"))
     consumables = _mapping(robot.get("SweeperConsumable"))
     sweeper_mgr = _mapping(robot.get("SweeperMgr"))
+    rest_mode = _mapping(sweeper_mgr.get("RestMode"))
     clean_task = _mapping(robot.get("SweeperCleanTask"))
 
     battery = _integer(power.get("SurplusPower"))
@@ -203,6 +271,8 @@ def parse_single_vacuum(
             clean_task.get("CarpetTurboCleanSwitch")
         ),
         rest_mode_enabled=_setting_boolean(sweeper_mgr.get("RestMode")),
+        rest_mode_start=_text(rest_mode.get("startTime")),
+        rest_mode_end=_text(rest_mode.get("endTime")),
     )
 
 

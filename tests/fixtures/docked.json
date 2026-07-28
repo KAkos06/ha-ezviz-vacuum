@@ -40,7 +40,13 @@
             "RotatingBrushWorkingTime": {"rest": 286, "used": 14},
             "MopWorkingTime": {"rest": 137, "used": 13}
           },
-          "SweeperMgr": {"RestMode": {"enabled": true}},
+          "SweeperMgr": {
+            "RestMode": {
+              "startTime": "22:00:00",
+              "endTime": "07:00:00",
+              "enabled": true
+            }
+          },
           "SweeperCleanTask": {
             "CarpetTurboCleanSwitch": {"enabled": 1}
           }

@@ -16,10 +16,16 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt as dt_util
 
 from . import EzvizVacuumRuntimeData
 from .entity import EzvizVacuumEntity
-from .models import VacuumData
+from .models import VacuumData, rest_mode_window
+
+
+def _rest_mode_boundary(data: VacuumData, index: int):
+    window = rest_mode_window(data, dt_util.now())
+    return window[index] if window else None
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -56,6 +62,18 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         key="map_name",
         translation_key="map_name",
         value_fn=lambda data: data.map_name,
+    ),
+    EzvizSensorDescription(
+        key="rest_mode_start",
+        translation_key="rest_mode_start",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=lambda data: _rest_mode_boundary(data, 0),
+    ),
+    EzvizSensorDescription(
+        key="rest_mode_end",
+        translation_key="rest_mode_end",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=lambda data: _rest_mode_boundary(data, 1),
     ),
     EzvizSensorDescription(
         key="hepa_remaining",

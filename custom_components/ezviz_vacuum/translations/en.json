@@ -83,6 +83,8 @@
         }
       },
       "map_name": {"name": "Map"},
+      "rest_mode_start": {"name": "Rest period start"},
+      "rest_mode_end": {"name": "Rest period end"},
       "hepa_remaining": {"name": "HEPA remaining"},
       "main_brush_remaining": {"name": "Main brush remaining"},
       "side_brush_remaining": {"name": "Side brush remaining"},
@@ -93,7 +95,8 @@
       "charging": {"name": "Charging"},
       "online": {"name": "Online"},
       "carpet_turbo_enabled": {"name": "Automatic carpet boost"},
-      "rest_mode_enabled": {"name": "Rest mode"}
+      "rest_mode_enabled": {"name": "Rest period enabled"},
+      "rest_mode_active": {"name": "Rest period active"}
     }
   }
 }

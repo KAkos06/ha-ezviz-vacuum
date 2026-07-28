@@ -83,6 +83,8 @@
         }
       },
       "map_name": {"name": "Térkép"},
+      "rest_mode_start": {"name": "Pihenőidő kezdete"},
+      "rest_mode_end": {"name": "Pihenőidő vége"},
       "hepa_remaining": {"name": "HEPA hátralévő érték"},
       "main_brush_remaining": {"name": "Főkefe hátralévő érték"},
       "side_brush_remaining": {"name": "Oldalkefe hátralévő érték"},
@@ -93,7 +95,8 @@
       "charging": {"name": "Töltés"},
       "online": {"name": "Elérhetőség"},
       "carpet_turbo_enabled": {"name": "Automatikus szőnyegturbó"},
-      "rest_mode_enabled": {"name": "Pihenő mód"}
+      "rest_mode_enabled": {"name": "Pihenőidő engedélyezve"},
+      "rest_mode_active": {"name": "Pihenőidő aktív"}
     }
   }
 }
