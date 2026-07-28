@@ -24,6 +24,7 @@ def test_parse_docked_and_consumables() -> None:
     assert vacuum.name == "Bözsi"
     assert vacuum.battery_level == 100
     assert vacuum.charging is True
+    assert vacuum.task_state == "docked"
     assert vacuum.map_name == "Lakás"
     assert vacuum.fan_speed == "super"
     assert vacuum.hepa and vacuum.hepa.remaining == 136

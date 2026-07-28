@@ -44,25 +44,60 @@
   "entity": {
     "sensor": {
       "battery": {"name": "Battery"},
-      "task_state": {"name": "Task state"},
-      "fan_speed": {"name": "Fan speed"},
-      "water_quantity": {"name": "Water quantity"},
+      "task_state": {
+        "name": "Task state",
+        "state": {
+          "cleaning": "Cleaning",
+          "paused": "Paused",
+          "pause": "Paused",
+          "returning": "Returning to dock",
+          "goinghome": "Returning to dock",
+          "going_home": "Returning to dock",
+          "docking": "Docking",
+          "docked": "Docked",
+          "idle": "Idle",
+          "completed": "Completed"
+        }
+      },
+      "fan_speed": {
+        "name": "Fan speed",
+        "state": {
+          "quiet": "Silent",
+          "silent": "Silent",
+          "standard": "Normal",
+          "normal": "Normal",
+          "strong": "High power",
+          "high": "High power",
+          "super": "Super strong",
+          "max": "Super strong"
+        }
+      },
+      "water_quantity": {
+        "name": "Water quantity",
+        "state": {
+          "off": "No mopping",
+          "none": "No mopping",
+          "close": "No mopping",
+          "closed": "No mopping",
+          "low": "Low level",
+          "middle": "Medium",
+          "medium": "Medium",
+          "high": "Max",
+          "max": "Max"
+        }
+      },
       "map_name": {"name": "Map"},
       "hepa_remaining": {"name": "HEPA remaining"},
       "main_brush_remaining": {"name": "Main brush remaining"},
       "side_brush_remaining": {"name": "Side brush remaining"},
       "mop_remaining": {"name": "Mop remaining"},
-      "sensor_cleaning_remaining": {"name": "Sensor cleaning remaining"},
-      "last_mqtt_event": {"name": "Last MQTT event"},
-      "mqtt_connection": {"name": "MQTT connection"}
+      "sensor_cleaning_remaining": {"name": "Sensor cleaning remaining"}
     },
     "binary_sensor": {
       "charging": {"name": "Charging"},
       "online": {"name": "Online"},
-      "mqtt_connected": {"name": "MQTT connected"},
-      "carpet_turbo_enabled": {"name": "Carpet turbo"},
+      "carpet_turbo_enabled": {"name": "Automatic carpet boost"},
       "rest_mode_enabled": {"name": "Rest mode"}
     }
   }
 }
-

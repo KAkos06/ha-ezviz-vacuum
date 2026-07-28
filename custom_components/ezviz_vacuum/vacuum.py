@@ -26,6 +26,8 @@ TASK_ACTIVITY_MAP: dict[str, VacuumActivity] = {
     "returning": VacuumActivity.RETURNING,
     "goinghome": VacuumActivity.RETURNING,
     "docking": VacuumActivity.RETURNING,
+    "docked": VacuumActivity.DOCKED,
+    "idle": VacuumActivity.IDLE,
 }
 
 

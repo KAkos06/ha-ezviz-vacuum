@@ -174,6 +174,10 @@ def parse_single_vacuum(
     battery = _integer(power.get("SurplusPower"))
     if battery is not None:
         battery = max(0, min(100, battery))
+    charging = _boolean(current.get("inCharging"))
+    task_state = _text(current.get("taskState"))
+    if not task_state and charging is not None:
+        task_state = "docked" if charging else "idle"
 
     return VacuumData(
         serial=serial,
@@ -182,8 +186,8 @@ def parse_single_vacuum(
         firmware=_text(info.get("version") or info.get("firmwareVersion")),
         available=_available(raw_device, info),
         battery_level=battery,
-        charging=_boolean(current.get("inCharging")),
-        task_state=_text(current.get("taskState")),
+        charging=charging,
+        task_state=task_state,
         task_id=_integer(current.get("ID")),
         exception=_text(current.get("exception")),
         fan_speed=_text(clean_cfg.get("fanMode")),

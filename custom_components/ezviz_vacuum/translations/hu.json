@@ -40,25 +40,60 @@
   "entity": {
     "sensor": {
       "battery": {"name": "Akkumulátor"},
-      "task_state": {"name": "Feladat állapota"},
-      "fan_speed": {"name": "Szívóerő"},
-      "water_quantity": {"name": "Vízmennyiség"},
+      "task_state": {
+        "name": "Feladat állapota",
+        "state": {
+          "cleaning": "Takarítás",
+          "paused": "Szüneteltetve",
+          "pause": "Szüneteltetve",
+          "returning": "Visszatérés a dokkolóhoz",
+          "goinghome": "Visszatérés a dokkolóhoz",
+          "going_home": "Visszatérés a dokkolóhoz",
+          "docking": "Dokkolás",
+          "docked": "Dokkolva",
+          "idle": "Tétlen",
+          "completed": "Befejezve"
+        }
+      },
+      "fan_speed": {
+        "name": "Szívóerő",
+        "state": {
+          "quiet": "Csendes",
+          "silent": "Csendes",
+          "standard": "Normál",
+          "normal": "Normál",
+          "strong": "Nagy teljesítményű",
+          "high": "Nagy teljesítményű",
+          "super": "Szuper erős",
+          "max": "Szuper erős"
+        }
+      },
+      "water_quantity": {
+        "name": "Vízmennyiség",
+        "state": {
+          "off": "Nincs felmosás",
+          "none": "Nincs felmosás",
+          "close": "Nincs felmosás",
+          "closed": "Nincs felmosás",
+          "low": "Alacsony fokozat",
+          "middle": "Közepes",
+          "medium": "Közepes",
+          "high": "Max",
+          "max": "Max"
+        }
+      },
       "map_name": {"name": "Térkép"},
       "hepa_remaining": {"name": "HEPA hátralévő érték"},
       "main_brush_remaining": {"name": "Főkefe hátralévő érték"},
       "side_brush_remaining": {"name": "Oldalkefe hátralévő érték"},
       "mop_remaining": {"name": "Felmosó hátralévő érték"},
-      "sensor_cleaning_remaining": {"name": "Szenzortisztítás hátralévő érték"},
-      "last_mqtt_event": {"name": "Utolsó MQTT-esemény"},
-      "mqtt_connection": {"name": "MQTT-kapcsolat"}
+      "sensor_cleaning_remaining": {"name": "Szenzortisztítás hátralévő érték"}
     },
     "binary_sensor": {
       "charging": {"name": "Töltés"},
-      "online": {"name": "Online"},
-      "mqtt_connected": {"name": "MQTT csatlakoztatva"},
-      "carpet_turbo_enabled": {"name": "Szőnyeg turbó"},
+      "online": {"name": "Elérhetőség"},
+      "carpet_turbo_enabled": {"name": "Automatikus szőnyegturbó"},
       "rest_mode_enabled": {"name": "Pihenő mód"}
     }
   }
 }
-

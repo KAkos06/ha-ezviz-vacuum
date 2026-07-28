@@ -106,11 +106,6 @@ async def async_setup_entry(
         for serial in coordinator.data
         for description in SENSORS
     ]
-    entities.extend(
-        EzvizMqttSensor(coordinator, serial, key)
-        for serial in coordinator.data
-        for key in ("last_mqtt_event", "mqtt_connection")
-    )
     async_add_entities(entities)
 
 
@@ -132,20 +127,3 @@ class EzvizVacuumSensor(EzvizVacuumEntity, SensorEntity):
         if self.entity_description.raw_counter:
             return {"source_field": "rest", "unit_documented": False}
         return None
-
-
-class EzvizMqttSensor(EzvizVacuumEntity, SensorEntity):
-    def __init__(self, coordinator, serial: str, key: str) -> None:
-        super().__init__(coordinator, serial)
-        self._key = key
-        self._attr_unique_id = f"{serial}_{key}"
-        self._attr_translation_key = key
-        self._attr_entity_category = EntityCategory.DIAGNOSTIC
-        if key == "last_mqtt_event":
-            self._attr_device_class = SensorDeviceClass.TIMESTAMP
-
-    @property
-    def native_value(self) -> Any:
-        if self._key == "last_mqtt_event":
-            return self.coordinator.last_mqtt_event
-        return "connected" if self.coordinator.mqtt_connected else "disconnected"

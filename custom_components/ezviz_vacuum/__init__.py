@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from homeassistant.helpers import entity_registry as er
 
 from .api import EzvizVacuumApi, EzvizVacuumAuthError, EzvizVacuumError
 from .const import CONF_REGION, PLATFORMS
@@ -21,6 +22,12 @@ class EzvizVacuumRuntimeData:
 
 
 type EzvizVacuumConfigEntry = ConfigEntry[EzvizVacuumRuntimeData]
+
+_OBSOLETE_MQTT_ENTITY_SUFFIXES = (
+    "_last_mqtt_event",
+    "_mqtt_connection",
+    "_mqtt_connected",
+)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: EzvizVacuumConfigEntry) -> bool:
@@ -46,6 +53,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: EzvizVacuumConfigEntry) 
         raise
 
     entry.runtime_data = EzvizVacuumRuntimeData(api, coordinator)
+    _remove_obsolete_mqtt_entities(hass, entry)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     await coordinator.async_start_mqtt()
     entry.async_on_unload(entry.add_update_listener(_async_reload_entry))
@@ -54,6 +62,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: EzvizVacuumConfigEntry) 
 
 async def api_close(hass: HomeAssistant, api: EzvizVacuumApi) -> None:
     await hass.async_add_executor_job(api.close)
+
+
+def _remove_obsolete_mqtt_entities(
+    hass: HomeAssistant, entry: EzvizVacuumConfigEntry
+) -> None:
+    """Remove MQTT implementation details exposed by earlier versions."""
+
+    registry = er.async_get(hass)
+    for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+        if entity.unique_id.endswith(_OBSOLETE_MQTT_ENTITY_SUFFIXES):
+            registry.async_remove(entity.entity_id)
 
 
 async def async_unload_entry(

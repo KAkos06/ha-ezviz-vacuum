@@ -11,7 +11,6 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -62,10 +61,6 @@ async def async_setup_entry(
         for serial in coordinator.data
         for description in BINARY_SENSORS
     ]
-    entities.extend(
-        EzvizMqttConnectedBinarySensor(coordinator, serial)
-        for serial in coordinator.data
-    )
     async_add_entities(entities)
 
 
@@ -81,17 +76,3 @@ class EzvizVacuumBinarySensor(EzvizVacuumEntity, BinarySensorEntity):
     def is_on(self) -> bool | None:
         data = self.vacuum_data
         return self.entity_description.value_fn(data) if data else None
-
-
-class EzvizMqttConnectedBinarySensor(EzvizVacuumEntity, BinarySensorEntity):
-    _attr_translation_key = "mqtt_connected"
-    _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator, serial: str) -> None:
-        super().__init__(coordinator, serial)
-        self._attr_unique_id = f"{serial}_mqtt_connected"
-
-    @property
-    def is_on(self) -> bool:
-        return self.coordinator.mqtt_connected
