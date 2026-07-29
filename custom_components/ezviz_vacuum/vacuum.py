@@ -21,6 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 
 # Values are intentionally conservative and easy to extend from real fixtures.
 TASK_ACTIVITY_MAP: dict[str, VacuumActivity] = {
+    "clean": VacuumActivity.CLEANING,
     "cleaning": VacuumActivity.CLEANING,
     "paused": VacuumActivity.PAUSED,
     "pause": VacuumActivity.PAUSED,

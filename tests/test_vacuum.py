@@ -32,7 +32,7 @@ def test_docked_activity_and_unique_id() -> None:
     assert entity.device_info["identifiers"]
 
 
-def test_cleaning_activity() -> None:
+def test_ezviz_clean_activity_is_cleaning() -> None:
     assert _entity("cleaning.json").activity is VacuumActivity.CLEANING
 
 

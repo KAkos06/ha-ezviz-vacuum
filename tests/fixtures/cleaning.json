@@ -13,7 +13,7 @@
           "SweeperTaskMgr": {
             "CurrentTask": {
               "exception": "",
-              "taskState": "cleaning",
+              "taskState": "clean",
               "ID": "42",
               "inCharging": false
             }
@@ -23,4 +23,3 @@
     }
   }
 }
-
