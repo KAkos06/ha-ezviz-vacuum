@@ -27,7 +27,7 @@ ROBOT_LOCAL_INDEX = "0"
 IOT_ACTION_ENDPOINT = "/v3/iot-feature/action/"
 IOT_FEATURE_ENDPOINT = "/v3/iot-feature/feature/"
 FAN_SPEEDS = ("quiet", "normal", "strong", "super")
-WATER_QUANTITIES = ("low", "middle", "high")
+WATER_QUANTITIES = ("dry", "low", "middle", "high")
 
 
 class EzvizVacuumError(Exception):

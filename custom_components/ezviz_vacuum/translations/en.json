@@ -38,6 +38,21 @@
     }
   },
   "entity": {
+    "vacuum": {
+      "ezviz_vacuum": {
+        "state_attributes": {
+          "fan_speed": {
+            "name": "Suction power",
+            "state": {
+              "quiet": "Silent",
+              "normal": "Normal",
+              "strong": "High power",
+              "super": "Super strong"
+            }
+          }
+        }
+      }
+    },
     "sensor": {
       "battery": {"name": "Battery"},
       "task_state": {
@@ -103,9 +118,19 @@
       "water_quantity_control": {
         "name": "Water quantity control",
         "state": {
+          "dry": "No mopping",
           "low": "Low",
           "middle": "Medium",
           "high": "High"
+        }
+      },
+      "fan_speed_control": {
+        "name": "Suction power control",
+        "state": {
+          "quiet": "Silent",
+          "normal": "Normal",
+          "strong": "High power",
+          "super": "Super strong"
         }
       }
     },

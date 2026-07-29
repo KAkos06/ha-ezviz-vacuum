@@ -8,7 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import EzvizVacuumRuntimeData
-from .api import WATER_QUANTITIES
+from .api import FAN_SPEEDS, WATER_QUANTITIES
 from .entity import EzvizVacuumEntity
 
 
@@ -18,10 +18,15 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator = entry.runtime_data.coordinator
-    async_add_entities(
-        EzvizWaterQuantitySelect(coordinator, serial)
-        for serial in coordinator.data
-    )
+    entities: list[SelectEntity] = []
+    for serial in coordinator.data:
+        entities.extend(
+            (
+                EzvizWaterQuantitySelect(coordinator, serial),
+                EzvizFanSpeedSelect(coordinator, serial),
+            )
+        )
+    async_add_entities(entities)
 
 
 class EzvizWaterQuantitySelect(EzvizVacuumEntity, SelectEntity):
@@ -44,4 +49,27 @@ class EzvizWaterQuantitySelect(EzvizVacuumEntity, SelectEntity):
     async def async_select_option(self, option: str) -> None:
         await self._async_execute_command(
             self.coordinator.api.set_water_quantity, self.serial, option
+        )
+
+
+class EzvizFanSpeedSelect(EzvizVacuumEntity, SelectEntity):
+    """Control the vacuum fan speed as a standalone device control."""
+
+    _attr_translation_key = "fan_speed_control"
+    _attr_options = list(FAN_SPEEDS)
+
+    def __init__(self, coordinator, serial: str) -> None:
+        super().__init__(coordinator, serial)
+        self._attr_unique_id = f"{serial}_fan_speed_control"
+
+    @property
+    def current_option(self) -> str | None:
+        data = self.vacuum_data
+        if data is None or data.fan_speed not in self.options:
+            return None
+        return data.fan_speed
+
+    async def async_select_option(self, option: str) -> None:
+        await self._async_execute_command(
+            self.coordinator.api.set_fan_speed, self.serial, option
         )

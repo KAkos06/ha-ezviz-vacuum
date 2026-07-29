@@ -9,7 +9,10 @@ from homeassistant.exceptions import HomeAssistantError
 
 from custom_components.ezviz_vacuum.api import EzvizVacuumError
 from custom_components.ezviz_vacuum.models import VacuumData
-from custom_components.ezviz_vacuum.select import EzvizWaterQuantitySelect
+from custom_components.ezviz_vacuum.select import (
+    EzvizFanSpeedSelect,
+    EzvizWaterQuantitySelect,
+)
 from custom_components.ezviz_vacuum.switch import EzvizCarpetTurboSwitch
 from custom_components.ezviz_vacuum.vacuum import EzvizVacuum
 
@@ -76,11 +79,27 @@ async def test_water_select_exposes_state_and_controls() -> None:
     entity = EzvizWaterQuantitySelect(coordinator, "ABC123456")
 
     assert entity.current_option == "middle"
-    assert entity.options == ["low", "middle", "high"]
-    await entity.async_select_option("high")
+    assert entity.options == ["dry", "low", "middle", "high"]
+    await entity.async_select_option("dry")
 
     coordinator.api.set_water_quantity.assert_called_once_with(
-        "ABC123456", "high"
+        "ABC123456", "dry"
+    )
+    coordinator.async_request_refresh.assert_awaited_once_with()
+
+
+@pytest.mark.asyncio
+async def test_fan_select_exposes_state_and_controls() -> None:
+    coordinator = _coordinator()
+    entity = EzvizFanSpeedSelect(coordinator, "ABC123456")
+
+    assert entity.translation_key == "fan_speed_control"
+    assert entity.current_option == "normal"
+    assert entity.options == ["quiet", "normal", "strong", "super"]
+    await entity.async_select_option("strong")
+
+    coordinator.api.set_fan_speed.assert_called_once_with(
+        "ABC123456", "strong"
     )
     coordinator.async_request_refresh.assert_awaited_once_with()
 

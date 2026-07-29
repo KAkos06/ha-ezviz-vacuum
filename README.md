@@ -94,7 +94,7 @@ following entities.
 
 ### Controls
 
-- water quantity: low, medium, or high;
+- water quantity: no mopping, low, medium, or high;
 - automatic carpet boost: on or off.
 
 ### Sensors

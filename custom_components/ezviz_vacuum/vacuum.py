@@ -47,6 +47,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     """An EZVIZ robot vacuum with verified controls."""
 
     _attr_name = None
+    _attr_translation_key = "ezviz_vacuum"
     _attr_supported_features = (
         VacuumEntityFeature.RETURN_HOME | VacuumEntityFeature.FAN_SPEED
     )

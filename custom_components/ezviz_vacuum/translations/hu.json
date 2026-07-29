@@ -38,6 +38,21 @@
     }
   },
   "entity": {
+    "vacuum": {
+      "ezviz_vacuum": {
+        "state_attributes": {
+          "fan_speed": {
+            "name": "Szívóerő",
+            "state": {
+              "quiet": "Csendes",
+              "normal": "Normál",
+              "strong": "Nagy teljesítményű",
+              "super": "Szuper erős"
+            }
+          }
+        }
+      }
+    },
     "sensor": {
       "battery": {"name": "Akkumulátor"},
       "task_state": {
@@ -103,9 +118,19 @@
       "water_quantity_control": {
         "name": "Vízmennyiség vezérlése",
         "state": {
+          "dry": "Nincs felmosás",
           "low": "Alacsony",
           "middle": "Közepes",
           "high": "Magas"
+        }
+      },
+      "fan_speed_control": {
+        "name": "Szívóerő vezérlése",
+        "state": {
+          "quiet": "Csendes",
+          "normal": "Normál",
+          "strong": "Nagy teljesítményű",
+          "super": "Szuper erős"
         }
       }
     },
