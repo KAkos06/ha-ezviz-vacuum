@@ -147,18 +147,21 @@ def test_clean_config_controls_preserve_all_other_fields(
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
-def test_carpet_turbo_uses_verified_feature_and_wrapper(client_class) -> None:
+@pytest.mark.parametrize("enabled", [True, False])
+def test_carpet_turbo_uses_verified_feature_and_wrapper(
+    client_class, enabled: bool
+) -> None:
     client = client_class.return_value
     client._request_json.return_value = {"meta": {"code": 200}}
     api = EzvizVacuumApi("user@example.com", "secret", "eu")
 
-    api.set_carpet_turbo("ABC123456", True)
+    api.set_carpet_turbo("ABC123456", enabled)
 
     client._request_json.assert_called_once_with(
         "PUT",
         "/v3/iot-feature/feature/ABC123456/SweepingRobot/0/"
         "SweeperCleanTask/CarpetTurboCleanSwitch",
-        json_body={"value": {"enabled": 1}},
+        json_body={"value": {"enabled": enabled}},
     )
     client.set_iot_feature.assert_not_called()
 

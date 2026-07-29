@@ -275,7 +275,7 @@ class EzvizVacuumApi:
             serial,
             "SweeperCleanTask",
             "CarpetTurboCleanSwitch",
-            {"value": {"enabled": int(enabled)}},
+            {"value": {"enabled": enabled}},
         )
 
     def _set_clean_config_value(
