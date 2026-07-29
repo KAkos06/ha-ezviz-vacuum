@@ -59,12 +59,6 @@ async def async_get_config_entry_diagnostics(
     }
     return {
         "entry": _redact(dict(entry.data)),
-        "mqtt_connected": coordinator.mqtt_connected,
-        "last_mqtt_event": (
-            coordinator.last_mqtt_event.isoformat()
-            if coordinator.last_mqtt_event
-            else None
-        ),
         "last_update_success": coordinator.last_update_success,
         "poll_interval_seconds": (
             coordinator.update_interval.total_seconds()

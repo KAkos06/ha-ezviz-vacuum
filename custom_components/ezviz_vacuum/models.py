@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import UTC, datetime, time, timedelta
+from datetime import datetime, time, timedelta
 from typing import Any
 
 from .const import SUPPORTED_CATEGORY
@@ -48,16 +48,6 @@ class VacuumData:
     rest_mode_enabled: bool | None
     rest_mode_start: str | None
     rest_mode_end: str | None
-
-
-@dataclass(frozen=True, slots=True)
-class MqttEvent:
-    """A redacted, normalized MQTT event."""
-
-    serial: str | None
-    event_type: str | None
-    payload_keys: tuple[str, ...]
-    received_at: datetime
 
 
 def _mapping(value: Any) -> Mapping[str, Any]:
@@ -286,21 +276,6 @@ def parse_vacuum_devices(response: Any) -> dict[str, VacuumData]:
         if parsed is not None:
             result[serial] = parsed
     return result
-
-
-def parse_mqtt_event(payload: Any) -> MqttEvent:
-    """Extract only routing metadata; never retain the raw payload."""
-
-    data = _mapping(payload)
-    ext = _mapping(data.get("ext"))
-    return MqttEvent(
-        serial=_text(ext.get("device_serial") or data.get("deviceSerial")),
-        event_type=_text(
-            ext.get("alert_type_code") or ext.get("alertType") or data.get("eventType")
-        ),
-        payload_keys=tuple(sorted(str(key) for key in data)),
-        received_at=datetime.now(UTC),
-    )
 
 
 def masked_serial(serial: str | None) -> str:

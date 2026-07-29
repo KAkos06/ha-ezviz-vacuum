@@ -14,7 +14,6 @@ After installation, you can see:
 - a return-to-dock command;
 - the name of the active map;
 - remaining values reported for the brushes, HEPA filter, mop, and sensors;
-- the status of the EZVIZ real-time notification connection.
 
 > [!IMPORTANT]
 > Starting, pausing, and resuming a cleaning task are not yet supported because
@@ -109,14 +108,11 @@ following entities.
 - side brush remaining value;
 - mop remaining value;
 - sensor cleaning remaining value;
-- time of the last real-time notification;
-- EZVIZ notification connection status.
 
 ### Binary sensors
 
 - charging;
 - online status;
-- real-time notification connection;
 - carpet turbo mode;
 - rest mode.
 
@@ -126,22 +122,13 @@ following entities.
 
 ## How quickly are states updated?
 
-The integration uses two update methods:
+The integration requests the current state from the EZVIZ cloud every 15
+seconds. A state change made with the EZVIZ app or the robot's physical buttons
+may therefore take up to approximately 15 seconds to appear in Home Assistant.
 
-1. **EZVIZ real-time notifications:** when the EZVIZ cloud sends a notification
-   about a state change, the integration requests the latest vacuum state
-   shortly afterward.
-2. **Fallback polling:** the integration requests the current state from the
-   EZVIZ cloud every 60 seconds, including while real-time notifications are
-   connected.
-
-You do not need your own MQTT broker or a Mosquitto installation. The
-integration connects directly to the EZVIZ cloud notification service.
-
-The RE5 Plus does not appear to send an EZVIZ notification for every setting
-change. Fan speed, water quantity, and rest-period changes may therefore take
-up to approximately one minute to appear. Cleaning, docking, charging, and
-error events use real-time notifications when the EZVIZ cloud provides them.
+The RE5 Plus did not send usable EZVIZ cloud MQTT notifications during
+controlled testing, so the integration intentionally uses polling only. You do
+not need an MQTT broker or a Mosquitto installation.
 
 ## Manual installation
 
@@ -205,8 +192,6 @@ code, or a complete raw API response.
 - EZVIZ may temporarily limit an account after too many requests.
 - Login flows requiring multi-factor authentication are not currently
   supported.
-- Complete real-time notification coverage for the RE5 Plus still needs to be
-  confirmed.
 
 ## Privacy
 

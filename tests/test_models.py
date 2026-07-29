@@ -8,7 +8,6 @@ from pathlib import Path
 
 from custom_components.ezviz_vacuum.models import (
     masked_serial,
-    parse_mqtt_event,
     parse_vacuum_devices,
     rest_mode_is_active,
     rest_mode_window,
@@ -111,10 +110,5 @@ def test_missing_invalid_and_non_vacuum() -> None:
     assert result["VAC"].charging is None
 
 
-def test_mqtt_is_redacted_to_metadata() -> None:
-    event = parse_mqtt_event(_fixture("mqtt_event.json"))
-    assert event.serial == "ABC123456"
-    assert event.event_type == "vacuum_state"
-    assert event.payload_keys == ("body", "ext")
-    assert not hasattr(event, "payload")
-    assert masked_serial(event.serial) == "ABC***456"
+def test_serial_is_masked() -> None:
+    assert masked_serial("ABC123456") == "ABC***456"

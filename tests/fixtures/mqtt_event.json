@@ -1,9 +1,0 @@
-{
-  "ext": {
-    "device_serial": "ABC123456",
-    "alert_type_code": "vacuum_state",
-    "msgId": "secret-message-id"
-  },
-  "body": {"unknown": "not retained"}
-}
-

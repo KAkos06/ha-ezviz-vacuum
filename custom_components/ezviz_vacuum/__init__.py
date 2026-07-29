@@ -56,7 +56,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: EzvizVacuumConfigEntry) 
     entry.runtime_data = EzvizVacuumRuntimeData(api, coordinator)
     _remove_obsolete_entities(hass, entry)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    await coordinator.async_start_mqtt()
     entry.async_on_unload(entry.add_update_listener(_async_reload_entry))
     return True
 
