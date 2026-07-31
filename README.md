@@ -123,7 +123,7 @@ while the robot is cleaning, paused, or returning to its dock. At other times it
 uses a 15-second interval. Successful Home Assistant commands are reflected
 immediately and then verified by the next cloud update.
 
-Pause and stop remain locked for 5 seconds after starting. While the robot is
+Pause and stop remain visible but disabled for 5 seconds after starting. While the robot is
 stopping, all adjustable controls remain locked until it docks. Changes made in
 the EZVIZ app or with the robot's physical controls are still detected by the
 active 3-second polling and update the available Home Assistant controls.

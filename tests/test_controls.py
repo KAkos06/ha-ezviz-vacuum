@@ -52,6 +52,7 @@ def _coordinator():
     coordinator.data = {"ABC123456": _data()}
     coordinator.last_update_success = True
     coordinator.task_controls_locked.return_value = False
+    coordinator.start_controls_locked.return_value = False
     coordinator.settings_locked.return_value = False
     coordinator.async_request_refresh = AsyncMock()
 
@@ -135,9 +136,11 @@ async def test_start_resumes_when_paused() -> None:
 async def test_task_commands_are_rejected_while_transition_is_locked() -> None:
     coordinator = _coordinator()
     coordinator.task_controls_locked.return_value = True
+    coordinator.start_controls_locked.return_value = True
     entity = EzvizVacuum(coordinator, "ABC123456")
 
-    assert entity.supported_features == VacuumEntityFeature.FAN_SPEED
+    assert entity.supported_features == entity._attr_supported_features
+    assert entity.available is False
     with pytest.raises(HomeAssistantError, match="temporarily locked"):
         await entity.async_pause()
     with pytest.raises(HomeAssistantError, match="temporarily locked"):

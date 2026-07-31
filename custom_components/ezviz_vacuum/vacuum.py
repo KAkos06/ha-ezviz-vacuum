@@ -64,13 +64,19 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         self._attr_unique_id = serial
 
     @property
+    def available(self) -> bool:
+        """Keep modal controls visible but disabled during the start lock."""
+
+        return super().available and not self.coordinator.start_controls_locked(
+            self.serial
+        )
+
+    @property
     def supported_features(self) -> VacuumEntityFeature:
         """Disable controls during protected task transitions."""
 
         if self.coordinator.settings_locked(self.serial):
             return VacuumEntityFeature(0)
-        if self.coordinator.task_controls_locked(self.serial):
-            return VacuumEntityFeature.FAN_SPEED
         return self._attr_supported_features
 
     @property

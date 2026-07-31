@@ -58,6 +58,11 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         data = self.data.get(serial)
         if data and normalize_task_state(data.task_state) == "stopping":
             return True
+        return self.start_controls_locked(serial)
+
+    def start_controls_locked(self, serial: str) -> bool:
+        """Return whether controls are in the brief post-start lock."""
+
         return self.hass.loop.time() < self._task_control_lock_until.get(serial, 0)
 
     def settings_locked(self, serial: str) -> bool:
