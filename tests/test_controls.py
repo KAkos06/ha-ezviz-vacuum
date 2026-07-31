@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -70,6 +71,39 @@ async def test_vacuum_controls_run_in_executor_and_refresh() -> None:
     coordinator.async_request_refresh.reset_mock()
     await entity.async_set_fan_speed("super")
     coordinator.api.set_fan_speed.assert_called_once_with("ABC123456", "super")
+    coordinator.async_request_refresh.assert_awaited_once_with()
+
+
+@pytest.mark.asyncio
+async def test_cleaning_controls_run_in_executor_and_refresh() -> None:
+    coordinator = _coordinator()
+    entity = EzvizVacuum(coordinator, "ABC123456")
+
+    await entity.async_start()
+    coordinator.api.start_cleaning.assert_called_once_with("ABC123456")
+
+    await entity.async_pause()
+    coordinator.api.pause.assert_called_once_with("ABC123456")
+
+    await entity.async_stop()
+    coordinator.api.stop_cleaning.assert_called_once_with("ABC123456")
+
+    assert coordinator.hass.async_add_executor_job.await_count == 3
+    assert coordinator.async_request_refresh.await_count == 3
+
+
+@pytest.mark.asyncio
+async def test_start_resumes_when_paused() -> None:
+    coordinator = _coordinator()
+    coordinator.data["ABC123456"] = replace(
+        coordinator.data["ABC123456"], task_state="paused", charging=False
+    )
+    entity = EzvizVacuum(coordinator, "ABC123456")
+
+    await entity.async_start()
+
+    coordinator.api.resume.assert_called_once_with("ABC123456")
+    coordinator.api.start_cleaning.assert_not_called()
     coordinator.async_request_refresh.assert_awaited_once_with()
 
 

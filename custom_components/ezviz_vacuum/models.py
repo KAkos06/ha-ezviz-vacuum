@@ -231,6 +231,8 @@ def parse_single_vacuum(
         battery = max(0, min(100, battery))
     charging = _boolean(current.get("inCharging"))
     task_state = _text(current.get("taskState"))
+    if task_state == "clean":
+        task_state = "cleaning"
     if not task_state and charging is not None:
         task_state = "docked" if charging else "idle"
 

@@ -11,13 +11,10 @@ After installation, you can see:
 - the current cleaning task;
 - the configured fan speed and water level;
 - controls for fan speed, water level, and automatic carpet boost;
+- controls to start, pause, resume, and stop cleaning;
 - a return-to-dock command;
 - the name of the active map;
 - remaining values reported for the brushes, HEPA filter, mop, and sensors;
-
-> [!IMPORTANT]
-> Starting, pausing, and resuming a cleaning task are not yet supported because
-> their cloud commands have not been verified for the targeted model.
 
 ## Supported device
 
@@ -88,6 +85,7 @@ following entities.
 - current activity, such as idle, cleaning, paused, returning, or docked;
 - availability;
 - current fan speed and fan-speed control;
+- start, pause, resume, and stop controls;
 - return-to-dock control;
 - reported error state.
 
@@ -185,7 +183,6 @@ code, or a complete raw API response.
 
 ## Current limitations
 
-- Starting, pausing, and resuming cleaning are not yet supported.
 - An internet connection is required.
 - The integration relies on a private, undocumented EZVIZ cloud API.
 - A future EZVIZ API change may temporarily break the integration.

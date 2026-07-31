@@ -71,6 +71,33 @@ def test_return_to_base_uses_verified_action_and_wrapper(client_class) -> None:
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
 @pytest.mark.parametrize(
+    ("method_name", "action"),
+    [
+        ("start_cleaning", "start"),
+        ("pause", "pause"),
+        ("resume", "resume"),
+        ("stop_cleaning", "stop"),
+    ],
+)
+def test_clean_controls_use_verified_action_and_wrapper(
+    client_class, method_name: str, action: str
+) -> None:
+    client = client_class.return_value
+    client._request_json.return_value = {"meta": {"code": 200}}
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    getattr(api, method_name)("abc123456")
+
+    client._request_json.assert_called_once_with(
+        "PUT",
+        "/v3/iot-feature/action/ABC123456/SweepingRobot/0/"
+        "SweeperCleanTask/CleanCtrl",
+        json_body={"value": {"action": action, "source": "mobile"}},
+    )
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+@pytest.mark.parametrize(
     ("method_name", "field", "new_value"),
     [
         ("set_fan_speed", "fanMode", "super"),

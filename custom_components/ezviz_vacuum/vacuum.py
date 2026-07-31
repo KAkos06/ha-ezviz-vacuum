@@ -50,7 +50,11 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     _attr_name = None
     _attr_translation_key = "ezviz_vacuum"
     _attr_supported_features = (
-        VacuumEntityFeature.RETURN_HOME | VacuumEntityFeature.FAN_SPEED
+        VacuumEntityFeature.START
+        | VacuumEntityFeature.PAUSE
+        | VacuumEntityFeature.STOP
+        | VacuumEntityFeature.RETURN_HOME
+        | VacuumEntityFeature.FAN_SPEED
     )
 
     def __init__(self, coordinator, serial: str) -> None:
@@ -83,6 +87,29 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     @property
     def fan_speed_list(self) -> list[str]:
         return list(FAN_SPEEDS)
+
+    async def async_start(self) -> None:
+        """Start a task, or resume it when the robot is paused."""
+
+        command = (
+            self.coordinator.api.resume
+            if self.activity is VacuumActivity.PAUSED
+            else self.coordinator.api.start_cleaning
+        )
+        await self._async_execute_command(command, self.serial)
+
+    async def async_pause(self) -> None:
+        """Pause the current cleaning task."""
+
+        await self._async_execute_command(self.coordinator.api.pause, self.serial)
+
+    async def async_stop(self, **kwargs) -> None:
+        """Stop the current cleaning task."""
+
+        del kwargs
+        await self._async_execute_command(
+            self.coordinator.api.stop_cleaning, self.serial
+        )
 
     async def async_return_to_base(self, **kwargs) -> None:
         del kwargs

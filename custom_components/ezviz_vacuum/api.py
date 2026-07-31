@@ -93,13 +93,35 @@ class EzvizVacuumApi:
             session.close()
 
     def start_cleaning(self, serial: str) -> None:
-        raise NotImplementedError
+        """Start a new whole-home cleaning task."""
+
+        self._clean_control(serial, "start")
 
     def pause(self, serial: str) -> None:
-        raise NotImplementedError
+        """Pause the active cleaning task."""
+
+        self._clean_control(serial, "pause")
 
     def resume(self, serial: str) -> None:
-        raise NotImplementedError
+        """Resume the paused cleaning task."""
+
+        self._clean_control(serial, "resume")
+
+    def stop_cleaning(self, serial: str) -> None:
+        """Stop the active cleaning task."""
+
+        self._clean_control(serial, "stop")
+
+    def _clean_control(self, serial: str, action: str) -> None:
+        """Send a verified cleaning-task control command."""
+
+        self._put_iot_value(
+            IOT_ACTION_ENDPOINT,
+            serial,
+            "SweeperCleanTask",
+            "CleanCtrl",
+            {"value": {"action": action, "source": "mobile"}},
+        )
 
     def return_to_base(self, serial: str) -> None:
         """Send the robot back to its charging dock."""

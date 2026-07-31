@@ -39,6 +39,10 @@ def test_ezviz_clean_activity_is_cleaning() -> None:
 def test_verified_features_and_fan_speeds() -> None:
     entity = _entity("docked.json")
     assert entity.supported_features == (
-        VacuumEntityFeature.RETURN_HOME | VacuumEntityFeature.FAN_SPEED
+        VacuumEntityFeature.START
+        | VacuumEntityFeature.PAUSE
+        | VacuumEntityFeature.STOP
+        | VacuumEntityFeature.RETURN_HOME
+        | VacuumEntityFeature.FAN_SPEED
     )
     assert entity.fan_speed_list == list(FAN_SPEEDS)
