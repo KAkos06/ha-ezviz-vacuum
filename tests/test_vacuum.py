@@ -26,6 +26,7 @@ def _entity(fixture: str) -> EzvizVacuum:
     coordinator.data = devices
     coordinator.last_update_success = True
     coordinator.task_controls_locked.return_value = False
+    coordinator.start_controls_locked.return_value = False
     coordinator.settings_locked.return_value = False
     return EzvizVacuum(coordinator, "ABC123456")
 
@@ -71,3 +72,11 @@ def test_verified_features_and_fan_speeds() -> None:
         | VacuumEntityFeature.FAN_SPEED
     )
     assert entity.fan_speed_list == list(FAN_SPEEDS)
+
+
+def test_start_lock_keeps_features_but_disables_entity() -> None:
+    entity = _entity("cleaning.json")
+    entity.coordinator.start_controls_locked.return_value = True
+
+    assert entity.supported_features == entity._attr_supported_features
+    assert entity.available is False
