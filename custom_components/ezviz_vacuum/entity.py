@@ -45,7 +45,7 @@ class EzvizVacuumEntity(CoordinatorEntity[EzvizVacuumCoordinator]):
         )
 
     async def _async_execute_command(
-        self, command: Callable[..., None], *args: Any
+        self, command: Callable[..., None], *args: Any, refresh: bool = True
     ) -> None:
         """Run a blocking cloud command and refresh only after success."""
 
@@ -53,4 +53,5 @@ class EzvizVacuumEntity(CoordinatorEntity[EzvizVacuumCoordinator]):
             await self.coordinator.hass.async_add_executor_job(command, *args)
         except EzvizVacuumError as err:
             raise HomeAssistantError(str(err)) from err
-        await self.coordinator.async_request_refresh()
+        if refresh:
+            await self.coordinator.async_request_refresh()

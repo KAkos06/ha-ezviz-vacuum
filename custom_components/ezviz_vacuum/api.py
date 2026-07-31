@@ -123,17 +123,6 @@ class EzvizVacuumApi:
             {"value": {"action": action, "source": "mobile"}},
         )
 
-    def return_to_base(self, serial: str) -> None:
-        """Send the robot back to its charging dock."""
-
-        self._put_iot_value(
-            IOT_ACTION_ENDPOINT,
-            serial,
-            "SweeperTaskMgr",
-            "RechargeCtrl",
-            {"value": {"action": "start"}},
-        )
-
     def set_fan_speed(self, serial: str, fan_speed: str) -> None:
         """Set the fan mode while preserving the rest of StdCleanCfg."""
 

@@ -12,6 +12,19 @@ from .const import SUPPORTED_CATEGORY
 
 _LOGGER = logging.getLogger(__name__)
 
+ACTIVE_TASK_STATES = frozenset(
+    {
+        "clean",
+        "cleaning",
+        "pause",
+        "paused",
+        "cleanpause",
+        "returning",
+        "goinghome",
+        "docking",
+    }
+)
+
 
 @dataclass(frozen=True, slots=True)
 class ConsumableData:
@@ -93,6 +106,25 @@ def _setting_boolean(value: Any) -> bool | None:
 
 def _text(value: Any) -> str | None:
     return str(value) if value not in (None, "") else None
+
+
+def normalize_task_state(value: str | None) -> str | None:
+    """Normalize a cloud task state for comparisons and HA mapping."""
+
+    if value is None:
+        return None
+    normalized = value.strip().lower().replace("_", "").replace("-", "")
+    return {
+        "clean": "cleaning",
+        "cleanpause": "paused",
+        "pause": "paused",
+    }.get(normalized, normalized)
+
+
+def task_state_is_active(value: str | None) -> bool:
+    """Return whether a task benefits from fast state polling."""
+
+    return normalize_task_state(value) in ACTIVE_TASK_STATES
 
 
 def _clock_time(value: Any) -> time | None:
@@ -230,11 +262,11 @@ def parse_single_vacuum(
     if battery is not None:
         battery = max(0, min(100, battery))
     charging = _boolean(current.get("inCharging"))
-    task_state = _text(current.get("taskState"))
-    if task_state == "clean":
-        task_state = "cleaning"
-    if not task_state and charging is not None:
-        task_state = "docked" if charging else "idle"
+    task_state = normalize_task_state(_text(current.get("taskState")))
+    if charging is True:
+        task_state = "docked"
+    elif not task_state and charging is False:
+        task_state = "idle"
 
     return VacuumData(
         serial=serial,

@@ -16,6 +16,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import EzvizVacuumRuntimeData
 from .api import FAN_SPEEDS
 from .entity import EzvizVacuumEntity
+from .models import normalize_task_state
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,7 +54,6 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         VacuumEntityFeature.START
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
-        | VacuumEntityFeature.RETURN_HOME
         | VacuumEntityFeature.FAN_SPEED
     )
 
@@ -72,7 +72,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
             return VacuumActivity.DOCKED
         if not data.task_state:
             return VacuumActivity.IDLE
-        normalized = data.task_state.strip().lower().replace("_", "").replace("-", "")
+        normalized = normalize_task_state(data.task_state)
         activity = TASK_ACTIVITY_MAP.get(normalized)
         if activity is None:
             _LOGGER.debug("Unknown EZVIZ task state: %s", data.task_state)
@@ -96,25 +96,44 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
             if self.activity is VacuumActivity.PAUSED
             else self.coordinator.api.start_cleaning
         )
-        await self._async_execute_command(command, self.serial)
+        await self._async_execute_task_command(
+            command, optimistic_state="cleaning", charging=False
+        )
 
     async def async_pause(self) -> None:
         """Pause the current cleaning task."""
 
-        await self._async_execute_command(self.coordinator.api.pause, self.serial)
+        await self._async_execute_task_command(
+            self.coordinator.api.pause, optimistic_state="paused"
+        )
 
     async def async_stop(self, **kwargs) -> None:
         """Stop the current cleaning task."""
 
         del kwargs
-        await self._async_execute_command(
-            self.coordinator.api.stop_cleaning, self.serial
+        await self._async_execute_task_command(
+            self.coordinator.api.stop_cleaning,
+            optimistic_state="paused",
+            charging=False,
+            hold_until_docked=True,
         )
 
-    async def async_return_to_base(self, **kwargs) -> None:
-        del kwargs
-        await self._async_execute_command(
-            self.coordinator.api.return_to_base, self.serial
+    async def _async_execute_task_command(
+        self,
+        command,
+        *,
+        optimistic_state: str,
+        charging: bool | None = None,
+        hold_until_docked: bool = False,
+    ) -> None:
+        """Execute a task command and immediately reflect its expected state."""
+
+        await self._async_execute_command(command, self.serial, refresh=False)
+        self.coordinator.async_set_task_state(
+            self.serial,
+            optimistic_state,
+            charging=charging,
+            hold_until_docked=hold_until_docked,
         )
 
     async def async_set_fan_speed(self, fan_speed: str, **kwargs) -> None:

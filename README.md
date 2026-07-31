@@ -12,7 +12,6 @@ After installation, you can see:
 - the configured fan speed and water level;
 - controls for fan speed, water level, and automatic carpet boost;
 - controls to start, pause, resume, and stop cleaning;
-- a return-to-dock command;
 - the name of the active map;
 - remaining values reported for the brushes, HEPA filter, mop, and sensors;
 
@@ -86,7 +85,6 @@ following entities.
 - availability;
 - current fan speed and fan-speed control;
 - start, pause, resume, and stop controls;
-- return-to-dock control;
 - reported error state.
 
 ### Controls
@@ -120,9 +118,10 @@ following entities.
 
 ## How quickly are states updated?
 
-The integration requests the current state from the EZVIZ cloud every 15
-seconds. A state change made with the EZVIZ app or the robot's physical buttons
-may therefore take up to approximately 15 seconds to appear in Home Assistant.
+The integration requests the current state from the EZVIZ cloud every 3 seconds
+while the robot is cleaning, paused, or returning to its dock. At other times it
+uses a 15-second interval. Successful Home Assistant commands are reflected
+immediately and then verified by the next cloud update.
 
 The RE5 Plus did not send usable EZVIZ cloud MQTT notifications during
 controlled testing, so the integration intentionally uses polling only. You do

@@ -42,7 +42,6 @@ def test_verified_features_and_fan_speeds() -> None:
         VacuumEntityFeature.START
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
-        | VacuumEntityFeature.RETURN_HOME
         | VacuumEntityFeature.FAN_SPEED
     )
     assert entity.fan_speed_list == list(FAN_SPEEDS)

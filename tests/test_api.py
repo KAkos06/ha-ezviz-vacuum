@@ -53,23 +53,6 @@ def test_login_and_refresh_use_real_library_surface(client_class) -> None:
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
-def test_return_to_base_uses_verified_action_and_wrapper(client_class) -> None:
-    client = client_class.return_value
-    client._request_json.return_value = {"meta": {"code": 200}}
-    api = EzvizVacuumApi("user@example.com", "secret", "eu")
-
-    api.return_to_base("ABC123456")
-
-    client._request_json.assert_called_once_with(
-        "PUT",
-        "/v3/iot-feature/action/ABC123456/SweepingRobot/0/"
-        "SweeperTaskMgr/RechargeCtrl",
-        json_body={"value": {"action": "start"}},
-    )
-    client.set_iot_action.assert_not_called()
-
-
-@patch("custom_components.ezviz_vacuum.api.EzvizClient")
 @pytest.mark.parametrize(
     ("method_name", "action"),
     [
@@ -187,7 +170,7 @@ def test_command_errors_are_translated(client_class) -> None:
     api = EzvizVacuumApi("user@example.com", "secret", "eu")
 
     with pytest.raises(EzvizVacuumConnectionError):
-        api.return_to_base("ABC123456")
+        api.pause("ABC123456")
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
@@ -197,7 +180,7 @@ def test_requests_connection_errors_are_translated(client_class) -> None:
     api = EzvizVacuumApi("user@example.com", "secret", "eu")
 
     with pytest.raises(EzvizVacuumConnectionError):
-        api.return_to_base("ABC123456")
+        api.pause("ABC123456")
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
@@ -215,4 +198,4 @@ def test_rejected_command_exposes_only_safe_error_codes(client_class) -> None:
         EzvizVacuumError,
         match=r"API code 500, device code DEVICE_BUSY",
     ):
-        api.return_to_base("ABC123456")
+        api.pause("ABC123456")

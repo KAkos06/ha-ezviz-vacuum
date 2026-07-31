@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, call
 
 import pytest
 from homeassistant.exceptions import HomeAssistantError
@@ -64,11 +64,6 @@ async def test_vacuum_controls_run_in_executor_and_refresh() -> None:
     coordinator = _coordinator()
     entity = EzvizVacuum(coordinator, "ABC123456")
 
-    await entity.async_return_to_base()
-    coordinator.api.return_to_base.assert_called_once_with("ABC123456")
-    coordinator.async_request_refresh.assert_awaited_once_with()
-
-    coordinator.async_request_refresh.reset_mock()
     await entity.async_set_fan_speed("super")
     coordinator.api.set_fan_speed.assert_called_once_with("ABC123456", "super")
     coordinator.async_request_refresh.assert_awaited_once_with()
@@ -89,7 +84,27 @@ async def test_cleaning_controls_run_in_executor_and_refresh() -> None:
     coordinator.api.stop_cleaning.assert_called_once_with("ABC123456")
 
     assert coordinator.hass.async_add_executor_job.await_count == 3
-    assert coordinator.async_request_refresh.await_count == 3
+    assert coordinator.async_set_task_state.call_args_list == [
+        call(
+            "ABC123456",
+            "cleaning",
+            charging=False,
+            hold_until_docked=False,
+        ),
+        call(
+            "ABC123456",
+            "paused",
+            charging=None,
+            hold_until_docked=False,
+        ),
+        call(
+            "ABC123456",
+            "paused",
+            charging=False,
+            hold_until_docked=True,
+        ),
+    ]
+    coordinator.async_request_refresh.assert_not_awaited()
 
 
 @pytest.mark.asyncio
@@ -104,7 +119,13 @@ async def test_start_resumes_when_paused() -> None:
 
     coordinator.api.resume.assert_called_once_with("ABC123456")
     coordinator.api.start_cleaning.assert_not_called()
-    coordinator.async_request_refresh.assert_awaited_once_with()
+    coordinator.async_set_task_state.assert_called_once_with(
+        "ABC123456",
+        "cleaning",
+        charging=False,
+        hold_until_docked=False,
+    )
+    coordinator.async_request_refresh.assert_not_awaited()
 
 
 @pytest.mark.asyncio
@@ -155,10 +176,11 @@ async def test_carpet_turbo_switch_exposes_state_and_controls() -> None:
 @pytest.mark.asyncio
 async def test_failed_command_is_exposed_and_does_not_refresh() -> None:
     coordinator = _coordinator()
-    coordinator.api.return_to_base.side_effect = EzvizVacuumError("failed")
+    coordinator.api.pause.side_effect = EzvizVacuumError("failed")
     entity = EzvizVacuum(coordinator, "ABC123456")
 
     with pytest.raises(HomeAssistantError, match="failed"):
-        await entity.async_return_to_base()
+        await entity.async_pause()
 
     coordinator.async_request_refresh.assert_not_awaited()
+    coordinator.async_set_task_state.assert_not_called()

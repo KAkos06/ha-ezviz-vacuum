@@ -85,6 +85,18 @@ def test_parse_cleaning_and_types() -> None:
     assert vacuum.task_id == 42
 
 
+def test_clean_pause_is_normalized_to_paused() -> None:
+    response = _fixture("cleaning.json")
+    current = response["ABC123456"]["FEATURE_INFO"]["0"]["SweepingRobot"][
+        "SweeperTaskMgr"
+    ]["CurrentTask"]
+    current["taskState"] = "cleanPause"
+
+    vacuum = parse_vacuum_devices(response)["ABC123456"]
+
+    assert vacuum.task_state == "paused"
+
+
 def test_missing_invalid_and_non_vacuum() -> None:
     response = {
         "VAC": {
