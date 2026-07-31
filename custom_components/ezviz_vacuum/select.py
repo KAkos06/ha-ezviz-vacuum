@@ -46,7 +46,12 @@ class EzvizWaterQuantitySelect(EzvizVacuumEntity, SelectEntity):
             return None
         return data.water_quantity
 
+    @property
+    def available(self) -> bool:
+        return super().available and not self.coordinator.settings_locked(self.serial)
+
     async def async_select_option(self, option: str) -> None:
+        self._ensure_settings_unlocked()
         await self._async_execute_command(
             self.coordinator.api.set_water_quantity, self.serial, option
         )
@@ -69,7 +74,12 @@ class EzvizFanSpeedSelect(EzvizVacuumEntity, SelectEntity):
             return None
         return data.fan_speed
 
+    @property
+    def available(self) -> bool:
+        return super().available and not self.coordinator.settings_locked(self.serial)
+
     async def async_select_option(self, option: str) -> None:
+        self._ensure_settings_unlocked()
         await self._async_execute_command(
             self.coordinator.api.set_fan_speed, self.serial, option
         )

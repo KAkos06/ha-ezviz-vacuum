@@ -39,6 +39,10 @@ class EzvizCarpetTurboSwitch(EzvizVacuumEntity, SwitchEntity):
         data = self.vacuum_data
         return data.carpet_turbo_enabled if data else None
 
+    @property
+    def available(self) -> bool:
+        return super().available and not self.coordinator.settings_locked(self.serial)
+
     async def async_turn_on(self, **kwargs: Any) -> None:
         del kwargs
         await self._async_set_enabled(True)
@@ -48,6 +52,7 @@ class EzvizCarpetTurboSwitch(EzvizVacuumEntity, SwitchEntity):
         await self._async_set_enabled(False)
 
     async def _async_set_enabled(self, enabled: bool) -> None:
+        self._ensure_settings_unlocked()
         await self._async_execute_command(
             self.coordinator.api.set_carpet_turbo, self.serial, enabled
         )

@@ -40,6 +40,9 @@
   "entity": {
     "vacuum": {
       "ezviz_vacuum": {
+        "state": {
+          "stopping": "Leállítás"
+        },
         "state_attributes": {
           "fan_speed": {
             "name": "Szívóerő",
@@ -61,6 +64,7 @@
           "cleaning": "Takarítás",
           "paused": "Szüneteltetve",
           "pause": "Szüneteltetve",
+          "stopping": "Leállítás",
           "returning": "Visszatérés a dokkolóhoz",
           "goinghome": "Visszatérés a dokkolóhoz",
           "going_home": "Visszatérés a dokkolóhoz",

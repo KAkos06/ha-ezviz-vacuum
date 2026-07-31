@@ -56,6 +56,7 @@ async def test_active_task_uses_fast_polling(hass) -> None:
 
     assert coordinator.update_interval == timedelta(seconds=3)
     assert coordinator.update_interval == ACTIVE_POLL_INTERVAL
+    coordinator._release_task_control_lock("ABC123456")
 
 
 async def test_command_state_is_immediate_and_survives_stale_cloud_data(
@@ -73,6 +74,10 @@ async def test_command_state_is_immediate_and_survives_stale_cloud_data(
     assert coordinator.data["ABC123456"].task_state == "cleaning"
     assert coordinator.data["ABC123456"].charging is False
     assert coordinator.update_interval == ACTIVE_POLL_INTERVAL
+    assert coordinator.task_controls_locked("ABC123456") is True
+
+    coordinator._release_task_control_lock("ABC123456")
+    assert coordinator.task_controls_locked("ABC123456") is False
 
     await coordinator.async_refresh()
 
@@ -81,7 +86,7 @@ async def test_command_state_is_immediate_and_survives_stale_cloud_data(
     assert coordinator.update_interval == ACTIVE_POLL_INTERVAL
 
 
-async def test_stop_stays_paused_until_charging_confirms_docking(hass) -> None:
+async def test_stop_stays_stopping_until_charging_confirms_docking(hass) -> None:
     api = MagicMock()
     api.refresh.return_value = _devices("cleaning.json")
     coordinator = _coordinator(hass, api)
@@ -89,7 +94,7 @@ async def test_stop_stays_paused_until_charging_confirms_docking(hass) -> None:
 
     coordinator.async_set_task_state(
         "ABC123456",
-        "paused",
+        "stopping",
         charging=False,
         hold_until_docked=True,
     )
@@ -103,7 +108,7 @@ async def test_stop_stays_paused_until_charging_confirms_docking(hass) -> None:
 
     await coordinator.async_refresh()
 
-    assert coordinator.data["ABC123456"].task_state == "paused"
+    assert coordinator.data["ABC123456"].task_state == "stopping"
 
     task_state, charging, _, hold = coordinator._command_task_states[
         "ABC123456"
@@ -120,3 +125,55 @@ async def test_stop_stays_paused_until_charging_confirms_docking(hass) -> None:
 
     assert coordinator.data["ABC123456"].task_state == "docked"
     assert "ABC123456" not in coordinator._command_task_states
+
+
+async def test_remote_pause_overrides_started_state_after_transition(hass) -> None:
+    api = MagicMock()
+    api.refresh.return_value = _devices("cleaning.json")
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    coordinator._release_task_control_lock("ABC123456")
+    coordinator.async_set_task_state("ABC123456", "cleaning", charging=False)
+    coordinator._release_task_control_lock("ABC123456")
+    coordinator._command_task_states["ABC123456"] = (
+        "cleaning",
+        False,
+        0,
+        False,
+    )
+    api.refresh.return_value = {
+        "ABC123456": replace(
+            api.refresh.return_value["ABC123456"], task_state="paused"
+        )
+    }
+
+    await coordinator.async_refresh()
+
+    assert coordinator.data["ABC123456"].task_state == "paused"
+    assert coordinator.task_controls_locked("ABC123456") is False
+
+
+async def test_remote_start_overrides_stopping_and_relocks_controls(hass) -> None:
+    api = MagicMock()
+    api.refresh.return_value = _devices("cleaning.json")
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    coordinator._release_task_control_lock("ABC123456")
+    coordinator.async_set_task_state(
+        "ABC123456",
+        "stopping",
+        charging=False,
+        hold_until_docked=True,
+    )
+    coordinator._command_task_states["ABC123456"] = (
+        "stopping",
+        False,
+        0,
+        True,
+    )
+
+    await coordinator.async_refresh()
+
+    assert coordinator.data["ABC123456"].task_state == "cleaning"
+    assert coordinator.task_controls_locked("ABC123456") is True
+    coordinator._release_task_control_lock("ABC123456")

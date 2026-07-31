@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import cast
 
 from homeassistant.components.vacuum import (
     StateVacuumEntity,
@@ -26,6 +27,7 @@ TASK_ACTIVITY_MAP: dict[str, VacuumActivity] = {
     "cleaning": VacuumActivity.CLEANING,
     "paused": VacuumActivity.PAUSED,
     "pause": VacuumActivity.PAUSED,
+    "stopping": cast(VacuumActivity, "stopping"),
     "returning": VacuumActivity.RETURNING,
     "goinghome": VacuumActivity.RETURNING,
     "docking": VacuumActivity.RETURNING,
@@ -62,6 +64,16 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         self._attr_unique_id = serial
 
     @property
+    def supported_features(self) -> VacuumEntityFeature:
+        """Disable controls during protected task transitions."""
+
+        if self.coordinator.settings_locked(self.serial):
+            return VacuumEntityFeature(0)
+        if self.coordinator.task_controls_locked(self.serial):
+            return VacuumEntityFeature.FAN_SPEED
+        return self._attr_supported_features
+
+    @property
     def activity(self) -> VacuumActivity | None:
         data = self.vacuum_data
         if not data or not data.available:
@@ -91,6 +103,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     async def async_start(self) -> None:
         """Start a task, or resume it when the robot is paused."""
 
+        self._ensure_task_controls_unlocked()
         command = (
             self.coordinator.api.resume
             if self.activity is VacuumActivity.PAUSED
@@ -103,6 +116,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     async def async_pause(self) -> None:
         """Pause the current cleaning task."""
 
+        self._ensure_task_controls_unlocked()
         await self._async_execute_task_command(
             self.coordinator.api.pause, optimistic_state="paused"
         )
@@ -111,9 +125,10 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         """Stop the current cleaning task."""
 
         del kwargs
+        self._ensure_task_controls_unlocked()
         await self._async_execute_task_command(
             self.coordinator.api.stop_cleaning,
-            optimistic_state="paused",
+            optimistic_state="stopping",
             charging=False,
             hold_until_docked=True,
         )
@@ -138,6 +153,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
 
     async def async_set_fan_speed(self, fan_speed: str, **kwargs) -> None:
         del kwargs
+        self._ensure_settings_unlocked()
         await self._async_execute_command(
             self.coordinator.api.set_fan_speed, self.serial, fan_speed
         )

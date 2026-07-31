@@ -6,6 +6,7 @@ from dataclasses import replace
 from unittest.mock import AsyncMock, MagicMock, call
 
 import pytest
+from homeassistant.components.vacuum import VacuumEntityFeature
 from homeassistant.exceptions import HomeAssistantError
 
 from custom_components.ezviz_vacuum.api import EzvizVacuumError
@@ -50,6 +51,8 @@ def _coordinator():
     coordinator = MagicMock()
     coordinator.data = {"ABC123456": _data()}
     coordinator.last_update_success = True
+    coordinator.task_controls_locked.return_value = False
+    coordinator.settings_locked.return_value = False
     coordinator.async_request_refresh = AsyncMock()
 
     async def execute(command, *args):
@@ -99,7 +102,7 @@ async def test_cleaning_controls_run_in_executor_and_refresh() -> None:
         ),
         call(
             "ABC123456",
-            "paused",
+            "stopping",
             charging=False,
             hold_until_docked=True,
         ),
@@ -126,6 +129,42 @@ async def test_start_resumes_when_paused() -> None:
         hold_until_docked=False,
     )
     coordinator.async_request_refresh.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_task_commands_are_rejected_while_transition_is_locked() -> None:
+    coordinator = _coordinator()
+    coordinator.task_controls_locked.return_value = True
+    entity = EzvizVacuum(coordinator, "ABC123456")
+
+    assert entity.supported_features == VacuumEntityFeature.FAN_SPEED
+    with pytest.raises(HomeAssistantError, match="temporarily locked"):
+        await entity.async_pause()
+    with pytest.raises(HomeAssistantError, match="temporarily locked"):
+        await entity.async_stop()
+
+    coordinator.api.pause.assert_not_called()
+    coordinator.api.stop_cleaning.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_all_controls_are_disabled_while_stopping() -> None:
+    coordinator = _coordinator()
+    coordinator.settings_locked.return_value = True
+    coordinator.task_controls_locked.return_value = True
+    vacuum = EzvizVacuum(coordinator, "ABC123456")
+    water = EzvizWaterQuantitySelect(coordinator, "ABC123456")
+    carpet = EzvizCarpetTurboSwitch(coordinator, "ABC123456")
+
+    assert vacuum.supported_features == VacuumEntityFeature(0)
+    assert water.available is False
+    assert carpet.available is False
+    with pytest.raises(HomeAssistantError, match="locked while stopping"):
+        await vacuum.async_set_fan_speed("normal")
+    with pytest.raises(HomeAssistantError, match="locked while stopping"):
+        await water.async_select_option("low")
+    with pytest.raises(HomeAssistantError, match="locked while stopping"):
+        await carpet.async_turn_off()
 
 
 @pytest.mark.asyncio

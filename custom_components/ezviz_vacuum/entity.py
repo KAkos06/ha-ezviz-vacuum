@@ -44,6 +44,18 @@ class EzvizVacuumEntity(CoordinatorEntity[EzvizVacuumCoordinator]):
             sw_version=data.firmware if data else None,
         )
 
+    def _ensure_task_controls_unlocked(self) -> None:
+        """Reject task commands while a transition lock is active."""
+
+        if self.coordinator.task_controls_locked(self.serial):
+            raise HomeAssistantError("Vacuum task controls are temporarily locked")
+
+    def _ensure_settings_unlocked(self) -> None:
+        """Reject setting changes while the vacuum is stopping."""
+
+        if self.coordinator.settings_locked(self.serial):
+            raise HomeAssistantError("Vacuum settings are locked while stopping")
+
     async def _async_execute_command(
         self, command: Callable[..., None], *args: Any, refresh: bool = True
     ) -> None:

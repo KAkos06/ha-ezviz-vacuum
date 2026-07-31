@@ -44,6 +44,9 @@
   "entity": {
     "vacuum": {
       "ezviz_vacuum": {
+        "state": {
+          "stopping": "Stopping"
+        },
         "state_attributes": {
           "fan_speed": {
             "name": "Suction power",
@@ -65,6 +68,7 @@
           "cleaning": "Cleaning",
           "paused": "Paused",
           "pause": "Paused",
+          "stopping": "Stopping",
           "returning": "Returning to dock",
           "goinghome": "Returning to dock",
           "going_home": "Returning to dock",

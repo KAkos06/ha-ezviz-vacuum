@@ -19,6 +19,7 @@ ACTIVE_TASK_STATES = frozenset(
         "pause",
         "paused",
         "cleanpause",
+        "stopping",
         "returning",
         "goinghome",
         "docking",

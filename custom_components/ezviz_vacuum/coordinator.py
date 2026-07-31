@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import replace
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import EzvizVacuumApi, EzvizVacuumAuthError, EzvizVacuumError
@@ -16,6 +18,7 @@ from .const import (
     COMMAND_TRANSITION_GRACE_SECONDS,
     DEFAULT_POLL_INTERVAL,
     DOMAIN,
+    START_CONTROL_LOCK_SECONDS,
 )
 from .models import (
     VacuumData,
@@ -46,6 +49,48 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         self._command_task_states: dict[
             str, tuple[str, bool | None, float, bool]
         ] = {}
+        self._task_control_lock_until: dict[str, float] = {}
+        self._task_control_lock_unsubs: dict[str, Callable[[], None]] = {}
+
+    def task_controls_locked(self, serial: str) -> bool:
+        """Return whether task commands must currently be rejected."""
+
+        data = self.data.get(serial)
+        if data and normalize_task_state(data.task_state) == "stopping":
+            return True
+        return self.hass.loop.time() < self._task_control_lock_until.get(serial, 0)
+
+    def settings_locked(self, serial: str) -> bool:
+        """Return whether all adjustable controls are locked while stopping."""
+
+        data = self.data.get(serial)
+        return bool(data and normalize_task_state(data.task_state) == "stopping")
+
+    def _set_start_control_lock(self, serial: str, task_state: str) -> None:
+        """Lock pause and stop briefly after a successful start command."""
+
+        if unsub := self._task_control_lock_unsubs.pop(serial, None):
+            unsub()
+        self._task_control_lock_until.pop(serial, None)
+        if normalize_task_state(task_state) != "cleaning":
+            return
+
+        self._task_control_lock_until[serial] = (
+            self.hass.loop.time() + START_CONTROL_LOCK_SECONDS
+        )
+        self._task_control_lock_unsubs[serial] = async_call_later(
+            self.hass,
+            START_CONTROL_LOCK_SECONDS,
+            lambda _now: self._release_task_control_lock(serial),
+        )
+
+    def _release_task_control_lock(self, serial: str) -> None:
+        """Unlock controls and update the entity without waiting for a poll."""
+
+        if unsub := self._task_control_lock_unsubs.pop(serial, None):
+            unsub()
+        self._task_control_lock_until.pop(serial, None)
+        self.async_update_listeners()
 
     def _set_poll_interval(self, devices: dict[str, VacuumData]) -> None:
         """Poll quickly only while a robot has an active task."""
@@ -82,6 +127,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             self.hass.loop.time() + COMMAND_TRANSITION_GRACE_SECONDS,
             hold_until_docked,
         )
+        self._set_start_control_lock(serial, task_state)
         # Every task command gets one quick verification, including stop.
         self.update_interval = ACTIVE_POLL_INTERVAL
         self.async_set_updated_data(devices)
@@ -131,8 +177,20 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
 
             # Allow a physical pause/resume after stale transition data has passed.
             elif now >= transition_until:
-                if command_state == "cleaning" and cloud_state == "paused":
+                if command_state == "stopping" and cloud_state == "cleaning":
+                    command_state = "cleaning"
+                    charging = False
+                    hold_until_docked = False
+                    transition_until = now + COMMAND_TRANSITION_GRACE_SECONDS
+                    self._command_task_states[serial] = (
+                        command_state,
+                        charging,
+                        transition_until,
+                        hold_until_docked,
+                    )
+                elif command_state == "cleaning" and cloud_state == "paused":
                     command_state = "paused"
+                    transition_until = now + COMMAND_TRANSITION_GRACE_SECONDS
                     self._command_task_states[serial] = (
                         command_state,
                         charging,
@@ -141,6 +199,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                     )
                 elif command_state == "paused" and cloud_state == "cleaning":
                     command_state = "cleaning"
+                    transition_until = now + COMMAND_TRANSITION_GRACE_SECONDS
                     self._command_task_states[serial] = (
                         command_state,
                         charging,
@@ -160,6 +219,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         return merged
 
     async def _async_update_data(self) -> dict[str, VacuumData]:
+        previous = self.data or {}
         try:
             devices = await self.hass.async_add_executor_job(self.api.refresh)
         except EzvizVacuumAuthError as err:
@@ -167,5 +227,24 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         except EzvizVacuumError as err:
             raise UpdateFailed(str(err)) from err
         devices = self._merge_command_task_states(devices)
+        for serial, data in devices.items():
+            previous_data = previous.get(serial)
+            if task_state_is_active(data.task_state) and (
+                normalize_task_state(data.task_state) == "cleaning"
+                and (
+                    previous_data is None
+                    or normalize_task_state(previous_data.task_state) != "cleaning"
+                )
+            ):
+                self._set_start_control_lock(serial, "cleaning")
         self._set_poll_interval(devices)
         return devices
+
+    async def async_shutdown(self) -> None:
+        """Cancel transition timers when the config entry unloads."""
+
+        for unsub in self._task_control_lock_unsubs.values():
+            unsub()
+        self._task_control_lock_unsubs.clear()
+        self._task_control_lock_until.clear()
+        await super().async_shutdown()
