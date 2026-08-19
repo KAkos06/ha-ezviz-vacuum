@@ -213,7 +213,17 @@ def _robot_data(raw_device: Mapping[str, Any]) -> Mapping[str, Any]:
     return _mapping(feature_info.get(SUPPORTED_CATEGORY))
 
 
-def _available(raw_device: Mapping[str, Any], info: Mapping[str, Any]) -> bool:
+def _available(
+    raw_device: Mapping[str, Any],
+    info: Mapping[str, Any],
+    robot: Mapping[str, Any],
+) -> bool:
+    # The pagelist API can keep returning cached device metadata and an online
+    # flag after a robot and its dock have lost power.  Do not treat that stale
+    # shell as available when the robot-specific feature data is absent.
+    if not robot:
+        return False
+
     status = _mapping(raw_device.get("STATUS"))
     status_options = _mapping(status.get("optionals"))
     connection = _mapping(raw_device.get("CONNECTION"))
@@ -274,7 +284,7 @@ def parse_single_vacuum(
         name=_text(info.get("name")) or "EZVIZ Vacuum",
         model=_text(info.get("deviceType") or info.get("model")),
         firmware=_text(info.get("version") or info.get("firmwareVersion")),
-        available=_available(raw_device, info),
+        available=_available(raw_device, info, robot),
         battery_level=battery,
         charging=charging,
         task_state=task_state,

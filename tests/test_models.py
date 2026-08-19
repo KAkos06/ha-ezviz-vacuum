@@ -77,6 +77,18 @@ def test_explicit_offline_status_wins_over_global_status() -> None:
     assert vacuum.available is False
 
 
+def test_missing_robot_data_is_unavailable_even_with_online_status() -> None:
+    response = _fixture("docked.json")
+    device = response["ABC123456"]
+    device["FEATURE_INFO"] = {}
+    device["STATUS"]["optionals"]["OnlineStatus"] = 1
+    device["deviceInfos"]["status"] = 1
+
+    vacuum = parse_vacuum_devices(response)["ABC123456"]
+
+    assert vacuum.available is False
+
+
 def test_parse_cleaning_and_types() -> None:
     vacuum = parse_vacuum_devices(_fixture("cleaning.json"))["ABC123456"]
     assert vacuum.battery_level == 72
