@@ -1,0 +1,250 @@
+{
+  "EdgeBrushWorkingTime": {
+    "identifier": "EdgeBrushWorkingTime",
+    "version": "v3.0",
+    "access": "rw",
+    "title": "\u8fb9\u5237\u5de5\u4f5c\u65f6\u95f4",
+    "sid": 3,
+    "schema": {
+      "properties": {
+        "used": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u5df2\u5de5\u4f5c\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        },
+        "rest": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u8fd8\u5269\u4f59\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        }
+      },
+      "required": [
+        "rest",
+        "used"
+      ],
+      "title": "\u8fb9\u5237\u5de5\u4f5c\u65f6\u95f4",
+      "type": "object"
+    }
+  },
+  "RotatingBrushWorkingTime": {
+    "identifier": "RotatingBrushWorkingTime",
+    "version": "v3.0",
+    "access": "rw",
+    "title": "\u6eda\u5237\u5de5\u4f5c\u65f6\u95f4",
+    "sid": 5,
+    "schema": {
+      "properties": {
+        "used": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u5df2\u5de5\u4f5c\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        },
+        "rest": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u8fd8\u5269\u4f59\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        }
+      },
+      "required": [
+        "rest",
+        "used"
+      ],
+      "title": "\u6eda\u5237\u5de5\u4f5c\u65f6\u95f4",
+      "type": "object"
+    }
+  },
+  "HepaWorkingTime": {
+    "identifier": "HepaWorkingTime",
+    "version": "v3.0",
+    "access": "rw",
+    "title": "\u6ee4\u7f51\u5de5\u4f5c\u65f6\u95f4",
+    "sid": 2,
+    "schema": {
+      "properties": {
+        "used": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u5df2\u5de5\u4f5c\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        },
+        "rest": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u8fd8\u5269\u4f59\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        }
+      },
+      "required": [
+        "rest",
+        "used"
+      ],
+      "title": "\u6ee4\u7f51\u5de5\u4f5c\u65f6\u95f4",
+      "type": "object"
+    }
+  },
+  "SensorWorkingTime": {
+    "identifier": "SensorWorkingTime",
+    "version": "v3.0",
+    "access": "rw",
+    "title": "\u4f20\u611f\u5668\u5de5\u4f5c\u65f6\u95f4",
+    "sid": 1,
+    "schema": {
+      "properties": {
+        "used": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u5df2\u5de5\u4f5c\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        },
+        "rest": {
+          "default": 0,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "\u8fd8\u5269\u4f59\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        }
+      },
+      "required": [
+        "rest",
+        "used"
+      ],
+      "title": "\u4f20\u611f\u5668\u5de5\u4f5c\u65f6\u95f4",
+      "type": "object"
+    }
+  },
+  "MopWorkingTime": {
+    "identifier": "MopWorkingTime",
+    "version": "v3.0",
+    "access": "rw",
+    "title": "\u62d6\u5e03\u5de5\u4f5c\u65f6\u95f4",
+    "sid": 4,
+    "schema": {
+      "properties": {
+        "used": {
+          "default": 0,
+          "title": "\u5df2\u5de5\u4f5c\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        },
+        "rest": {
+          "default": 0,
+          "title": "\u8fd8\u5269\u4f59\u591a\u5c11\u5c0f\u65f6",
+          "type": "integer",
+          "unit": "\u5c0f\u65f6"
+        }
+      },
+      "required": [
+        "rest",
+        "used"
+      ],
+      "title": "\u62d6\u5e03\u5de5\u4f5c\u65f6\u95f4",
+      "type": "object"
+    }
+  },
+  "ResetConsumableWorkingTime": {
+    "identifier": "ResetConsumableWorkingTime",
+    "sid": 2,
+    "version": "v3.0",
+    "direction": "Plt2Dev",
+    "title": "\u91cd\u7f6e\u8017\u6750\u5de5\u4f5c\u65f6\u95f4",
+    "input": {
+      "schema": {
+        "properties": {
+          "type": {
+            "default": "hepa",
+            "enum": [
+              "hepa",
+              "edgeBrush",
+              "rotatingBrush",
+              "mop",
+              "sensor",
+              "dustBag"
+            ],
+            "enumDesc": [
+              "\u6ee4\u7f51",
+              "\u8fb9\u5237",
+              "\u6eda\u5237",
+              "\u62d6\u5e03",
+              "\u4f20\u611f\u5668",
+              "\u5c18\u888b"
+            ],
+            "title": "\u8017\u6750\u7c7b\u578b",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "\u91cd\u7f6e\u8017\u6750\u5de5\u4f5c\u65f6\u95f4\u8f93\u5165",
+        "type": "object"
+      }
+    },
+    "output": {
+      "schema": {
+        "properties": {
+          "type": {
+            "default": "hepa",
+            "enum": [
+              "hepa",
+              "edgeBrush",
+              "rotatingBrush",
+              "mop",
+              "sensor"
+            ],
+            "enumDesc": [
+              "\u6ee4\u7f51",
+              "\u8fb9\u5237",
+              "\u6eda\u5237",
+              "\u62d6\u5e03",
+              "\u4f20\u611f\u5668"
+            ],
+            "title": "\u8017\u6750\u7c7b\u578b",
+            "type": "string"
+          },
+          "used": {
+            "default": 0,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "title": "\u5df2\u5de5\u4f5c\u591a\u5c11\u5c0f\u65f6",
+            "type": "integer",
+            "unit": "\u5c0f\u65f6"
+          },
+          "rest": {
+            "default": 0,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "title": "\u8fd8\u5269\u4f59\u591a\u5c11\u5c0f\u65f6",
+            "type": "integer",
+            "unit": "\u5c0f\u65f6"
+          }
+        },
+        "required": [
+          "rest",
+          "used",
+          "type"
+        ],
+        "title": "\u91cd\u7f6e\u8017\u6750\u5de5\u4f5c\u65f6\u95f4\u8f93\u51fa",
+        "type": "object"
+      }
+    }
+  }
+}

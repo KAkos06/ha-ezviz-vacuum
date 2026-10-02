@@ -1,4 +1,4 @@
-"""Verified consumable reset controls."""
+"""Consumable reset and body-cleaning acknowledgement controls."""
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.const import EntityCategory
@@ -27,6 +27,8 @@ class EzvizConsumableResetButton(EzvizVacuumEntity, ButtonEntity):
         field, _ = CONSUMABLES[kind]
         self._attr_translation_key = f"reset_{field}"
         self._attr_unique_id = f"{serial}_reset_{field}"
+        if kind == "sensor":
+            self._attr_icon = "mdi:broom"
 
     @property
     def available(self) -> bool:

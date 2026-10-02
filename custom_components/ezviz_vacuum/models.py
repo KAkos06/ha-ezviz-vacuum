@@ -29,7 +29,7 @@ ACTIVE_TASK_STATES = frozenset(
 
 @dataclass(frozen=True, slots=True)
 class ConsumableData:
-    """Raw consumable counters (the unit is not documented)."""
+    """Consumable counters in hours, as documented by the device API schema."""
 
     remaining: int | None
     used: int | None

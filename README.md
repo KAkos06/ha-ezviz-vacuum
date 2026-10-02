@@ -122,8 +122,9 @@ actions for the map currently in use. Each action changes only its own setting.
 - device-reported do not disturb mode.
 
 > [!NOTE]
-> EZVIZ does not clearly document the unit used for the consumable `rest`
-> values. The integration therefore displays them as raw values without a unit.
+> The captured device API schema documents accessory and sensor-cleaning
+> counters in hours. Remaining values use `rest`; `used` and `total_hours`
+> attributes provide the used time and the sum of the reported counters.
 
 ### Volume, area units and accessory resets
 
@@ -132,9 +133,10 @@ actions for the map currently in use. Each action changes only its own setting.
 - Separate reset buttons are provided for the main brush, HEPA filter, side
   brush and mop. A reset changes the robot's lifetime counter; use it after
   replacing the corresponding accessory.
-- Remaining accessory counters expose the reported `used` counter as a state
-  attribute. Sensor cleaning counters are readable, but their reset command
-  has not been verified and is not exposed.
+- The "Body cleaned" button acknowledges manual body/sensor cleaning and
+  resets its maintenance counter using the device schema's `sensor` type.
+  It does not run a physical cleaning operation. Used and remaining sensor
+  cleaning time are exposed as separate sensors in hours.
 
 These controls match captured mobile-app requests. A successful command
 invalidates the settings cache and triggers readback. The area display

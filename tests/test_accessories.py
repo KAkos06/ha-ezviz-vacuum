@@ -85,10 +85,10 @@ def test_invalid_volume_sends_no_request(client_class, value):
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
-def test_unverified_sensor_reset_sends_no_request(client_class):
+def test_unknown_reset_sends_no_request(client_class):
     api = EzvizVacuumApi("unused", "unused", "eu")
     with pytest.raises(EzvizVacuumError):
-        api.reset_consumable("ABC123456", "sensor")
+        api.reset_consumable("ABC123456", "unknown")
     client_class.return_value._request_json.assert_not_called()
 
 

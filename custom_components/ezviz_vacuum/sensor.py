@@ -89,6 +89,8 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         translation_key="hepa_remaining",
         entity_category=EntityCategory.DIAGNOSTIC,
         raw_counter=True,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
         value_fn=lambda data: data.hepa.remaining if data.hepa else None,
     ),
     EzvizSensorDescription(
@@ -96,6 +98,8 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         translation_key="main_brush_remaining",
         entity_category=EntityCategory.DIAGNOSTIC,
         raw_counter=True,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
         value_fn=lambda data: data.main_brush.remaining if data.main_brush else None,
     ),
     EzvizSensorDescription(
@@ -103,6 +107,8 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         translation_key="side_brush_remaining",
         entity_category=EntityCategory.DIAGNOSTIC,
         raw_counter=True,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
         value_fn=lambda data: data.side_brush.remaining if data.side_brush else None,
     ),
     EzvizSensorDescription(
@@ -110,6 +116,8 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         translation_key="mop_remaining",
         entity_category=EntityCategory.DIAGNOSTIC,
         raw_counter=True,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
         value_fn=lambda data: data.mop.remaining if data.mop else None,
     ),
     EzvizSensorDescription(
@@ -117,7 +125,18 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         translation_key="sensor_cleaning_remaining",
         entity_category=EntityCategory.DIAGNOSTIC,
         raw_counter=True,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
         value_fn=lambda data: data.sensors.remaining if data.sensors else None,
+    ),
+    EzvizSensorDescription(
+        key="sensor_cleaning_used",
+        translation_key="sensor_cleaning_used",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        raw_counter=True,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        value_fn=lambda data: data.sensors.used if data.sensors else None,
     ),
 )
 
@@ -158,12 +177,22 @@ class EzvizVacuumSensor(EzvizVacuumEntity, SensorEntity):
                 "side_brush_remaining": "side_brush",
                 "mop_remaining": "mop",
                 "sensor_cleaning_remaining": "sensors",
+                "sensor_cleaning_used": "sensors",
             }[self.entity_description.key]
             data = self.vacuum_data
             counter = getattr(data, field) if data else None
             return {
-                "source_field": "rest",
-                "unit_documented": False,
+                "source_field": (
+                    "used" if self.entity_description.key.endswith("_used") else "rest"
+                ),
+                "unit_documented": True,
                 "used": counter.used if counter else None,
+                "total_hours": (
+                    counter.used + counter.remaining
+                    if counter
+                    and counter.used is not None
+                    and counter.remaining is not None
+                    else None
+                ),
             }
         return None
