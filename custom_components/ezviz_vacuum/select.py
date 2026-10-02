@@ -5,10 +5,11 @@ from __future__ import annotations
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import EzvizVacuumRuntimeData
-from .api import FAN_SPEEDS, WATER_QUANTITIES
+from .api import AREA_UNITS, CLEAN_TIMES, FAN_SPEEDS, WATER_QUANTITIES
 from .entity import EzvizVacuumEntity
 
 
@@ -24,9 +25,43 @@ async def async_setup_entry(
             (
                 EzvizWaterQuantitySelect(coordinator, serial),
                 EzvizFanSpeedSelect(coordinator, serial),
+                EzvizCleanTimesSelect(coordinator, serial),
+                EzvizAreaUnitSelect(coordinator, serial),
             )
         )
     async_add_entities(entities)
+
+
+class EzvizAreaUnitSelect(EzvizVacuumEntity, SelectEntity):
+    """Control the area display preference reported by the robot."""
+
+    _attr_translation_key = "area_unit"
+    _attr_options = [unit.replace(".", "_") for unit in AREA_UNITS]
+
+    def __init__(self, coordinator, serial: str) -> None:
+        super().__init__(coordinator, serial)
+        self._attr_unique_id = f"{serial}_area_unit"
+
+    @property
+    def current_option(self) -> str | None:
+        data = self.vacuum_data
+        return (
+            data.area_unit.replace(".", "_")
+            if data and data.area_unit in AREA_UNITS
+            else None
+        )
+
+    @property
+    def available(self) -> bool:
+        return super().available and not self.coordinator.settings_locked(self.serial)
+
+    async def async_select_option(self, option: str) -> None:
+        self._ensure_settings_unlocked()
+        if option not in self.options:
+            raise HomeAssistantError("Unsupported area unit")
+        await self._async_execute_command(
+            self.coordinator.api.set_area_unit, self.serial, option.replace("_", ".")
+        )
 
 
 class EzvizWaterQuantitySelect(EzvizVacuumEntity, SelectEntity):
@@ -82,4 +117,34 @@ class EzvizFanSpeedSelect(EzvizVacuumEntity, SelectEntity):
         self._ensure_settings_unlocked()
         await self._async_execute_command(
             self.coordinator.api.set_fan_speed, self.serial, option
+        )
+
+
+class EzvizCleanTimesSelect(EzvizVacuumEntity, SelectEntity):
+    """Control the number of standard cleaning passes."""
+
+    _attr_translation_key = "clean_times_control"
+    _attr_options = [str(count) for count in CLEAN_TIMES]
+
+    def __init__(self, coordinator, serial: str) -> None:
+        super().__init__(coordinator, serial)
+        self._attr_unique_id = f"{serial}_clean_times_control"
+
+    @property
+    def current_option(self) -> str | None:
+        data = self.vacuum_data
+        if data is None or data.clean_times not in CLEAN_TIMES:
+            return None
+        return str(data.clean_times)
+
+    @property
+    def available(self) -> bool:
+        return super().available and not self.coordinator.settings_locked(self.serial)
+
+    async def async_select_option(self, option: str) -> None:
+        self._ensure_settings_unlocked()
+        if option not in self.options:
+            raise HomeAssistantError(f"Unsupported cleaning count: {option}")
+        await self._async_execute_command(
+            self.coordinator.api.set_clean_times, self.serial, int(option)
         )

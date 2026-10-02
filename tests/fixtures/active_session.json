@@ -1,0 +1,4482 @@
+{
+  "commands": [
+    {
+      "time": "2026-10-02T09:06:26.165656+00:00",
+      "operation": "0/SweeperCleanTask/CleanCtrl",
+      "request": {
+        "value": {
+          "action": "start",
+          "source": "mobile"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:24.884431+00:00",
+      "operation": "0/SweeperMapMgr/SetFanModeOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "fanMode": "super"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:37.979828+00:00",
+      "operation": "0/SweeperMapMgr/SetFanModeOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "fanMode": "strong"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:54.215321+00:00",
+      "operation": "0/SweeperMapMgr/SetFanModeOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "fanMode": "normal"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:06.946475+00:00",
+      "operation": "0/SweeperMapMgr/SetFanModeOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "fanMode": "quiet"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:15.730913+00:00",
+      "operation": "0/SweeperMapMgr/SetWaterQuantityOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "waterQuantity": "high"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:27.563058+00:00",
+      "operation": "0/SweeperMapMgr/SetWaterQuantityOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "waterQuantity": "middle"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:40.744963+00:00",
+      "operation": "0/SweeperMapMgr/SetWaterQuantityOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "waterQuantity": "low"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:50.948236+00:00",
+      "operation": "0/SweeperMapMgr/SetWaterQuantityOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "waterQuantity": "dry"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:01.072242+00:00",
+      "operation": "0/SweeperMapMgr/SetCleanTimesOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "cleanTimes": 2
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:09.467900+00:00",
+      "operation": "0/SweeperMapMgr/SetCleanTimesOfStdClean",
+      "request": {
+        "value": {
+          "mapID": 4,
+          "cleanTimes": 1
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:26.713125+00:00",
+      "operation": "0/SweeperCleanTask/CleanCtrl",
+      "request": {
+        "value": {
+          "action": "pause",
+          "source": "mobile"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:39.884213+00:00",
+      "operation": "0/SweeperCleanTask/CleanCtrl",
+      "request": {
+        "value": {
+          "action": "resume",
+          "source": "mobile"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:20.458967+00:00",
+      "operation": "0/SweeperCleanTask/CleanCtrl",
+      "request": {
+        "value": {
+          "action": "stop",
+          "source": "mobile"
+        }
+      },
+      "response": {
+        "meta": {
+          "code": 200,
+          "message": "success",
+          "moreInfo": {
+            "deviceMeta": {
+              "code": "0x00000000",
+              "errorMsg": "success"
+            }
+          }
+        },
+        "data": null
+      }
+    }
+  ],
+  "states": [
+    {
+      "time": "2026-10-02T09:06:01.837143+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:04.876122+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:07.905024+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:10.943741+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:13.971809+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:17.005622+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:20.041548+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:23.075824+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:26.218031+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 77,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:29.177016+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 2,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:32.209684+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 5,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:35.269532+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 8,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:38.272324+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 11,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:41.301514+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 14,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:44.334142+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 17,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:47.368639+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 20,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:50.401456+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 23,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:53.435178+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 26,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:56.465947+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 29,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:06:59.499371+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 32,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:02.535857+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 35,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:05.573577+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 38,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:08.600352+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 41,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:11.635922+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 44,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "",
+          "startType": "sweeperButton",
+          "status": "relocation",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 24.6299991607666,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:14.666942+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 1,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.10999999940395355,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:17.713206+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 4,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.10999999940395355,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:20.740750+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 7,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.18000000715255737,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:23.772175+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 10,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.25,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:26.817267+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 13,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.5600000023841858,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:29.839510+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 16,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.7400000095367432,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:32.875577+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 19,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 0.9599999785423279,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:35.906022+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 22,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.0099999904632568,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:38.946898+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 25,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.0800000429153442,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:41.977443+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 28,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.1299999952316284,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:45.036983+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 31,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.340000033378601,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:48.048042+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 34,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.3700000047683716,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:51.071233+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 37,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.559999942779541,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:54.114081+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 40,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 1.7200000286102295,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:07:57.142838+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 44,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.0399999618530273,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:00.186016+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 47,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.059999942779541,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:03.229727+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 50,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.0899999141693115,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:06.258269+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 52,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.0999999046325684,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:09.285818+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 55,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.140000104904175,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:12.319157+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 58,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.2300000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:15.370362+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 62,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.4200000762939453,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:18.404438+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 65,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.569999933242798,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:21.435879+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 68,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.809999942779541,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:24.471432+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 71,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 2.940000057220459,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:27.506965+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 74,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.0399999618530273,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:30.546105+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 77,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.109999895095825,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:33.576883+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 80,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.359999895095825,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:36.618081+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 83,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.4700000286102295,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:39.660238+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 86,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.559999942779541,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:42.700791+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 89,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.680000066757202,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:45.757252+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 92,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.75,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:48.790879+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 95,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 3.9100000858306885,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:51.821266+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 98,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.079999923706055,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:54.870361+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 101,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.150000095367432,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:08:57.912886+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 104,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.190000057220459,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:00.947566+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 107,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.360000133514404,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:03.978041+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 110,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.460000038146973,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:07.020105+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 113,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.5,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:10.042908+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 116,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.539999961853027,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:13.088948+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 120,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.760000228881836,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:16.126685+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 123,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.889999866485596,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:19.150995+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 126,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 4.929999828338623,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:22.186412+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 129,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:25.252827+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 132,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.019999980926514,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:28.280466+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 133,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "pause",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.050000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:31.303419+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 133,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "pause",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.050000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:34.336639+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 133,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "pause",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.050000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:37.371530+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 133,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "pause",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.050000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:40.416403+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 133,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "pause",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.050000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:43.427184+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 135,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.050000190734863,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:46.468754+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 138,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.059999942779541,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:49.488086+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 141,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.119999885559082,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:52.533271+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 144,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.139999866485596,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:55.558585+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 147,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.190000057220459,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:09:58.600876+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 150,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.260000228881836,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:01.625983+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 153,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.440000057220459,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:04.675774+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 156,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.5,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:07.714835+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 159,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.619999885559082,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:10.744767+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 162,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.659999847412109,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:13.863570+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 165,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.71999979019165,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:16.897756+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 168,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.769999980926514,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:19.927084+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "clean",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 172,
+        "relocationFailCount": 0,
+        "cleanTaskInfo": {
+          "cleanRange": "full",
+          "startType": "sweeperButton",
+          "status": "clean",
+          "cleanTimes": {
+            "total": 1,
+            "current": 1
+          },
+          "cleanArea": 5.789999961853027,
+          "mapName": "Active map"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:22.947694+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:25.967398+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:28.999288+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:32.032164+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:35.066263+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:38.102299+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:41.135435+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:44.167093+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:47.200321+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:50.232716+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:53.268420+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:56.299345+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:10:59.332859+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:02.366458+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:05.400605+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "recharge",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 0,
+        "isOnBasestation": 0,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "rechargeTaskInfo": {
+          "status": "backBase"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:08.435149+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:11.469127+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:14.516080+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:17.552321+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:20.594060+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:23.623599+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:26.672585+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:29.715129+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:32.812166+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:35.839825+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:38.878339+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:41.928659+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:44.955818+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:47.993223+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:51.030148+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:54.444962+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:11:57.444978+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:12:00.479085+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:12:03.519432+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:12:11.506679+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    },
+    {
+      "time": "2026-10-02T09:12:14.476681+00:00",
+      "data": {
+        "currentMapID": 4,
+        "taskID": 78,
+        "currentTask": "charging",
+        "preTask": "standby",
+        "pickup": false,
+        "exceptionCode": "",
+        "inDNDMode": false,
+        "inCharging": 1,
+        "isOnBasestation": 1,
+        "taskDuration": 0,
+        "relocationFailCount": 0,
+        "chargingTaskInfo": {
+          "status": "charging"
+        }
+      },
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      }
+    }
+  ]
+}

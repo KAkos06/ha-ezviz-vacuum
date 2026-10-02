@@ -1,0 +1,222 @@
+[
+  {
+    "action": "SetFanModeOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "fanMode": "strong"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetFanModeOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "fanMode": "normal"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetFanModeOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "fanMode": "quiet"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetWaterQuantityOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "waterQuantity": "high"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetWaterQuantityOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "waterQuantity": "middle"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetWaterQuantityOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "waterQuantity": "low"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetWaterQuantityOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "waterQuantity": "dry"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetCleanTimesOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "cleanTimes": 2
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetCleanTimesOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "cleanTimes": 1
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "action": "SetWaterQuantityOfStdClean",
+    "request": {
+      "value": {
+        "mapID": 4,
+        "waterQuantity": "low"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "message": "success",
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000",
+            "errorMsg": "success"
+          }
+        }
+      },
+      "data": null
+    }
+  }
+]

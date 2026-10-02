@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, time, timedelta
+from math import isfinite
 from typing import Any
 
 from .const import SUPPORTED_CATEGORY
@@ -62,6 +63,17 @@ class VacuumData:
     rest_mode_enabled: bool | None
     rest_mode_start: str | None
     rest_mode_end: str | None
+    clean_times: int | None = None
+    task_phase: str | None = None
+    task_duration: int | None = None
+    cleaned_area: float | None = None
+    clean_pass_current: int | None = None
+    clean_pass_total: int | None = None
+    on_base_station: bool | None = None
+    picked_up: bool | None = None
+    in_dnd_mode: bool | None = None
+    volume: int | None = None
+    area_unit: str | None = None
 
 
 def _mapping(value: Any) -> Mapping[str, Any]:
@@ -155,9 +167,7 @@ def rest_mode_window(
     elif start > end:
         start_date = today - timedelta(days=1) if current_time < end else today
     else:
-        start_date = (
-            today if current_time >= start else today - timedelta(days=1)
-        )
+        start_date = today if current_time >= start else today - timedelta(days=1)
 
     end_date = start_date if start < end else start_date + timedelta(days=1)
     timezone = current_datetime.tzinfo
@@ -197,10 +207,36 @@ def _consumable(value: Any) -> ConsumableData | None:
     return ConsumableData(_integer(data.get("rest")), _integer(data.get("used")))
 
 
-def _first_mapping(value: Any) -> Mapping[str, Any]:
+def _mapping_items(value: Any) -> list[Mapping[str, Any]]:
     if isinstance(value, list):
-        return next((item for item in value if isinstance(item, Mapping)), {})
-    return _mapping(value)
+        return [item for item in value if isinstance(item, Mapping)]
+    return [value] if isinstance(value, Mapping) else []
+
+
+def active_map_settings(
+    map_manager: Mapping[str, Any],
+) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
+    """Match standard settings to the map marked in use, regardless of order."""
+
+    maps = _mapping_items(map_manager.get("MapBasicProperty"))
+    active_maps = [item for item in maps if _boolean(item.get("inUse")) is True]
+    if len(active_maps) == 1:
+        active_map = active_maps[0]
+    elif len(maps) == 1:
+        active_map = maps[0]
+    else:
+        active_map = {}
+
+    configs = _mapping_items(map_manager.get("StdCleanCfg"))
+    map_id = _integer(active_map.get("mapID"))
+    if map_id is not None:
+        config = next(
+            (item for item in configs if _integer(item.get("mapID")) == map_id), {}
+        )
+        return active_map, config
+    if not maps and len(configs) == 1:
+        return {"mapID": configs[0].get("mapID")}, configs[0]
+    return active_map, {}
 
 
 def _robot_data(raw_device: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -262,8 +298,7 @@ def parse_single_vacuum(
     power = _mapping(robot.get("PowerMgr"))
     current = _mapping(_mapping(robot.get("SweeperTaskMgr")).get("CurrentTask"))
     map_mgr = _mapping(robot.get("SweeperMapMgr"))
-    map_data = _first_mapping(map_mgr.get("MapBasicProperty"))
-    clean_cfg = _first_mapping(map_mgr.get("StdCleanCfg"))
+    map_data, clean_cfg = active_map_settings(map_mgr)
     consumables = _mapping(robot.get("SweeperConsumable"))
     sweeper_mgr = _mapping(robot.get("SweeperMgr"))
     rest_mode = _mapping(sweeper_mgr.get("RestMode"))
@@ -299,12 +334,15 @@ def parse_single_vacuum(
         side_brush=_consumable(consumables.get("EdgeBrushWorkingTime")),
         mop=_consumable(consumables.get("MopWorkingTime")),
         sensors=_consumable(consumables.get("SensorWorkingTime")),
-        carpet_turbo_enabled=_setting_boolean(
-            clean_task.get("CarpetTurboCleanSwitch")
-        ),
+        carpet_turbo_enabled=_setting_boolean(clean_task.get("CarpetTurboCleanSwitch")),
         rest_mode_enabled=_setting_boolean(sweeper_mgr.get("RestMode")),
         rest_mode_start=_text(rest_mode.get("startTime")),
         rest_mode_end=_text(rest_mode.get("endTime")),
+        clean_times=(
+            count
+            if (count := _integer(clean_cfg.get("cleanTimes"))) in (1, 2)
+            else None
+        ),
     )
 
 
@@ -321,6 +359,55 @@ def parse_vacuum_devices(response: Any) -> dict[str, VacuumData]:
         if parsed is not None:
             result[serial] = parsed
     return result
+
+
+def apply_live_task(data: VacuumData, task: Mapping[str, Any]) -> VacuumData:
+    """Interpret QueryCurrentTask, whose main task stays 'clean' when paused."""
+
+    task_type = _text(task.get("currentTask"))
+    clean = _mapping(task.get("cleanTaskInfo")) if task_type == "clean" else {}
+    detail = _mapping(task.get(f"{task_type}TaskInfo")) if task_type else {}
+    phase = _text(detail.get("status"))
+    charging = _boolean(task.get("inCharging"))
+    if charging is True:
+        state = "docked"
+    elif phase in {"pause", "paused"}:
+        state = "paused"
+    elif task_type == "clean":
+        state = "cleaning"
+    elif task_type == "recharge":
+        state = "returning"
+    elif task_type == "standby":
+        state = "idle"
+    else:
+        state = normalize_task_state(task_type)
+    passes = _mapping(clean.get("cleanTimes"))
+    try:
+        area = float(clean["cleanArea"])
+        if not isfinite(area) or area < 0:
+            area = None
+    except (KeyError, TypeError, ValueError):
+        area = None
+    exception = _text(task.get("exceptionCode"))
+    if exception in {"0", "0x00000000"}:
+        exception = None
+    return replace(
+        data,
+        available=True,
+        charging=charging,
+        task_state=state,
+        task_id=_integer(task.get("taskID")),
+        exception=exception,
+        map_id=_integer(task.get("currentMapID")),
+        task_phase=phase,
+        task_duration=_integer(task.get("taskDuration")),
+        cleaned_area=area,
+        clean_pass_current=_integer(passes.get("current")),
+        clean_pass_total=_integer(passes.get("total")),
+        on_base_station=_boolean(task.get("isOnBasestation")),
+        picked_up=_boolean(task.get("pickup")),
+        in_dnd_mode=_boolean(task.get("inDNDMode")),
+    )
 
 
 def masked_serial(serial: str | None) -> str:

@@ -10,7 +10,7 @@ After installation, you can see:
 - charging and online status;
 - the current cleaning task;
 - the configured fan speed and water level;
-- controls for fan speed, water level, and automatic carpet boost;
+- controls for fan speed, water level, cleaning passes, and automatic carpet boost;
 - controls to start, pause, resume, and stop cleaning;
 - the name of the active map;
 - remaining values reported for the brushes, HEPA filter, mop, and sensors;
@@ -89,8 +89,13 @@ following entities.
 
 ### Controls
 
+- suction power: silent, normal, high power, or super strong;
 - water quantity: no mopping, low, medium, or high;
+- cleaning passes: 1× or 2×;
 - automatic carpet boost: on or off.
+
+Suction power, water quantity, and cleaning passes use the mobile app's dedicated
+actions for the map currently in use. Each action changes only its own setting.
 
 ### Sensors
 
@@ -98,6 +103,10 @@ following entities.
 - current task state;
 - fan speed;
 - water level;
+- live task phase (including relocation and pause);
+- current task duration in seconds;
+- reported cleaned area (raw value; the unit is not verified);
+- current and total passes of the running task;
 - map name;
 - HEPA filter remaining value;
 - main brush remaining value;
@@ -111,17 +120,53 @@ following entities.
 - online status;
 - carpet turbo mode;
 - rest mode.
+- on base station;
+- picked up;
+- device-reported do not disturb mode.
 
 > [!NOTE]
 > EZVIZ does not clearly document the unit used for the consumable `rest`
 > values. The integration therefore displays them as raw values without a unit.
 
+### Volume, area units and accessory resets
+
+- Prompt volume is a 0–100% slider with integer steps, including mute at 0.
+- The area display preference supports `m2`, `sq.ft`, and `ping`.
+- Separate reset buttons are provided for the main brush, HEPA filter, side
+  brush and mop. A reset changes the robot's lifetime counter; use it after
+  replacing the corresponding accessory.
+- Remaining accessory counters expose the reported `used` counter as a state
+  attribute. Sensor cleaning counters are readable, but their reset command
+  has not been verified and is not exposed.
+
+These controls match captured mobile-app requests. A successful command
+invalidates the settings cache and triggers readback. The area display
+preference does not establish the unit of the raw live `cleanArea` field;
+the integration does not guess or convert that value.
+
 ## How quickly are states updated?
 
-The integration requests the current state from the EZVIZ cloud every 3 seconds
-while the robot is cleaning, paused, or returning to its dock. At other times it
-uses a 15-second interval. Successful Home Assistant commands are reflected
-immediately and then verified by the next cloud update.
+The integration queries `SweeperTaskMgr/QueryCurrentTask` and the current
+standard cleaning settings on a 3-second polling interval while cleaning,
+paused, or returning. At other times the interval is 15 seconds. Network latency
+adds to these intervals; this is cloud polling, not instantaneous push updates.
+Battery, general device metadata, volume, area preference, carpet boost and
+accessory counters are refreshed every 30 seconds. The extra cloud requests
+can add latency to a refresh, and commands share the same authenticated session.
+
+The live response's nested task status distinguishes pause from cleaning and
+returning from charging. Successful Home Assistant commands appear immediately,
+but can override the observed state for at most a 6-second transition period.
+The stopping label is retained while the live response confirms a return to the
+dock. A failed live query makes that vacuum unavailable instead of presenting
+cached online data as current.
+
+Configured cleaning passes and the running task's passes are separate values:
+changing the 1×/2× setting during cleaning does not necessarily change the current
+task. Task duration is the robot's reported phase duration, which can reset after
+relocation. Area is also firmware-reported and may initially retain an earlier
+value during relocation. Running-task metrics become unknown when the response
+no longer includes cleaning details.
 
 Pause and stop remain visible but disabled for 5 seconds after starting. While the robot is
 stopping, all adjustable controls remain locked until it docks. Changes made in

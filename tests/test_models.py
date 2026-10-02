@@ -47,6 +47,33 @@ def test_parse_docked_and_consumables() -> None:
     assert rest_mode_is_active(vacuum, time(12, 0)) is False
 
 
+def test_settings_follow_the_active_map_instead_of_the_first_map() -> None:
+    response = _fixture("docked.json")
+    manager = response["ABC123456"]["FEATURE_INFO"]["0"]["SweepingRobot"][
+        "SweeperMapMgr"
+    ]
+    manager["MapBasicProperty"].append(
+        {"mapID": 4, "mapName": "Active", "inUse": 1}
+    )
+    manager["MapBasicProperty"][0]["inUse"] = 0
+    manager["StdCleanCfg"].append(
+        {"mapID": 4, "fanMode": "quiet", "waterQuantity": "low", "cleanTimes": 2}
+    )
+
+    vacuum = parse_vacuum_devices(response)["ABC123456"]
+
+    assert vacuum.map_id == 4
+    assert vacuum.map_name == "Active"
+    assert vacuum.fan_speed == "quiet"
+    assert vacuum.water_quantity == "low"
+    assert vacuum.clean_times == 2
+
+    manager["StdCleanCfg"].pop()
+    vacuum = parse_vacuum_devices(response)["ABC123456"]
+    assert vacuum.fan_speed is None
+    assert vacuum.clean_times is None
+
+
 def test_rest_mode_window_before_end_and_outside_period() -> None:
     vacuum = parse_vacuum_devices(_fixture("docked.json"))["ABC123456"]
 

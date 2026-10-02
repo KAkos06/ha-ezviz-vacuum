@@ -1,0 +1,349 @@
+[
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/EdgeBrushWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 284,
+        "used": 15
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/MopWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 135,
+        "used": 14
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/SensorWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 164,
+        "used": 15
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/HepaWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 134,
+        "used": 15
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SoundSetting/PromptToneVolume",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": 0
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SoundSetting/PromptToneVolume",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": 0
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SoundSetting/PromptToneVolume",
+    "request": {
+      "value": 53
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/EdgeBrushWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 300,
+        "used": 0
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/HepaWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 150,
+        "used": 0
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/MopWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 150,
+        "used": 0
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/SensorWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 164,
+        "used": 16
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperConsumable/RotatingBrushWorkingTime",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "rest": 300,
+        "used": 0
+      }
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperConsumable/ResetConsumableWorkingTime",
+    "request": {
+      "value": {
+        "type": "rotatingBrush"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperConsumable/ResetConsumableWorkingTime",
+    "request": {
+      "value": {
+        "type": "hepa"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperConsumable/ResetConsumableWorkingTime",
+    "request": {
+      "value": {
+        "type": "edgeBrush"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperConsumable/ResetConsumableWorkingTime",
+    "request": {
+      "value": {
+        "type": "mop"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": {
+          "deviceMeta": {
+            "code": "0x00000000"
+          }
+        }
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "GET",
+    "operation": "0/SweeperCleanTask/CarpetTurboCleanSwitch",
+    "request": null,
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": {
+        "enabled": 1
+      }
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperCleanTask/CarpetTurboCleanSwitch",
+    "request": {
+      "value": {
+        "enabled": false
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperCleanTask/CarpetTurboCleanSwitch",
+    "request": {
+      "value": {
+        "enabled": true
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperMapMgr/AreaUnitCfg",
+    "request": {
+      "value": {
+        "unit": "ping"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperMapMgr/AreaUnitCfg",
+    "request": {
+      "value": {
+        "unit": "sq.ft"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": null
+    }
+  },
+  {
+    "method": "PUT",
+    "operation": "0/SweeperMapMgr/AreaUnitCfg",
+    "request": {
+      "value": {
+        "unit": "m2"
+      }
+    },
+    "response": {
+      "meta": {
+        "code": 200,
+        "moreInfo": null
+      },
+      "data": null
+    }
+  }
+]
