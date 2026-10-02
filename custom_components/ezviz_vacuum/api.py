@@ -135,9 +135,6 @@ class EzvizVacuumApi:
                 _LOGGER.debug("Live task unavailable for %s", masked_serial(serial))
                 result[serial] = replace(base, available=False)
                 continue
-            # The task's current map ID is fresher than pagelist metadata.
-            if data.map_id != base.map_id:
-                data = replace(data, map_name=None)
             try:
                 config = self._request_iot(
                     "GET", IOT_FEATURE_ENDPOINT, serial, "SweeperMapMgr", "StdCleanCfg"

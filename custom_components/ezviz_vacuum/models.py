@@ -6,7 +6,6 @@ import logging
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from datetime import datetime, time, timedelta
-from math import isfinite
 from typing import Any
 
 from .const import SUPPORTED_CATEGORY
@@ -53,7 +52,6 @@ class VacuumData:
     fan_speed: str | None
     water_quantity: str | None
     map_id: int | None
-    map_name: str | None
     hepa: ConsumableData | None
     main_brush: ConsumableData | None
     side_brush: ConsumableData | None
@@ -66,9 +64,6 @@ class VacuumData:
     clean_times: int | None = None
     task_phase: str | None = None
     task_duration: int | None = None
-    cleaned_area: float | None = None
-    clean_pass_current: int | None = None
-    clean_pass_total: int | None = None
     on_base_station: bool | None = None
     picked_up: bool | None = None
     in_dnd_mode: bool | None = None
@@ -328,7 +323,6 @@ def parse_single_vacuum(
         fan_speed=_text(clean_cfg.get("fanMode")),
         water_quantity=_text(clean_cfg.get("waterQuantity")),
         map_id=_integer(map_data.get("mapID")),
-        map_name=_text(map_data.get("mapName")),
         hepa=_consumable(consumables.get("HepaWorkingTime")),
         main_brush=_consumable(consumables.get("RotatingBrushWorkingTime")),
         side_brush=_consumable(consumables.get("EdgeBrushWorkingTime")),
@@ -365,7 +359,6 @@ def apply_live_task(data: VacuumData, task: Mapping[str, Any]) -> VacuumData:
     """Interpret QueryCurrentTask, whose main task stays 'clean' when paused."""
 
     task_type = _text(task.get("currentTask"))
-    clean = _mapping(task.get("cleanTaskInfo")) if task_type == "clean" else {}
     detail = _mapping(task.get(f"{task_type}TaskInfo")) if task_type else {}
     phase = _text(detail.get("status"))
     charging = _boolean(task.get("inCharging"))
@@ -381,13 +374,6 @@ def apply_live_task(data: VacuumData, task: Mapping[str, Any]) -> VacuumData:
         state = "idle"
     else:
         state = normalize_task_state(task_type)
-    passes = _mapping(clean.get("cleanTimes"))
-    try:
-        area = float(clean["cleanArea"])
-        if not isfinite(area) or area < 0:
-            area = None
-    except (KeyError, TypeError, ValueError):
-        area = None
     exception = _text(task.get("exceptionCode"))
     if exception in {"0", "0x00000000"}:
         exception = None
@@ -401,9 +387,6 @@ def apply_live_task(data: VacuumData, task: Mapping[str, Any]) -> VacuumData:
         map_id=_integer(task.get("currentMapID")),
         task_phase=phase,
         task_duration=_integer(task.get("taskDuration")),
-        cleaned_area=area,
-        clean_pass_current=_integer(passes.get("current")),
-        clean_pass_total=_integer(passes.get("total")),
         on_base_station=_boolean(task.get("isOnBasestation")),
         picked_up=_boolean(task.get("pickup")),
         in_dnd_mode=_boolean(task.get("inDNDMode")),

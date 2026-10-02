@@ -54,7 +54,9 @@ async def async_get_config_entry_diagnostics(
 ) -> dict[str, Any]:
     coordinator = entry.runtime_data.coordinator
     vacuums = {
-        masked_serial(serial): _redact(asdict(data))
+        masked_serial(serial): _redact(
+            {key: value for key, value in asdict(data).items() if key != "map_id"}
+        )
         for serial, data in coordinator.data.items()
     }
     return {

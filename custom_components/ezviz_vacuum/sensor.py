@@ -59,11 +59,6 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         value_fn=lambda data: data.water_quantity,
     ),
     EzvizSensorDescription(
-        key="map_name",
-        translation_key="map_name",
-        value_fn=lambda data: data.map_name,
-    ),
-    EzvizSensorDescription(
         key="task_phase",
         translation_key="task_phase",
         value_fn=lambda data: (
@@ -76,22 +71,6 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.SECONDS,
         value_fn=lambda data: data.task_duration,
-    ),
-    EzvizSensorDescription(
-        key="cleaned_area",
-        translation_key="cleaned_area",
-        suggested_display_precision=2,
-        value_fn=lambda data: data.cleaned_area,
-    ),
-    EzvizSensorDescription(
-        key="clean_pass_current",
-        translation_key="clean_pass_current",
-        value_fn=lambda data: data.clean_pass_current,
-    ),
-    EzvizSensorDescription(
-        key="clean_pass_total",
-        translation_key="clean_pass_total",
-        value_fn=lambda data: data.clean_pass_total,
     ),
     EzvizSensorDescription(
         key="rest_mode_start",
@@ -172,8 +151,6 @@ class EzvizVacuumSensor(EzvizVacuumEntity, SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
-        if self.entity_description.key == "cleaned_area":
-            return {"source_field": "cleanTaskInfo.cleanArea", "unit_documented": False}
         if self.entity_description.raw_counter:
             field = {
                 "hepa_remaining": "hepa",

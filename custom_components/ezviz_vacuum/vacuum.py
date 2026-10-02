@@ -56,7 +56,6 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         VacuumEntityFeature.START
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
-        | VacuumEntityFeature.RETURN_HOME
         | VacuumEntityFeature.FAN_SPEED
     )
 
@@ -129,7 +128,12 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         )
 
     async def async_stop(self, **kwargs) -> None:
-        """Stop the current cleaning task."""
+        """Use the stop-icon control to invoke the existing return-to-base action."""
+
+        await self.async_return_to_base(**kwargs)
+
+    async def async_return_to_base(self, **kwargs) -> None:
+        """The captured mobile stop action ends cleaning and returns to the dock."""
 
         del kwargs
         self._ensure_task_controls_unlocked()
@@ -139,11 +143,6 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
             charging=False,
             hold_until_docked=True,
         )
-
-    async def async_return_to_base(self, **kwargs) -> None:
-        """The captured mobile stop action ends cleaning and returns to the dock."""
-
-        await self.async_stop(**kwargs)
 
     async def _async_execute_task_command(
         self,

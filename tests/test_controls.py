@@ -35,7 +35,6 @@ def _data() -> VacuumData:
         fan_speed="normal",
         water_quantity="middle",
         map_id=3,
-        map_name="Home",
         hepa=None,
         main_brush=None,
         side_brush=None,
@@ -259,3 +258,12 @@ async def test_return_to_base_uses_captured_stop_action() -> None:
     await entity.async_return_to_base()
     coordinator.api.stop_cleaning.assert_called_once_with("ABC123456")
     assert coordinator.async_set_task_state.call_args.kwargs["hold_until_docked"]
+
+
+async def test_stop_icon_control_delegates_to_return_to_base() -> None:
+    entity = EzvizVacuum(_coordinator(), "ABC123456")
+    entity.async_return_to_base = AsyncMock()
+    await entity.async_stop()
+    entity.async_return_to_base.assert_awaited_once_with()
+    assert entity.supported_features & VacuumEntityFeature.STOP
+    assert not entity.supported_features & VacuumEntityFeature.RETURN_HOME
