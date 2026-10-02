@@ -74,18 +74,11 @@ def test_active_metrics_do_not_leak_into_returning_or_docked_state():
     )
     data = apply_live_task(replace(base_data(), clean_times=2), paused)
     assert data.clean_times == 2  # Configured next task versus running task.
-    assert data.clean_pass_total == 1
-    assert data.clean_pass_current == 1
-    assert data.cleaned_area == pytest.approx(5.05)
     assert data.task_duration == 133
     sensors = {s.key: s.value_fn(data) for s in SENSORS}
     assert sensors["task_phase"] == "pause"
-    assert sensors["clean_pass_total"] == 1
     assert data.on_base_station is False
     docked = apply_live_task(data, SESSION["states"][-1]["data"])
-    assert docked.cleaned_area is None
-    assert docked.clean_pass_current is None
-    assert docked.clean_pass_total is None
     assert docked.on_base_station is True
 
 
@@ -140,7 +133,6 @@ def test_refresh_uses_live_task_and_config_over_stale_pagelist(client_class):
     assert data.task_state == "paused"
     assert data.charging is False
     assert data.map_id == 4
-    assert data.map_name is None  # Never label map 4 using map 3's cached name.
     assert data.fan_speed == "quiet"
     assert data.water_quantity == "dry"
     assert data.clean_times == 2

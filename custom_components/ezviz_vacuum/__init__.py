@@ -28,6 +28,10 @@ _OBSOLETE_ENTITY_SUFFIXES = (
     "_mqtt_connection",
     "_mqtt_connected",
     "_rest_mode_schedule",
+    "_map_name",
+    "_cleaned_area",
+    "_clean_pass_current",
+    "_clean_pass_total",
 )
 
 

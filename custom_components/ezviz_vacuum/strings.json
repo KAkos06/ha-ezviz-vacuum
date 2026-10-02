@@ -106,7 +106,6 @@
           "max": "Max"
         }
       },
-      "map_name": {"name": "Map"},
       "task_phase": {
         "name": "Task phase",
         "state": {
@@ -119,15 +118,6 @@
       },
       "task_duration": {
         "name": "Task duration"
-      },
-      "cleaned_area": {
-        "name": "Reported cleaned area"
-      },
-      "clean_pass_current": {
-        "name": "Current cleaning pass"
-      },
-      "clean_pass_total": {
-        "name": "Running task passes"
       },
       "rest_mode_start": {"name": "Rest period start"},
       "rest_mode_end": {"name": "Rest period end"},

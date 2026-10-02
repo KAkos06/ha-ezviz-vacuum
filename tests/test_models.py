@@ -27,7 +27,6 @@ def test_parse_docked_and_consumables() -> None:
     assert vacuum.battery_level == 100
     assert vacuum.charging is True
     assert vacuum.task_state == "docked"
-    assert vacuum.map_name == "Lakás"
     assert vacuum.fan_speed == "super"
     assert vacuum.hepa and vacuum.hepa.remaining == 136
     assert vacuum.main_brush and vacuum.main_brush.used == 14
@@ -63,7 +62,6 @@ def test_settings_follow_the_active_map_instead_of_the_first_map() -> None:
     vacuum = parse_vacuum_devices(response)["ABC123456"]
 
     assert vacuum.map_id == 4
-    assert vacuum.map_name == "Active"
     assert vacuum.fan_speed == "quiet"
     assert vacuum.water_quantity == "low"
     assert vacuum.clean_times == 2

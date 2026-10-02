@@ -12,7 +12,6 @@ After installation, you can see:
 - the configured fan speed and water level;
 - controls for fan speed, water level, cleaning passes, and automatic carpet boost;
 - controls to start, pause, resume, and stop cleaning;
-- the name of the active map;
 - remaining values reported for the brushes, HEPA filter, mop, and sensors;
 
 ## Supported device
@@ -84,7 +83,8 @@ following entities.
 - current activity, such as idle, cleaning, paused, returning, or docked;
 - availability;
 - current fan speed and fan-speed control;
-- start, pause, resume, and stop controls;
+- start, pause and resume controls;
+- one stop-icon control that ends cleaning and returns to the dock;
 - reported error state.
 
 ### Controls
@@ -105,9 +105,6 @@ actions for the map currently in use. Each action changes only its own setting.
 - water level;
 - live task phase (including relocation and pause);
 - current task duration in seconds;
-- reported cleaned area (raw value; the unit is not verified);
-- current and total passes of the running task;
-- map name;
 - HEPA filter remaining value;
 - main brush remaining value;
 - side brush remaining value;
@@ -141,8 +138,8 @@ actions for the map currently in use. Each action changes only its own setting.
 
 These controls match captured mobile-app requests. A successful command
 invalidates the settings cache and triggers readback. The area display
-preference does not establish the unit of the raw live `cleanArea` field;
-the integration does not guess or convert that value.
+preference changes the EZVIZ app's preference; this integration does not
+display cleaning area, maps, room locations or robot paths.
 
 ## How quickly are states updated?
 
@@ -167,12 +164,19 @@ The stopping label is retained while the live response confirms a return to the
 dock. A failed live query makes that vacuum unavailable instead of presenting
 cached online data as current.
 
-Configured cleaning passes and the running task's passes are separate values:
-changing the 1×/2× setting during cleaning does not necessarily change the current
-task. Task duration is the robot's reported phase duration, which can reset after
-relocation. Area is also firmware-reported and may initially retain an earlier
-value during relocation. Running-task metrics become unknown when the response
-no longer includes cleaning details.
+Changing the configured 1×/2× cleaning-pass setting during cleaning does not
+necessarily change the current task. Task duration is the robot's reported
+phase duration, which can reset after relocation.
+
+The standard vacuum controls expose one stop-icon button for returning to the
+dock. It invokes the same command as the previous return-home control. Automatic
+dust emptying remains device-controlled; this integration does not send an
+additional emptying command.
+
+Map names, cleaned area and running-pass counters are not exposed or included
+in integration diagnostics. Their old entity registry entries are removed on
+upgrade. The active map identifier is retained internally only to target settings
+correctly; the integration does not request map images or robot paths.
 
 Pause and stop remain visible but disabled for 5 seconds after starting. While the robot is
 stopping, all adjustable controls remain locked until it docks. Changes made in

@@ -102,7 +102,6 @@
           "max": "Max"
         }
       },
-      "map_name": {"name": "Térkép"},
       "task_phase": {
         "name": "Feladat fázisa",
         "state": {
@@ -115,15 +114,6 @@
       },
       "task_duration": {
         "name": "Feladat időtartama"
-      },
-      "cleaned_area": {
-        "name": "Jelentett takarított terület"
-      },
-      "clean_pass_current": {
-        "name": "Aktuális takarítási kör"
-      },
-      "clean_pass_total": {
-        "name": "Futó feladat körszáma"
       },
       "rest_mode_start": {"name": "Pihenőidő kezdete"},
       "rest_mode_end": {"name": "Pihenőidő vége"},
