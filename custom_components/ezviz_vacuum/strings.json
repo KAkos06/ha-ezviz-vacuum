@@ -114,7 +114,7 @@
           "clean": "Cleaning",
           "relocation": "Relocating",
           "pause": "Paused",
-          "backBase": "Returning to dock"
+          "back_base": "Returning to dock"
         }
       },
       "task_duration": {
@@ -154,7 +154,7 @@
       "rest_mode_active": {"name": "Rest period active"}
     },
     "select": {
-      "area_unit": {"name": "Area display unit", "state": {"m2": "m²", "sq.ft": "ft²", "ping": "Ping"}},
+      "area_unit": {"name": "Area display unit", "state": {"m2": "m²", "sq_ft": "ft²", "ping": "Ping"}},
       "water_quantity_control": {
         "name": "Water quantity control",
         "state": {

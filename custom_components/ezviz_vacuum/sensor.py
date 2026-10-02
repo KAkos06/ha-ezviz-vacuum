@@ -66,7 +66,9 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
     EzvizSensorDescription(
         key="task_phase",
         translation_key="task_phase",
-        value_fn=lambda data: data.task_phase,
+        value_fn=lambda data: (
+            "back_base" if data.task_phase == "backBase" else data.task_phase
+        ),
     ),
     EzvizSensorDescription(
         key="task_duration",

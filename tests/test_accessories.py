@@ -107,7 +107,7 @@ async def test_entities_expose_reported_values_and_refresh_after_commands():
     coordinator.hass.async_add_executor_job.assert_called_with(
         coordinator.api.set_volume, "ABC123456", 53
     )
-    await unit.async_select_option("sq.ft")
+    await unit.async_select_option("sq_ft")
     coordinator.hass.async_add_executor_job.assert_called_with(
         coordinator.api.set_area_unit, "ABC123456", "sq.ft"
     )

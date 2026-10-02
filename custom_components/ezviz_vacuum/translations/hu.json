@@ -110,7 +110,7 @@
           "clean": "Takarítás",
           "relocation": "Helymeghatározás",
           "pause": "Szüneteltetve",
-          "backBase": "Visszatérés a dokkolóhoz"
+          "back_base": "Visszatérés a dokkolóhoz"
         }
       },
       "task_duration": {
@@ -150,7 +150,7 @@
       "rest_mode_active": {"name": "Pihenőidő aktív"}
     },
     "select": {
-      "area_unit": {"name": "Terület mértékegysége", "state": {"m2": "m²", "sq.ft": "ft²", "ping": "Ping"}},
+      "area_unit": {"name": "Terület mértékegysége", "state": {"m2": "m²", "sq_ft": "ft²", "ping": "Ping"}},
       "water_quantity_control": {
         "name": "Vízmennyiség vezérlése",
         "state": {

@@ -36,7 +36,7 @@ class EzvizAreaUnitSelect(EzvizVacuumEntity, SelectEntity):
     """Control the area display preference reported by the robot."""
 
     _attr_translation_key = "area_unit"
-    _attr_options = list(AREA_UNITS)
+    _attr_options = [unit.replace(".", "_") for unit in AREA_UNITS]
 
     def __init__(self, coordinator, serial: str) -> None:
         super().__init__(coordinator, serial)
@@ -45,7 +45,11 @@ class EzvizAreaUnitSelect(EzvizVacuumEntity, SelectEntity):
     @property
     def current_option(self) -> str | None:
         data = self.vacuum_data
-        return data.area_unit if data and data.area_unit in self.options else None
+        return (
+            data.area_unit.replace(".", "_")
+            if data and data.area_unit in AREA_UNITS
+            else None
+        )
 
     @property
     def available(self) -> bool:
@@ -53,8 +57,10 @@ class EzvizAreaUnitSelect(EzvizVacuumEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         self._ensure_settings_unlocked()
+        if option not in self.options:
+            raise HomeAssistantError("Unsupported area unit")
         await self._async_execute_command(
-            self.coordinator.api.set_area_unit, self.serial, option
+            self.coordinator.api.set_area_unit, self.serial, option.replace("_", ".")
         )
 
 
