@@ -1,6 +1,8 @@
 """API adapter tests."""
 
+import json
 from copy import deepcopy
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -73,48 +75,120 @@ def test_clean_controls_use_verified_action_and_wrapper(
 
     client._request_json.assert_called_once_with(
         "PUT",
-        "/v3/iot-feature/action/ABC123456/SweepingRobot/0/"
-        "SweeperCleanTask/CleanCtrl",
+        "/v3/iot-feature/action/ABC123456/SweepingRobot/0/SweeperCleanTask/CleanCtrl",
         json_body={"value": {"action": action, "source": "mobile"}},
     )
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
 @pytest.mark.parametrize(
-    ("method_name", "field", "new_value"),
+    ("method_name", "action", "field", "new_value"),
     [
-        ("set_fan_speed", "fanMode", "super"),
-        ("set_water_quantity", "waterQuantity", "high"),
+        ("set_fan_speed", "SetFanModeOfStdClean", "fanMode", "super"),
+        ("set_water_quantity", "SetWaterQuantityOfStdClean", "waterQuantity", "high"),
+        ("set_clean_times", "SetCleanTimesOfStdClean", "cleanTimes", 2),
     ],
 )
-def test_clean_config_controls_preserve_all_other_fields(
-    client_class, method_name, field, new_value
+def test_clean_config_controls_only_change_the_requested_setting(
+    client_class, method_name, action, field, new_value
 ) -> None:
     client = client_class.return_value
     original = _raw_device()
     original_config = deepcopy(
-        original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"][
-            "StdCleanCfg"
-        ][0]
+        original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"]["StdCleanCfg"][
+            0
+        ]
     )
     client.get_device_infos.return_value = {"ABC123456": original}
-    client._request_json.return_value = {"meta": {"code": 200}}
+    client._request_json.side_effect = [
+        {"meta": {"code": 200}, "data": {"currentTask": "charging", "currentMapID": 3}},
+        {"meta": {"code": 200}},
+    ]
     api = EzvizVacuumApi("user@example.com", "secret", "eu")
 
     getattr(api, method_name)("ABC123456", new_value)
 
-    expected = deepcopy(original_config)
-    expected[field] = new_value
-    client._request_json.assert_called_once_with(
+    client._request_json.assert_called_with(
         "PUT",
-        "/v3/iot-feature/feature/ABC123456/SweepingRobot/0/"
-        "SweeperMapMgr/StdCleanCfg",
-        json_body={"value": [expected]},
+        f"/v3/iot-feature/action/ABC123456/SweepingRobot/0/SweeperMapMgr/{action}",
+        json_body={"value": {"mapID": 3, field: new_value}},
     )
     client.set_iot_feature.assert_not_called()
-    assert original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"][
-        "StdCleanCfg"
-    ][0] == original_config
+    assert (
+        original["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"]["StdCleanCfg"][
+            0
+        ]
+        == original_config
+    )
+
+
+CAPTURED_SETTINGS = json.loads(
+    (Path(__file__).parent / "fixtures/docked_setting_commands.json").read_text()
+)
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+@pytest.mark.parametrize("capture", CAPTURED_SETTINGS)
+def test_setting_commands_match_docked_mobile_capture(client_class, capture) -> None:
+    client = client_class.return_value
+    device = _raw_device()
+    map_manager = device["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"]
+    map_manager["MapBasicProperty"] = [
+        {"mapID": 3, "inUse": 0},
+        {"mapID": 4, "inUse": 1},
+    ]
+    client.get_device_infos.return_value = {"ABC123456": device}
+    client._request_json.side_effect = [
+        {"meta": {"code": 200}, "data": {"currentTask": "charging", "currentMapID": 4}},
+        capture["response"],
+    ]
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+    action = capture["action"]
+    method, field = {
+        "SetFanModeOfStdClean": (api.set_fan_speed, "fanMode"),
+        "SetWaterQuantityOfStdClean": (api.set_water_quantity, "waterQuantity"),
+        "SetCleanTimesOfStdClean": (api.set_clean_times, "cleanTimes"),
+    }[action]
+
+    method("abc123456", capture["request"]["value"][field])
+
+    client._request_json.assert_called_with(
+        "PUT",
+        f"/v3/iot-feature/action/ABC123456/SweepingRobot/0/SweeperMapMgr/{action}",
+        json_body=capture["request"],
+    )
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_missing_live_map_does_not_send_a_setting(client_class) -> None:
+    client = client_class.return_value
+    device = _raw_device()
+    device["FEATURE_INFO"]["0"]["SweepingRobot"]["SweeperMapMgr"][
+        "MapBasicProperty"
+    ] = [{"mapID": 3}, {"mapID": 4}]
+    client.get_device_infos.return_value = {"ABC123456": device}
+    client._request_json.return_value = {
+        "meta": {"code": 200},
+        "data": {"currentTask": "charging"},
+    }
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    with pytest.raises(EzvizVacuumError, match="Active cleaning map"):
+        api.set_clean_times("ABC123456", 2)
+
+    assert client._request_json.call_count == 1
+    assert client._request_json.call_args.args[1].endswith("QueryCurrentTask")
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+@pytest.mark.parametrize("count", [0, 3, True, "2", 1.5])
+def test_invalid_clean_times_does_not_read_or_write(client_class, count) -> None:
+    client = client_class.return_value
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+    with pytest.raises(EzvizVacuumError):
+        api.set_clean_times("ABC123456", count)
+    client.get_device_infos.assert_not_called()
+    client._request_json.assert_not_called()
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
@@ -152,15 +226,17 @@ def test_invalid_setting_does_not_read_or_write(client_class) -> None:
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
-def test_missing_clean_config_does_not_write(client_class) -> None:
+def test_invalid_live_task_does_not_write(client_class) -> None:
     client = client_class.return_value
     client.get_device_infos.return_value = {"ABC123456": {}}
+    client._request_json.return_value = {"meta": {"code": 200}, "data": None}
     api = EzvizVacuumApi("user@example.com", "secret", "eu")
 
     with pytest.raises(EzvizVacuumError):
         api.set_fan_speed("ABC123456", "normal")
 
-    client._request_json.assert_not_called()
+    assert client._request_json.call_count == 1
+    assert client._request_json.call_args.args[1].endswith("QueryCurrentTask")
 
 
 @patch("custom_components.ezviz_vacuum.api.EzvizClient")
@@ -198,4 +274,16 @@ def test_rejected_command_exposes_only_safe_error_codes(client_class) -> None:
         EzvizVacuumError,
         match=r"API code 500, device code DEVICE_BUSY",
     ):
+        api.pause("ABC123456")
+
+
+@patch("custom_components.ezviz_vacuum.api.EzvizClient")
+def test_cloud_success_does_not_hide_a_device_rejection(client_class) -> None:
+    client = client_class.return_value
+    client._request_json.return_value = {
+        "meta": {"code": 200, "moreInfo": {"deviceMeta": {"code": "0x00000001"}}}
+    }
+    api = EzvizVacuumApi("user@example.com", "secret", "eu")
+
+    with pytest.raises(EzvizVacuumError, match="device code 0x00000001"):
         api.pause("ABC123456")

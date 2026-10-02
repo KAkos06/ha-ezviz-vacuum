@@ -103,6 +103,28 @@
         }
       },
       "map_name": {"name": "Map"},
+      "task_phase": {
+        "name": "Task phase",
+        "state": {
+          "charging": "Charging",
+          "clean": "Cleaning",
+          "relocation": "Relocating",
+          "pause": "Paused",
+          "backBase": "Returning to dock"
+        }
+      },
+      "task_duration": {
+        "name": "Task duration"
+      },
+      "cleaned_area": {
+        "name": "Reported cleaned area"
+      },
+      "clean_pass_current": {
+        "name": "Current cleaning pass"
+      },
+      "clean_pass_total": {
+        "name": "Running task passes"
+      },
       "rest_mode_start": {"name": "Rest period start"},
       "rest_mode_end": {"name": "Rest period end"},
       "hepa_remaining": {"name": "HEPA remaining"},
@@ -112,6 +134,15 @@
       "sensor_cleaning_remaining": {"name": "Sensor cleaning remaining"}
     },
     "binary_sensor": {
+      "on_base_station": {
+        "name": "On base station"
+      },
+      "picked_up": {
+        "name": "Picked up"
+      },
+      "in_dnd_mode": {
+        "name": "Device do not disturb mode"
+      },
       "charging": {"name": "Charging"},
       "online": {"name": "Online"},
       "carpet_turbo_enabled": {"name": "Automatic carpet boost"},
@@ -119,6 +150,7 @@
       "rest_mode_active": {"name": "Rest period active"}
     },
     "select": {
+      "area_unit": {"name": "Area display unit", "state": {"m2": "m²", "sq.ft": "ft²", "ping": "Ping"}},
       "water_quantity_control": {
         "name": "Water quantity control",
         "state": {
@@ -136,8 +168,14 @@
           "strong": "High power",
           "super": "Super strong"
         }
+      },
+      "clean_times_control": {
+        "name": "Cleaning passes",
+        "state": {"1": "1×", "2": "2×"}
       }
     },
+    "number": {"volume": {"name": "Prompt volume"}},
+    "button": {"reset_main_brush": {"name": "Reset main brush lifetime"}, "reset_hepa": {"name": "Reset HEPA lifetime"}, "reset_side_brush": {"name": "Reset side brush lifetime"}, "reset_mop": {"name": "Reset mop lifetime"}},
     "switch": {
       "carpet_turbo_control": {"name": "Automatic carpet boost control"}
     }

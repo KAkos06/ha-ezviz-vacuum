@@ -12,6 +12,7 @@ from homeassistant.exceptions import HomeAssistantError
 from custom_components.ezviz_vacuum.api import EzvizVacuumError
 from custom_components.ezviz_vacuum.models import VacuumData
 from custom_components.ezviz_vacuum.select import (
+    EzvizCleanTimesSelect,
     EzvizFanSpeedSelect,
     EzvizWaterQuantitySelect,
 )
@@ -157,15 +158,19 @@ async def test_all_controls_are_disabled_while_stopping() -> None:
     coordinator.task_controls_locked.return_value = True
     vacuum = EzvizVacuum(coordinator, "ABC123456")
     water = EzvizWaterQuantitySelect(coordinator, "ABC123456")
+    clean_times = EzvizCleanTimesSelect(coordinator, "ABC123456")
     carpet = EzvizCarpetTurboSwitch(coordinator, "ABC123456")
 
     assert vacuum.supported_features == VacuumEntityFeature(0)
     assert water.available is False
+    assert clean_times.available is False
     assert carpet.available is False
     with pytest.raises(HomeAssistantError, match="locked while stopping"):
         await vacuum.async_set_fan_speed("normal")
     with pytest.raises(HomeAssistantError, match="locked while stopping"):
         await water.async_select_option("low")
+    with pytest.raises(HomeAssistantError, match="locked while stopping"):
+        await clean_times.async_select_option("2")
     with pytest.raises(HomeAssistantError, match="locked while stopping"):
         await carpet.async_turn_off()
 
@@ -202,6 +207,25 @@ async def test_fan_select_exposes_state_and_controls() -> None:
 
 
 @pytest.mark.asyncio
+async def test_clean_times_select_exposes_state_and_controls() -> None:
+    coordinator = _coordinator()
+    coordinator.data["ABC123456"] = replace(_data(), clean_times=2)
+    entity = EzvizCleanTimesSelect(coordinator, "ABC123456")
+
+    assert entity.current_option == "2"
+    assert entity.options == ["1", "2"]
+    await entity.async_select_option("1")
+    coordinator.api.set_clean_times.assert_called_once_with("ABC123456", 1)
+    coordinator.async_request_refresh.assert_awaited_once_with()
+
+    with pytest.raises(HomeAssistantError, match="Unsupported cleaning count"):
+        await entity.async_select_option("3")
+
+    coordinator.data["ABC123456"] = replace(_data(), clean_times=None)
+    assert entity.current_option is None
+
+
+@pytest.mark.asyncio
 async def test_carpet_turbo_switch_exposes_state_and_controls() -> None:
     coordinator = _coordinator()
     entity = EzvizCarpetTurboSwitch(coordinator, "ABC123456")
@@ -226,3 +250,12 @@ async def test_failed_command_is_exposed_and_does_not_refresh() -> None:
 
     coordinator.async_request_refresh.assert_not_awaited()
     coordinator.async_set_task_state.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_return_to_base_uses_captured_stop_action() -> None:
+    coordinator = _coordinator()
+    entity = EzvizVacuum(coordinator, "ABC123456")
+    await entity.async_return_to_base()
+    coordinator.api.stop_cleaning.assert_called_once_with("ABC123456")
+    assert coordinator.async_set_task_state.call_args.kwargs["hold_until_docked"]

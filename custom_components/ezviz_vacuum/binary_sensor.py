@@ -29,6 +29,21 @@ class EzvizBinaryDescription(BinarySensorEntityDescription):
 
 BINARY_SENSORS = (
     EzvizBinaryDescription(
+        key="on_base_station",
+        translation_key="on_base_station",
+        value_fn=lambda data: data.on_base_station,
+    ),
+    EzvizBinaryDescription(
+        key="picked_up",
+        translation_key="picked_up",
+        value_fn=lambda data: data.picked_up,
+    ),
+    EzvizBinaryDescription(
+        key="in_dnd_mode",
+        translation_key="in_dnd_mode",
+        value_fn=lambda data: data.in_dnd_mode,
+    ),
+    EzvizBinaryDescription(
         key="charging",
         translation_key="charging",
         device_class=BinarySensorDeviceClass.BATTERY_CHARGING,

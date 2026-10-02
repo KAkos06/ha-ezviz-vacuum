@@ -13,7 +13,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, EntityCategory
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
@@ -62,6 +62,34 @@ SENSORS: tuple[EzvizSensorDescription, ...] = (
         key="map_name",
         translation_key="map_name",
         value_fn=lambda data: data.map_name,
+    ),
+    EzvizSensorDescription(
+        key="task_phase",
+        translation_key="task_phase",
+        value_fn=lambda data: data.task_phase,
+    ),
+    EzvizSensorDescription(
+        key="task_duration",
+        translation_key="task_duration",
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        value_fn=lambda data: data.task_duration,
+    ),
+    EzvizSensorDescription(
+        key="cleaned_area",
+        translation_key="cleaned_area",
+        suggested_display_precision=2,
+        value_fn=lambda data: data.cleaned_area,
+    ),
+    EzvizSensorDescription(
+        key="clean_pass_current",
+        translation_key="clean_pass_current",
+        value_fn=lambda data: data.clean_pass_current,
+    ),
+    EzvizSensorDescription(
+        key="clean_pass_total",
+        translation_key="clean_pass_total",
+        value_fn=lambda data: data.clean_pass_total,
     ),
     EzvizSensorDescription(
         key="rest_mode_start",
@@ -142,6 +170,21 @@ class EzvizVacuumSensor(EzvizVacuumEntity, SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
+        if self.entity_description.key == "cleaned_area":
+            return {"source_field": "cleanTaskInfo.cleanArea", "unit_documented": False}
         if self.entity_description.raw_counter:
-            return {"source_field": "rest", "unit_documented": False}
+            field = {
+                "hepa_remaining": "hepa",
+                "main_brush_remaining": "main_brush",
+                "side_brush_remaining": "side_brush",
+                "mop_remaining": "mop",
+                "sensor_cleaning_remaining": "sensors",
+            }[self.entity_description.key]
+            data = self.vacuum_data
+            counter = getattr(data, field) if data else None
+            return {
+                "source_field": "rest",
+                "unit_documented": False,
+                "used": counter.used if counter else None,
+            }
         return None

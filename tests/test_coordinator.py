@@ -67,9 +67,7 @@ async def test_command_state_is_immediate_and_survives_stale_cloud_data(
     coordinator = _coordinator(hass, api)
     await coordinator.async_config_entry_first_refresh()
 
-    coordinator.async_set_task_state(
-        "ABC123456", "cleaning", charging=False
-    )
+    coordinator.async_set_task_state("ABC123456", "cleaning", charging=False)
 
     assert coordinator.data["ABC123456"].task_state == "cleaning"
     assert coordinator.data["ABC123456"].charging is False
@@ -110,9 +108,7 @@ async def test_stop_stays_stopping_until_charging_confirms_docking(hass) -> None
 
     assert coordinator.data["ABC123456"].task_state == "stopping"
 
-    task_state, charging, _, hold = coordinator._command_task_states[
-        "ABC123456"
-    ]
+    task_state, charging, _, hold = coordinator._command_task_states["ABC123456"]
     coordinator._command_task_states["ABC123456"] = (
         task_state,
         charging,
@@ -142,9 +138,7 @@ async def test_remote_pause_overrides_started_state_after_transition(hass) -> No
         False,
     )
     api.refresh.return_value = {
-        "ABC123456": replace(
-            api.refresh.return_value["ABC123456"], task_state="paused"
-        )
+        "ABC123456": replace(api.refresh.return_value["ABC123456"], task_state="paused")
     }
 
     await coordinator.async_refresh()
@@ -176,4 +170,27 @@ async def test_remote_start_overrides_stopping_and_relocks_controls(hass) -> Non
 
     assert coordinator.data["ABC123456"].task_state == "cleaning"
     assert coordinator.task_controls_locked("ABC123456") is True
+    coordinator._release_task_control_lock("ABC123456")
+
+
+async def test_expired_command_cannot_hide_idle_error_or_unavailability(hass) -> None:
+    api = MagicMock()
+    api.refresh.return_value = _devices("cleaning.json")
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    original = coordinator.data["ABC123456"]
+    for update in (
+        replace(original, task_state="idle"),
+        replace(original, exception="TEST_ERROR"),
+        replace(original, available=False),
+    ):
+        coordinator._command_task_states["ABC123456"] = (
+            "paused",
+            False,
+            0,
+            False,
+        )
+        merged = coordinator._merge_command_task_states({"ABC123456": update})
+        assert merged["ABC123456"] == update
+        assert "ABC123456" not in coordinator._command_task_states
     coordinator._release_task_control_lock("ABC123456")

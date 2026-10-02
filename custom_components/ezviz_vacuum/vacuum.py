@@ -56,6 +56,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         VacuumEntityFeature.START
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
+        | VacuumEntityFeature.RETURN_HOME
         | VacuumEntityFeature.FAN_SPEED
     )
 
@@ -94,7 +95,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         activity = TASK_ACTIVITY_MAP.get(normalized)
         if activity is None:
             _LOGGER.debug("Unknown EZVIZ task state: %s", data.task_state)
-            return VacuumActivity.IDLE
+            return None
         return activity
 
     @property
@@ -138,6 +139,11 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
             charging=False,
             hold_until_docked=True,
         )
+
+    async def async_return_to_base(self, **kwargs) -> None:
+        """The captured mobile stop action ends cleaning and returns to the dock."""
+
+        await self.async_stop(**kwargs)
 
     async def _async_execute_task_command(
         self,

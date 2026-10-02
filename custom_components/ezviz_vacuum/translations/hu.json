@@ -103,6 +103,28 @@
         }
       },
       "map_name": {"name": "Térkép"},
+      "task_phase": {
+        "name": "Feladat fázisa",
+        "state": {
+          "charging": "Töltés",
+          "clean": "Takarítás",
+          "relocation": "Helymeghatározás",
+          "pause": "Szüneteltetve",
+          "backBase": "Visszatérés a dokkolóhoz"
+        }
+      },
+      "task_duration": {
+        "name": "Feladat időtartama"
+      },
+      "cleaned_area": {
+        "name": "Jelentett takarított terület"
+      },
+      "clean_pass_current": {
+        "name": "Aktuális takarítási kör"
+      },
+      "clean_pass_total": {
+        "name": "Futó feladat körszáma"
+      },
       "rest_mode_start": {"name": "Pihenőidő kezdete"},
       "rest_mode_end": {"name": "Pihenőidő vége"},
       "hepa_remaining": {"name": "HEPA hátralévő érték"},
@@ -112,6 +134,15 @@
       "sensor_cleaning_remaining": {"name": "Szenzortisztítás hátralévő érték"}
     },
     "binary_sensor": {
+      "on_base_station": {
+        "name": "Dokkolón"
+      },
+      "picked_up": {
+        "name": "Felemelve"
+      },
+      "in_dnd_mode": {
+        "name": "Eszköz ne zavarj módja"
+      },
       "charging": {"name": "Töltés"},
       "online": {"name": "Elérhetőség"},
       "carpet_turbo_enabled": {"name": "Automatikus szőnyegturbó"},
@@ -119,6 +150,7 @@
       "rest_mode_active": {"name": "Pihenőidő aktív"}
     },
     "select": {
+      "area_unit": {"name": "Terület mértékegysége", "state": {"m2": "m²", "sq.ft": "ft²", "ping": "Ping"}},
       "water_quantity_control": {
         "name": "Vízmennyiség vezérlése",
         "state": {
@@ -136,8 +168,14 @@
           "strong": "Nagy teljesítményű",
           "super": "Szuper erős"
         }
+      },
+      "clean_times_control": {
+        "name": "Takarítások száma",
+        "state": {"1": "1×", "2": "2×"}
       }
     },
+    "number": {"volume": {"name": "Hangerő"}},
+    "button": {"reset_main_brush": {"name": "Főkefe élettartamának resetje"}, "reset_hepa": {"name": "HEPA-szűrő élettartamának resetje"}, "reset_side_brush": {"name": "Oldalkefe élettartamának resetje"}, "reset_mop": {"name": "Mop élettartamának resetje"}},
     "switch": {
       "carpet_turbo_control": {
         "name": "Automatikus szőnyegturbó vezérlése"

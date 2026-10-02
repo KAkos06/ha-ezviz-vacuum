@@ -46,9 +46,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             update_interval=DEFAULT_POLL_INTERVAL,
         )
         self.api = api
-        self._command_task_states: dict[
-            str, tuple[str, bool | None, float, bool]
-        ] = {}
+        self._command_task_states: dict[str, tuple[str, bool | None, float, bool]] = {}
         self._task_control_lock_until: dict[str, float] = {}
         self._task_control_lock_unsubs: dict[str, Callable[[], None]] = {}
 
@@ -144,78 +142,26 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
 
         now = self.hass.loop.time()
         merged = dict(devices)
-        for serial, (
-            task_state,
-            charging,
-            transition_until,
-            hold_until_docked,
-        ) in tuple(
+        for serial, (task_state, charging, transition_until, hold) in tuple(
             self._command_task_states.items()
         ):
             current = merged.get(serial)
-            if current is None:
+            if current is None or not current.available or current.exception:
                 self._command_task_states.pop(serial, None)
                 continue
-
-            # Charging is the reliable indication that the task has ended.
-            if current.charging is True and now >= transition_until:
-                self._command_task_states.pop(serial, None)
-                continue
-
             cloud_state = normalize_task_state(current.task_state)
             command_state = normalize_task_state(task_state)
-
-            # Once the cloud reports a return, retain it until actual docking.
-            if not hold_until_docked and cloud_state in {
-                "returning",
-                "goinghome",
-                "docking",
-            }:
-                command_state = "returning"
-                charging = False
-                self._command_task_states[serial] = (
-                    command_state,
-                    charging,
-                    transition_until,
-                    hold_until_docked,
-                )
-
-            # Allow a physical pause/resume after stale transition data has passed.
-            elif now >= transition_until:
-                if command_state == "stopping" and cloud_state == "cleaning":
-                    command_state = "cleaning"
-                    charging = False
-                    hold_until_docked = False
-                    transition_until = now + COMMAND_TRANSITION_GRACE_SECONDS
-                    self._command_task_states[serial] = (
-                        command_state,
-                        charging,
-                        transition_until,
-                        hold_until_docked,
-                    )
-                elif command_state == "cleaning" and cloud_state == "paused":
-                    command_state = "paused"
-                    transition_until = now + COMMAND_TRANSITION_GRACE_SECONDS
-                    self._command_task_states[serial] = (
-                        command_state,
-                        charging,
-                        transition_until,
-                        hold_until_docked,
-                    )
-                elif command_state == "paused" and cloud_state == "cleaning":
-                    command_state = "cleaning"
-                    transition_until = now + COMMAND_TRANSITION_GRACE_SECONDS
-                    self._command_task_states[serial] = (
-                        command_state,
-                        charging,
-                        transition_until,
-                        hold_until_docked,
-                    )
-
-            charging_matches = charging is None or current.charging is charging
-            if cloud_state == command_state and charging_matches:
+            if hold and cloud_state == "returning":
+                # Keep the existing stopping label only while a return is observed.
+                merged[serial] = replace(current, task_state="stopping")
                 continue
-
+            charging_matches = charging is None or current.charging is charging
+            if (
+                cloud_state == command_state and charging_matches
+            ) or now >= transition_until:
+                # Do not let a command override observed state indefinitely.
+                self._command_task_states.pop(serial, None)
+                continue
             merged[serial] = replace(
                 current,
                 task_state=command_state,
