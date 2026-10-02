@@ -46,6 +46,7 @@ CONSUMABLES = {
     "hepa": ("hepa", "HepaWorkingTime"),
     "edgeBrush": ("side_brush", "EdgeBrushWorkingTime"),
     "mop": ("mop", "MopWorkingTime"),
+    "sensor": ("sensors", "SensorWorkingTime"),
 }
 
 
@@ -202,7 +203,6 @@ class EzvizVacuumApi:
                     (field, "SweeperConsumable", item)
                     for field, item in CONSUMABLES.values()
                 ),
-                ("sensors", "SweeperConsumable", "SensorWorkingTime"),
             ]
             for field, domain, item in fields:
                 try:
@@ -258,7 +258,7 @@ class EzvizVacuumApi:
         self._settings.pop(serial, None)
 
     def reset_consumable(self, serial: str, consumable: str) -> None:
-        """Reset one of the four consumable types verified in the app capture."""
+        """Reset a counter type supported by the captured device API schema."""
         if consumable not in CONSUMABLES:
             raise EzvizVacuumError("Unsupported consumable reset")
         self._put_iot_value(

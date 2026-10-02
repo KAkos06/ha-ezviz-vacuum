@@ -121,7 +121,8 @@
       "main_brush_remaining": {"name": "Főkefe hátralévő érték"},
       "side_brush_remaining": {"name": "Oldalkefe hátralévő érték"},
       "mop_remaining": {"name": "Felmosó hátralévő érték"},
-      "sensor_cleaning_remaining": {"name": "Szenzortisztítás hátralévő érték"}
+      "sensor_cleaning_remaining": {"name": "Eszköztest tisztításáig hátralévő idő"},
+      "sensor_cleaning_used": {"name": "Eszköztest használati idő tisztítás óta"}
     },
     "binary_sensor": {
       "on_base_station": {
@@ -165,7 +166,7 @@
       }
     },
     "number": {"volume": {"name": "Hangerő"}},
-    "button": {"reset_main_brush": {"name": "Főkefe élettartamának resetje"}, "reset_hepa": {"name": "HEPA-szűrő élettartamának resetje"}, "reset_side_brush": {"name": "Oldalkefe élettartamának resetje"}, "reset_mop": {"name": "Mop élettartamának resetje"}},
+    "button": {"reset_main_brush": {"name": "Főkefe élettartamának resetje"}, "reset_hepa": {"name": "HEPA-szűrő élettartamának resetje"}, "reset_side_brush": {"name": "Oldalkefe élettartamának resetje"}, "reset_mop": {"name": "Mop élettartamának resetje"}, "reset_sensors": {"name": "Eszköztest megtisztítva"}},
     "switch": {
       "carpet_turbo_control": {
         "name": "Automatikus szőnyegturbó vezérlése"

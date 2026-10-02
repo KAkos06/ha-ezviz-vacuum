@@ -121,7 +121,8 @@
       "main_brush_remaining": {"name": "Main brush remaining"},
       "side_brush_remaining": {"name": "Side brush remaining"},
       "mop_remaining": {"name": "Mop remaining"},
-      "sensor_cleaning_remaining": {"name": "Sensor cleaning remaining"}
+      "sensor_cleaning_remaining": {"name": "Body cleaning time remaining"},
+      "sensor_cleaning_used": {"name": "Body time used since cleaning"}
     },
     "binary_sensor": {
       "on_base_station": {
@@ -165,7 +166,7 @@
       }
     },
     "number": {"volume": {"name": "Prompt volume"}},
-    "button": {"reset_main_brush": {"name": "Reset main brush lifetime"}, "reset_hepa": {"name": "Reset HEPA lifetime"}, "reset_side_brush": {"name": "Reset side brush lifetime"}, "reset_mop": {"name": "Reset mop lifetime"}},
+    "button": {"reset_main_brush": {"name": "Reset main brush lifetime"}, "reset_hepa": {"name": "Reset HEPA lifetime"}, "reset_side_brush": {"name": "Reset side brush lifetime"}, "reset_mop": {"name": "Reset mop lifetime"}, "reset_sensors": {"name": "Body cleaned"}},
     "switch": {
       "carpet_turbo_control": {"name": "Automatic carpet boost control"}
     }
