@@ -8,9 +8,12 @@ from datetime import timedelta
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import pytest
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.exceptions import HomeAssistantError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.ezviz_vacuum.api import EzvizVacuumError
 from custom_components.ezviz_vacuum.const import (
     ACTIVE_POLL_INTERVAL,
     DEFAULT_POLL_INTERVAL,
@@ -18,6 +21,11 @@ from custom_components.ezviz_vacuum.const import (
 )
 from custom_components.ezviz_vacuum.coordinator import EzvizVacuumCoordinator
 from custom_components.ezviz_vacuum.models import parse_vacuum_devices
+from custom_components.ezviz_vacuum.select import (
+    EzvizCleanTimesSelect,
+    EzvizFanSpeedSelect,
+    EzvizWaterQuantitySelect,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -194,3 +202,93 @@ async def test_expired_command_cannot_hide_idle_error_or_unavailability(hass) ->
         assert merged["ABC123456"] == update
         assert "ABC123456" not in coordinator._command_task_states
     coordinator._release_task_control_lock("ABC123456")
+
+
+@pytest.mark.parametrize(
+    ("entity_class", "field", "option", "value"),
+    [
+        (EzvizFanSpeedSelect, "fan_speed", "super", "super"),
+        (EzvizWaterQuantitySelect, "water_quantity", "dry", "dry"),
+        (EzvizCleanTimesSelect, "clean_times", "2", 2),
+    ],
+)
+async def test_setting_does_not_bounce_on_stale_readback(
+    hass, entity_class, field, option, value
+):
+    api = MagicMock()
+    api.refresh.return_value = {
+        "ABC123456": replace(
+            _devices("docked.json")["ABC123456"],
+            fan_speed="normal",
+            water_quantity="middle",
+            clean_times=1,
+        )
+    }
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    original = coordinator.data["ABC123456"]
+    entity = entity_class(coordinator, "ABC123456")
+    await entity.async_select_option(option)
+    assert entity.current_option == option
+    assert getattr(coordinator.data["ABC123456"], field) == value
+    assert coordinator.update_interval == ACTIVE_POLL_INTERVAL
+    assert api.refresh.return_value["ABC123456"] == original
+    assert ("ABC123456", field) in coordinator._command_settings
+    api.refresh.return_value = {"ABC123456": replace(original, **{field: value})}
+    await coordinator.async_refresh()
+    assert entity.current_option == option
+    assert not coordinator._command_settings
+    assert coordinator.update_interval == DEFAULT_POLL_INTERVAL
+    await coordinator.async_shutdown()
+
+
+async def test_setting_expiration_map_change_and_unavailable_clear_pending(hass):
+    api = MagicMock()
+    api.refresh.return_value = _devices("docked.json")
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    original = coordinator.data["ABC123456"]
+    for update in [
+        replace(original, available=False),
+        replace(original, map_id=99),
+        replace(original, exception="TEST_ERROR"),
+        original,
+    ]:
+        coordinator.async_set_setting_state("ABC123456", "fan_speed", "super")
+        if update is original:
+            coordinator._command_settings[("ABC123456", "fan_speed")] = (
+                "super",
+                0,
+                original.map_id,
+            )
+        result = coordinator._merge_command_settings({"ABC123456": update})
+        assert result["ABC123456"] == update
+        assert not coordinator._command_settings
+
+
+async def test_successive_settings_preserve_other_pending_fields(hass):
+    api = MagicMock()
+    api.refresh.return_value = _devices("docked.json")
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    original = coordinator.data["ABC123456"]
+    coordinator.async_set_setting_state("ABC123456", "fan_speed", "super")
+    coordinator.async_set_setting_state("ABC123456", "water_quantity", "dry")
+    coordinator.async_set_setting_state("ABC123456", "fan_speed", "quiet")
+    data = coordinator._merge_command_settings({"ABC123456": original})["ABC123456"]
+    assert data.fan_speed == "quiet"
+    assert data.water_quantity == "dry"
+    assert data.battery_level == original.battery_level
+
+
+async def test_failed_command_never_publishes_requested_setting(hass):
+    api = MagicMock()
+    api.refresh.return_value = _devices("docked.json")
+    api.set_fan_speed.side_effect = EzvizVacuumError("Rejected")
+    coordinator = _coordinator(hass, api)
+    await coordinator.async_config_entry_first_refresh()
+    original = coordinator.data["ABC123456"]
+    with pytest.raises(HomeAssistantError, match="Rejected"):
+        await EzvizFanSpeedSelect(coordinator, "ABC123456").async_select_option("super")
+    assert coordinator.data["ABC123456"] == original
+    assert not coordinator._command_settings

@@ -166,8 +166,8 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     async def async_set_fan_speed(self, fan_speed: str, **kwargs) -> None:
         del kwargs
         self._ensure_settings_unlocked()
-        await self._async_execute_command(
-            self.coordinator.api.set_fan_speed, self.serial, fan_speed
+        await self._async_execute_setting_command(
+            self.coordinator.api.set_fan_speed, "fan_speed", fan_speed
         )
 
     @property

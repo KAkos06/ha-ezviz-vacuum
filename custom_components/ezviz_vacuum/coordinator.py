@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable
 from dataclasses import replace
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -18,6 +19,7 @@ from .const import (
     COMMAND_TRANSITION_GRACE_SECONDS,
     DEFAULT_POLL_INTERVAL,
     DOMAIN,
+    SETTING_TRANSITION_GRACE_SECONDS,
     START_CONTROL_LOCK_SECONDS,
 )
 from .models import (
@@ -47,6 +49,9 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         )
         self.api = api
         self._command_task_states: dict[str, tuple[str, bool | None, float, bool]] = {}
+        self._command_settings: dict[
+            tuple[str, str], tuple[Any, float, int | None]
+        ] = {}
         self._task_control_lock_until: dict[str, float] = {}
         self._task_control_lock_unsubs: dict[str, Callable[[], None]] = {}
 
@@ -101,9 +106,64 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         self.update_interval = (
             ACTIVE_POLL_INTERVAL
             if self._command_task_states
+            or self._command_settings
             or any(task_state_is_active(data.task_state) for data in devices.values())
             else DEFAULT_POLL_INTERVAL
         )
+
+    def async_set_setting_state(self, serial: str, field: str, value: Any) -> None:
+        """Publish an acknowledged setting while waiting briefly for cloud readback."""
+        if field not in {
+            "fan_speed",
+            "water_quantity",
+            "clean_times",
+        }:
+            raise ValueError("Unsupported setting field")
+        current = self.data.get(serial)
+        if current is None:
+            return
+        map_id = (
+            current.map_id
+            if field
+            in {
+                "fan_speed",
+                "water_quantity",
+                "clean_times",
+            }
+            else None
+        )
+        self._command_settings[(serial, field)] = (
+            value,
+            self.hass.loop.time() + SETTING_TRANSITION_GRACE_SECONDS,
+            map_id,
+        )
+        devices = dict(self.data)
+        devices[serial] = replace(current, **{field: value})
+        self.update_interval = ACTIVE_POLL_INTERVAL
+        self.async_set_updated_data(devices)
+
+    def _merge_command_settings(
+        self, devices: dict[str, VacuumData]
+    ) -> dict[str, VacuumData]:
+        """Bound stale-read suppression by confirmation, map and elapsed time."""
+        merged = dict(devices)
+        now = self.hass.loop.time()
+        for (serial, field), (value, deadline, map_id) in tuple(
+            self._command_settings.items()
+        ):
+            current = merged.get(serial)
+            if (
+                current is None
+                or not current.available
+                or current.exception
+                or (map_id is not None and current.map_id != map_id)
+                or now >= deadline
+                or getattr(current, field) == value
+            ):
+                self._command_settings.pop((serial, field), None)
+                continue
+            merged[serial] = replace(current, **{field: value})
+        return merged
 
     def async_set_task_state(
         self,
@@ -178,6 +238,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         except EzvizVacuumError as err:
             raise UpdateFailed(str(err)) from err
         devices = self._merge_command_task_states(devices)
+        devices = self._merge_command_settings(devices)
         for serial, data in devices.items():
             previous_data = previous.get(serial)
             if task_state_is_active(data.task_state) and (
