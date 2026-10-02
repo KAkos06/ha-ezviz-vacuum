@@ -154,6 +154,12 @@ Battery, general device metadata, volume, area preference, carpet boost and
 accessory counters are refreshed every 30 seconds. The extra cloud requests
 can add latency to a refresh, and commands share the same authenticated session.
 
+After a successful suction, water or cleaning-pass command, its acknowledged
+value appears immediately. Stale readbacks are suppressed for up to 15 seconds
+while polling every 3 seconds for confirmation. Confirmation, a map change,
+device unavailability or an error ends this grace period; if it expires, the
+observed cloud value takes precedence. Failed commands never publish a new value.
+
 The live response's nested task status distinguishes pause from cleaning and
 returning from charging. Successful Home Assistant commands appear immediately,
 but can override the observed state for at most a 6-second transition period.

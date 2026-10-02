@@ -67,3 +67,11 @@ class EzvizVacuumEntity(CoordinatorEntity[EzvizVacuumCoordinator]):
             raise HomeAssistantError(str(err)) from err
         if refresh:
             await self.coordinator.async_request_refresh()
+
+    async def _async_execute_setting_command(
+        self, command: Callable[..., None], field: str, value: Any
+    ) -> None:
+        """Expose a successfully acknowledged setting before cloud verification."""
+        await self._async_execute_command(command, self.serial, value, refresh=False)
+        self.coordinator.async_set_setting_state(self.serial, field, value)
+        await self.coordinator.async_request_refresh()

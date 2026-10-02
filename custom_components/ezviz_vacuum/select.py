@@ -87,8 +87,8 @@ class EzvizWaterQuantitySelect(EzvizVacuumEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         self._ensure_settings_unlocked()
-        await self._async_execute_command(
-            self.coordinator.api.set_water_quantity, self.serial, option
+        await self._async_execute_setting_command(
+            self.coordinator.api.set_water_quantity, "water_quantity", option
         )
 
 
@@ -115,8 +115,8 @@ class EzvizFanSpeedSelect(EzvizVacuumEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         self._ensure_settings_unlocked()
-        await self._async_execute_command(
-            self.coordinator.api.set_fan_speed, self.serial, option
+        await self._async_execute_setting_command(
+            self.coordinator.api.set_fan_speed, "fan_speed", option
         )
 
 
@@ -145,6 +145,6 @@ class EzvizCleanTimesSelect(EzvizVacuumEntity, SelectEntity):
         self._ensure_settings_unlocked()
         if option not in self.options:
             raise HomeAssistantError(f"Unsupported cleaning count: {option}")
-        await self._async_execute_command(
-            self.coordinator.api.set_clean_times, self.serial, int(option)
+        await self._async_execute_setting_command(
+            self.coordinator.api.set_clean_times, "clean_times", int(option)
         )
