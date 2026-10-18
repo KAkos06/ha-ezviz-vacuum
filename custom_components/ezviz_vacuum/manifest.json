@@ -12,5 +12,5 @@
     "pyezvizapi>=1.0.5.0",
     "pycryptodome==3.23.0"
   ],
-  "version": "0.7.0b2"
+  "version": "0.7.0b3"
 }

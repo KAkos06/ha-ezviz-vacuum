@@ -57,10 +57,10 @@ async def test_stopping_state_has_hungarian_translation(hass) -> None:
         hass, "hu", "entity", integrations={DOMAIN}
     )
 
-    assert translations[
-        "component.ezviz_vacuum.entity.vacuum."
-        "ezviz_vacuum.state.stopping"
-    ] == "Leállítás"
+    assert (
+        translations["component.ezviz_vacuum.entity.vacuum.ezviz_vacuum.state.stopping"]
+        == "Leállítás"
+    )
 
 
 def test_verified_features_and_fan_speeds() -> None:
@@ -78,5 +78,7 @@ def test_start_lock_keeps_features_but_disables_entity() -> None:
     entity = _entity("cleaning.json")
     entity.coordinator.start_controls_locked.return_value = True
 
-    assert entity.supported_features == entity._attr_supported_features
+    assert entity.supported_features == (
+        entity._attr_supported_features & ~VacuumEntityFeature.CLEAN_AREA
+    )
     assert entity.available is False

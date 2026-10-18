@@ -139,7 +139,9 @@ async def test_task_commands_are_rejected_while_transition_is_locked() -> None:
     coordinator.start_controls_locked.return_value = True
     entity = EzvizVacuum(coordinator, "ABC123456")
 
-    assert entity.supported_features == entity._attr_supported_features
+    assert entity.supported_features == (
+        entity._attr_supported_features & ~VacuumEntityFeature.CLEAN_AREA
+    )
     assert entity.available is False
     with pytest.raises(HomeAssistantError, match="temporarily locked"):
         await entity.async_pause()
@@ -183,9 +185,7 @@ async def test_water_select_exposes_state_and_controls() -> None:
     assert entity.options == ["dry", "low", "middle", "high"]
     await entity.async_select_option("dry")
 
-    coordinator.api.set_water_quantity.assert_called_once_with(
-        "ABC123456", "dry"
-    )
+    coordinator.api.set_water_quantity.assert_called_once_with("ABC123456", "dry")
     coordinator.async_request_refresh.assert_awaited_once_with()
 
 
@@ -199,9 +199,7 @@ async def test_fan_select_exposes_state_and_controls() -> None:
     assert entity.options == ["quiet", "normal", "strong", "super"]
     await entity.async_select_option("strong")
 
-    coordinator.api.set_fan_speed.assert_called_once_with(
-        "ABC123456", "strong"
-    )
+    coordinator.api.set_fan_speed.assert_called_once_with("ABC123456", "strong")
     coordinator.async_request_refresh.assert_awaited_once_with()
 
 
@@ -232,9 +230,7 @@ async def test_carpet_turbo_switch_exposes_state_and_controls() -> None:
     assert entity.is_on is True
     await entity.async_turn_off()
 
-    coordinator.api.set_carpet_turbo.assert_called_once_with(
-        "ABC123456", False
-    )
+    coordinator.api.set_carpet_turbo.assert_called_once_with("ABC123456", False)
     coordinator.async_request_refresh.assert_awaited_once_with()
 
 
