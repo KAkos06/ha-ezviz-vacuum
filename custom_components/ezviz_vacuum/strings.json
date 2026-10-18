@@ -146,7 +146,7 @@
     },
     "select": {
       "area_unit": {"name": "Area display unit", "state": {"m2": "m²", "sq_ft": "ft²", "ping": "Ping"}},
-      "clean_mode": {"name": "Cleaning mode", "state": {"sweep": "Vacuum only", "mop": "Mop only", "sweepAndMop": "Vacuum and mop", "sweepThenMop": "Vacuum then mop"}},
+      "clean_mode": {"name": "Cleaning mode", "state": {"sweep": "Vacuum only", "mop": "Mop only", "sweep_and_mop": "Vacuum and mop", "sweep_then_mop": "Vacuum then mop"}},
       "water_quantity_control": {
         "name": "Water quantity control",
         "state": {

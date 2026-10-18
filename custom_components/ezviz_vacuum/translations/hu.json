@@ -142,7 +142,7 @@
     },
     "select": {
       "area_unit": {"name": "Terület mértékegysége", "state": {"m2": "m²", "sq_ft": "ft²", "ping": "Ping"}},
-      "clean_mode": {"name": "Takarítási mód", "state": {"sweep": "Csak porszívózás", "mop": "Csak felmosás", "sweepAndMop": "Porszívózás és felmosás", "sweepThenMop": "Előbb porszívózás, majd felmosás"}},
+      "clean_mode": {"name": "Takarítási mód", "state": {"sweep": "Csak porszívózás", "mop": "Csak felmosás", "sweep_and_mop": "Porszívózás és felmosás", "sweep_then_mop": "Előbb porszívózás, majd felmosás"}},
       "water_quantity_control": {
         "name": "Vízmennyiség vezérlése",
         "state": {

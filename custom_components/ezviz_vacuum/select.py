@@ -9,8 +9,15 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import EzvizVacuumRuntimeData
-from .api import AREA_UNITS, CLEAN_MODES, CLEAN_TIMES, FAN_SPEEDS, WATER_QUANTITIES
+from .api import AREA_UNITS, CLEAN_TIMES, FAN_SPEEDS, WATER_QUANTITIES
 from .entity import EzvizVacuumEntity
+
+CLEAN_MODE_OPTIONS = {
+    "sweep": "sweep",
+    "mop": "mop",
+    "sweep_and_mop": "sweepAndMop",
+    "sweep_then_mop": "sweepThenMop",
+}
 
 
 async def async_setup_entry(
@@ -72,7 +79,7 @@ class EzvizCleanModeSelect(EzvizVacuumEntity, SelectEntity):
     """Select a cleaning mode when the robot exposes the feature."""
 
     _attr_translation_key = "clean_mode"
-    _attr_options = list(CLEAN_MODES)
+    _attr_options = list(CLEAN_MODE_OPTIONS)
 
     def __init__(self, coordinator, serial: str) -> None:
         super().__init__(coordinator, serial)
@@ -81,7 +88,16 @@ class EzvizCleanModeSelect(EzvizVacuumEntity, SelectEntity):
     @property
     def current_option(self) -> str | None:
         data = self.vacuum_data
-        return data.clean_mode if data and data.clean_mode in self.options else None
+        if data is None:
+            return None
+        return next(
+            (
+                option
+                for option, value in CLEAN_MODE_OPTIONS.items()
+                if value == data.clean_mode
+            ),
+            None,
+        )
 
     @property
     def available(self) -> bool:
@@ -92,7 +108,9 @@ class EzvizCleanModeSelect(EzvizVacuumEntity, SelectEntity):
         if option not in self.options:
             raise HomeAssistantError("Unsupported cleaning mode")
         await self._async_execute_command(
-            self.coordinator.api.set_clean_mode, self.serial, option
+            self.coordinator.api.set_clean_mode,
+            self.serial,
+            CLEAN_MODE_OPTIONS[option],
         )
 
 
