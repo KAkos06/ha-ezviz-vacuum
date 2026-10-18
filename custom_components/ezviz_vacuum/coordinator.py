@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable
 from dataclasses import replace
+from datetime import UTC, datetime
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -22,8 +23,11 @@ from .const import (
     SETTING_TRANSITION_GRACE_SECONDS,
     START_CONTROL_LOCK_SECONDS,
 )
+from .mapdata import build_layers
+from .maprender import render_svg
 from .models import (
     VacuumData,
+    masked_serial,
     normalize_task_state,
     task_state_is_active,
 )
@@ -54,6 +58,9 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         ] = {}
         self._task_control_lock_until: dict[str, float] = {}
         self._task_control_lock_unsubs: dict[str, Callable[[], None]] = {}
+        self.map_images: dict[str, bytes] = {}
+        self.map_image_updated: dict[str, datetime] = {}
+        self._map_cache: dict[tuple[str, int], tuple[float, dict[str, Any]]] = {}
 
     def task_controls_locked(self, serial: str) -> bool:
         """Return whether task commands must currently be rejected."""
@@ -239,6 +246,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             raise UpdateFailed(str(err)) from err
         devices = self._merge_command_task_states(devices)
         devices = self._merge_command_settings(devices)
+        await self._async_refresh_maps(devices)
         for serial, data in devices.items():
             previous_data = previous.get(serial)
             if task_state_is_active(data.task_state) and (
@@ -251,6 +259,38 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                 self._set_start_control_lock(serial, "cleaning")
         self._set_poll_interval(devices)
         return devices
+
+    async def _async_refresh_maps(self, devices: dict[str, VacuumData]) -> None:
+        """Refresh optional map layers without making robot state depend on them."""
+        now = self.hass.loop.time()
+        for serial, data in devices.items():
+            if data.map_id is None or not data.available:
+                continue
+            cache_key = (serial, data.map_id)
+            cached = self._map_cache.get(cache_key)
+            if cached and now - cached[0] < 10:
+                continue
+            try:
+                layers = {}
+                for layer in ("map", "region", "path"):
+                    layers[layer] = await self.hass.async_add_executor_job(
+                        self.api.fetch_map_layer, serial, layer, data.map_id
+                    )
+                image = await self.hass.async_add_executor_job(
+                    render_svg,
+                    build_layers(layers["map"], layers["region"], layers["path"]),
+                )
+                if image:
+                    self._map_cache[cache_key] = (now, layers)
+                    if self.map_images.get(serial) != image:
+                        self.map_images[serial] = image
+                        self.map_image_updated[serial] = datetime.now(UTC)
+            except EzvizVacuumError as err:
+                _LOGGER.debug(
+                    "Optional EZVIZ map unavailable for %s: %s",
+                    masked_serial(serial),
+                    err,
+                )
 
     async def async_shutdown(self) -> None:
         """Cancel transition timers when the config entry unloads."""

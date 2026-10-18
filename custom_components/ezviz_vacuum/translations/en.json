@@ -142,6 +142,7 @@
     },
     "select": {
       "area_unit": {"name": "Area display unit", "state": {"m2": "m²", "sq_ft": "ft²", "ping": "Ping"}},
+      "clean_mode": {"name": "Cleaning mode", "state": {"sweep": "Vacuum only", "mop": "Mop only", "sweepAndMop": "Vacuum and mop", "sweepThenMop": "Vacuum then mop"}},
       "water_quantity_control": {
         "name": "Water quantity control",
         "state": {
@@ -167,6 +168,7 @@
     },
     "number": {"volume": {"name": "Prompt volume"}},
     "button": {"reset_main_brush": {"name": "Reset main brush lifetime"}, "reset_hepa": {"name": "Reset HEPA lifetime"}, "reset_side_brush": {"name": "Reset side brush lifetime"}, "reset_mop": {"name": "Reset mop lifetime"}, "reset_sensors": {"name": "Body cleaned"}},
+    "image": {"map": {"name": "Map"}},
     "switch": {
       "carpet_turbo_control": {"name": "Automatic carpet boost control"}
     }

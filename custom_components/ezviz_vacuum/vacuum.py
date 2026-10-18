@@ -6,6 +6,7 @@ import logging
 from typing import cast
 
 from homeassistant.components.vacuum import (
+    Segment,
     StateVacuumEntity,
     VacuumActivity,
     VacuumEntityFeature,
@@ -42,9 +43,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator = entry.runtime_data.coordinator
-    async_add_entities(
-        EzvizVacuum(coordinator, serial) for serial in coordinator.data
-    )
+    async_add_entities(EzvizVacuum(coordinator, serial) for serial in coordinator.data)
 
 
 class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
@@ -57,6 +56,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
         | VacuumEntityFeature.FAN_SPEED
+        | VacuumEntityFeature.CLEAN_AREA
     )
 
     def __init__(self, coordinator, serial: str) -> None:
@@ -77,7 +77,11 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
 
         if self.coordinator.settings_locked(self.serial):
             return VacuumEntityFeature(0)
-        return self._attr_supported_features
+        features = self._attr_supported_features
+        data = self.vacuum_data
+        if not data or not data.rooms:
+            features &= ~VacuumEntityFeature.CLEAN_AREA
+        return features
 
     @property
     def activity(self) -> VacuumActivity | None:
@@ -105,6 +109,32 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     @property
     def fan_speed_list(self) -> list[str]:
         return list(FAN_SPEEDS)
+
+    async def async_get_segments(self) -> list[Segment]:
+        data = self.vacuum_data
+        return (
+            [Segment(id=room_id, name=name) for room_id, name in data.rooms]
+            if data
+            else []
+        )
+
+    async def async_clean_area(self, cleaning_area_id: list[str], **kwargs) -> None:
+        del kwargs
+        data = self.vacuum_data
+        if not data or data.map_id is None or not data.rooms:
+            return
+        room_ids = {str(room_id) for room_id, _ in data.rooms}
+        selected = [int(value) for value in cleaning_area_id if str(value) in room_ids]
+        if not selected:
+            return
+        self._ensure_task_controls_unlocked()
+        await self._async_execute_task_command(
+            self.coordinator.api.clean_rooms,
+            data.map_id,
+            selected,
+            optimistic_state="cleaning",
+            charging=False,
+        )
 
     async def async_start(self) -> None:
         """Start a task, or resume it when the robot is paused."""

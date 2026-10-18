@@ -69,6 +69,9 @@ class VacuumData:
     in_dnd_mode: bool | None = None
     volume: int | None = None
     area_unit: str | None = None
+    capabilities: frozenset[str] = frozenset()
+    rooms: tuple[tuple[int, str], ...] = ()
+    clean_mode: str | None = None
 
 
 def _mapping(value: Any) -> Mapping[str, Any]:
@@ -294,10 +297,64 @@ def parse_single_vacuum(
     current = _mapping(_mapping(robot.get("SweeperTaskMgr")).get("CurrentTask"))
     map_mgr = _mapping(robot.get("SweeperMapMgr"))
     map_data, clean_cfg = active_map_settings(map_mgr)
+    region_info = _mapping(map_mgr.get("RegionBasicInfo"))
+    region_list = region_info.get("mapList", [])
+    if isinstance(region_list, Mapping):
+        region_list = [region_list]
+    room_items: list[tuple[int, str]] = []
+    for map_item in region_list if isinstance(region_list, list) else []:
+        if not isinstance(map_item, Mapping) or _integer(
+            map_item.get("mapID")
+        ) != _integer(map_data.get("mapID")):
+            continue
+        regions = map_item.get("regionList", [])
+        for room in regions if isinstance(regions, list) else []:
+            if (
+                isinstance(room, Mapping)
+                and room.get("regionType") == "room"
+                and _integer(room.get("ID")) is not None
+            ):
+                room_items.append(
+                    (
+                        _integer(room.get("ID")),
+                        _text(room.get("name")) or f"Room {_integer(room.get('ID'))}",
+                    )
+                )
     consumables = _mapping(robot.get("SweeperConsumable"))
     sweeper_mgr = _mapping(robot.get("SweeperMgr"))
     rest_mode = _mapping(sweeper_mgr.get("RestMode"))
     clean_task = _mapping(robot.get("SweeperCleanTask"))
+    capabilities = set()
+    if "SoundSetting" in robot and "PromptToneVolume" in _mapping(
+        robot.get("SoundSetting")
+    ):
+        capabilities.add("volume")
+    if "AreaUnitCfg" in map_mgr:
+        capabilities.add("area_unit")
+    if "CarpetTurboCleanSwitch" in clean_task:
+        capabilities.add("carpet_turbo")
+    for feature, key in (
+        ("HepaWorkingTime", "hepa"),
+        ("RotatingBrushWorkingTime", "main_brush"),
+        ("EdgeBrushWorkingTime", "side_brush"),
+        ("MopWorkingTime", "mop"),
+        ("SensorWorkingTime", "sensors"),
+    ):
+        if feature in consumables:
+            capabilities.add(key)
+    if "SweepMopMode" in clean_task:
+        capabilities.add("clean_mode")
+    if "RegionBasicInfo" in map_mgr:
+        capabilities.add("rooms")
+    for field in ("fanMode", "waterQuantity", "cleanTimes"):
+        if field in clean_cfg:
+            capabilities.add(
+                {
+                    "fanMode": "fan_speed",
+                    "waterQuantity": "water_quantity",
+                    "cleanTimes": "clean_times",
+                }[field]
+            )
 
     battery = _integer(power.get("SurplusPower"))
     if battery is not None:
@@ -337,6 +394,8 @@ def parse_single_vacuum(
             if (count := _integer(clean_cfg.get("cleanTimes"))) in (1, 2)
             else None
         ),
+        capabilities=frozenset(capabilities),
+        rooms=tuple(room_items),
     )
 
 

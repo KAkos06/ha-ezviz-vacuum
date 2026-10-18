@@ -1,0 +1,3 @@
+Map decoding and SVG rendering in custom_components/ezviz_vacuum/mapdata.py and
+maprender.py are adapted from ha-ezviz-vacuum by Stefan Ciubotaru,
+https://github.com/stefanelul2000/ha-ezviz-vacuum, licensed under Apache-2.0.

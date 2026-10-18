@@ -14,6 +14,7 @@ Supported device: **EZVIZ RE5 Plus** (`CS-RE5P-TWT`).
 - Monitor activity, battery, charging, connectivity and rest periods.
 - Track accessory lifetime and body-cleaning maintenance counters.
 - Reset maintenance counters after replacing accessories or cleaning the body.
+- Display the robot's cloud map when its model exposes map data, and clean mapped rooms individually.
 
 ## Requirements
 
@@ -67,6 +68,11 @@ After the device acknowledges a suction, water or cleaning-pass change, the
 selected value appears immediately and is confirmed by subsequent cloud updates.
 The cleaning-pass setting configures standard cleaning; its effect on a task
 already in progress depends on the robot.
+
+When the robot reports room IDs and an active map, the vacuum entity also exposes
+Home Assistant segments for room cleaning. The map image uses the cloud map,
+room and path layers; models or accounts that do not return these layers have no
+map image or room-cleaning controls.
 
 Pause and stop are temporarily disabled for five seconds after cleaning starts.
 After a stop command, adjustable settings remain locked while the robot returns

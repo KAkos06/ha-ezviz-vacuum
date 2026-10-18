@@ -10,7 +10,9 @@ from .entity import EzvizVacuumEntity
 async def async_setup_entry(hass, entry, async_add_entities) -> None:
     coordinator = entry.runtime_data.coordinator
     async_add_entities(
-        EzvizVolumeNumber(coordinator, serial) for serial in coordinator.data
+        EzvizVolumeNumber(coordinator, serial)
+        for serial, data in coordinator.data.items()
+        if "volume" in data.capabilities
     )
 
 
