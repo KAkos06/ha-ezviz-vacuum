@@ -246,7 +246,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             raise UpdateFailed(str(err)) from err
         devices = self._merge_command_task_states(devices)
         devices = self._merge_command_settings(devices)
-        await self._async_refresh_maps(devices)
+        devices = await self._async_refresh_maps(devices)
         for serial, data in devices.items():
             previous_data = previous.get(serial)
             if task_state_is_active(data.task_state) and (
@@ -260,37 +260,63 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         self._set_poll_interval(devices)
         return devices
 
-    async def _async_refresh_maps(self, devices: dict[str, VacuumData]) -> None:
-        """Refresh optional map layers without making robot state depend on them."""
+    async def _async_refresh_maps(
+        self, devices: dict[str, VacuumData]
+    ) -> dict[str, VacuumData]:
+        """Refresh optional maps and use their room IDs as a segment fallback."""
         now = self.hass.loop.time()
         for serial, data in devices.items():
             if data.map_id is None or not data.available:
                 continue
             cache_key = (serial, data.map_id)
             cached = self._map_cache.get(cache_key)
-            if cached and now - cached[0] < 10:
-                continue
             try:
-                layers = {}
-                for layer in ("map", "region", "path"):
-                    layers[layer] = await self.hass.async_add_executor_job(
-                        self.api.fetch_map_layer, serial, layer, data.map_id
+                if cached and now - cached[0] < 10:
+                    layers = cached[1]
+                else:
+                    layers = {}
+                    for layer in ("map", "region", "path"):
+                        layers[layer] = await self.hass.async_add_executor_job(
+                            self.api.fetch_map_layer, serial, layer, data.map_id
+                        )
+                    image = await self.hass.async_add_executor_job(
+                        render_svg,
+                        build_layers(
+                            layers["map"], layers["region"], layers["path"]
+                        ),
                     )
-                image = await self.hass.async_add_executor_job(
-                    render_svg,
-                    build_layers(layers["map"], layers["region"], layers["path"]),
-                )
-                if image:
                     self._map_cache[cache_key] = (now, layers)
-                    if self.map_images.get(serial) != image:
+                    if image and self.map_images.get(serial) != image:
                         self.map_images[serial] = image
                         self.map_image_updated[serial] = datetime.now(UTC)
+
+                # Some EZVIZ accounts return room outlines in the map layer but
+                # omit RegionBasicInfo from the device feature payload.
+                region_rooms = layers.get("region", {}).get("room", [])
+                existing_names = dict(data.rooms)
+                rooms = []
+                for room in region_rooms if isinstance(region_rooms, list) else []:
+                    if not isinstance(room, dict):
+                        continue
+                    try:
+                        room_id = int(room["roomID"])
+                    except (KeyError, TypeError, ValueError):
+                        continue
+                    name = room.get("name") or existing_names.get(room_id)
+                    rooms.append((room_id, str(name or f"Room {room_id}")))
+                if rooms and tuple(rooms) != data.rooms:
+                    devices[serial] = replace(
+                        data,
+                        rooms=tuple(rooms),
+                        capabilities=data.capabilities | {"rooms"},
+                    )
             except EzvizVacuumError as err:
                 _LOGGER.debug(
                     "Optional EZVIZ map unavailable for %s: %s",
                     masked_serial(serial),
                     err,
                 )
+        return devices
 
     async def async_shutdown(self) -> None:
         """Cancel transition timers when the config entry unloads."""
