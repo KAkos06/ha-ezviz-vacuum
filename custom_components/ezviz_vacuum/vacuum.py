@@ -35,6 +35,9 @@ except ImportError:
         group: str | None = None
 
 
+_CLEAN_AREA_FEATURE = getattr(VacuumEntityFeature, "CLEAN_AREA", VacuumEntityFeature(0))
+
+
 # Values are intentionally conservative and easy to extend from real fixtures.
 TASK_ACTIVITY_MAP: dict[str, VacuumActivity] = {
     "clean": VacuumActivity.CLEANING,
@@ -69,7 +72,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
         | VacuumEntityFeature.FAN_SPEED
-        | VacuumEntityFeature.CLEAN_AREA
+        | _CLEAN_AREA_FEATURE
     )
 
     def __init__(self, coordinator, serial: str) -> None:
@@ -93,7 +96,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         features = self._attr_supported_features
         data = self.vacuum_data
         if not data or not data.rooms:
-            features &= ~VacuumEntityFeature.CLEAN_AREA
+            features &= ~_CLEAN_AREA_FEATURE
         return features
 
     @property

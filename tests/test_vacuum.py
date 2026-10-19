@@ -78,7 +78,10 @@ def test_start_lock_keeps_features_but_disables_entity() -> None:
     entity = _entity("cleaning.json")
     entity.coordinator.start_controls_locked.return_value = True
 
+    clean_area_feature = getattr(
+        VacuumEntityFeature, "CLEAN_AREA", VacuumEntityFeature(0)
+    )
     assert entity.supported_features == (
-        entity._attr_supported_features & ~VacuumEntityFeature.CLEAN_AREA
+        entity._attr_supported_features & ~clean_area_feature
     )
     assert entity.available is False
