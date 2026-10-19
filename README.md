@@ -70,9 +70,11 @@ The cleaning-pass setting configures standard cleaning; its effect on a task
 already in progress depends on the robot.
 
 When the robot reports room IDs and an active map, the vacuum entity also exposes
-Home Assistant segments for room cleaning. The map image uses the cloud map,
-room and path layers; models or accounts that do not return these layers have no
-map image or room-cleaning controls.
+Home Assistant segments for room cleaning. In Home Assistant, open the vacuum
+entity settings and assign its room segments to areas under the room/segment
+mapping section; then use `vacuum.clean_area` with those area IDs. The map image
+uses the cloud map, room and path layers; models or accounts that do not return
+room metadata have no room-cleaning controls.
 
 Pause and stop are temporarily disabled for five seconds after cleaning starts.
 After a stop command, adjustable settings remain locked while the robot returns

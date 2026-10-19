@@ -135,12 +135,22 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         )
 
     async def async_clean_area(self, cleaning_area_id: list[str], **kwargs) -> None:
+        """Clean selected room IDs on older Home Assistant versions."""
         del kwargs
+        await self._async_clean_room_ids(cleaning_area_id)
+
+    async def async_clean_segments(self, segment_ids: list[str], **kwargs) -> None:
+        """Clean segments selected through Home Assistant's area mapping."""
+        del kwargs
+        await self._async_clean_room_ids(segment_ids)
+
+    async def _async_clean_room_ids(self, room_ids: list[str]) -> None:
+        """Start a room clean for selected EZVIZ room IDs."""
         data = self.vacuum_data
         if not data or data.map_id is None or not data.rooms:
             return
-        room_ids = {str(room_id) for room_id, _ in data.rooms}
-        selected = [int(value) for value in cleaning_area_id if str(value) in room_ids]
+        known_room_ids = {str(room_id) for room_id, _ in data.rooms}
+        selected = [int(value) for value in room_ids if str(value) in known_room_ids]
         if not selected:
             return
         self._ensure_task_controls_unlocked()
