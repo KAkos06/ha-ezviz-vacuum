@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 from typing import cast
 
 from homeassistant.components.vacuum import (
-    Segment,
     StateVacuumEntity,
     VacuumActivity,
     VacuumEntityFeature,
@@ -21,6 +21,19 @@ from .entity import EzvizVacuumEntity
 from .models import normalize_task_state
 
 _LOGGER = logging.getLogger(__name__)
+
+try:
+    from homeassistant.components.vacuum import Segment
+except ImportError:
+
+    @dataclass(frozen=True, slots=True)
+    class Segment:
+        """Compatibility value for Home Assistant versions before segment API."""
+
+        id: int | str
+        name: str
+        group: str | None = None
+
 
 # Values are intentionally conservative and easy to extend from real fixtures.
 TASK_ACTIVITY_MAP: dict[str, VacuumActivity] = {
