@@ -85,3 +85,28 @@ def test_start_lock_keeps_features_but_disables_entity() -> None:
         entity._attr_supported_features & ~clean_area_feature
     )
     assert entity.available is False
+
+
+async def test_get_segments_and_clean_segments(hass) -> None:
+    from unittest.mock import AsyncMock
+    entity = _entity("cleaning.json")
+    entity.hass = hass
+    entity.coordinator.hass.async_add_executor_job = AsyncMock(
+        side_effect=lambda fn, *args: fn(*args)
+    )
+    entity.coordinator.data["ABC123456"] = replace(
+        entity.coordinator.data["ABC123456"],
+        map_id=5,
+        rooms=((0, "Konyha"), (1, "Folyosó")),
+    )
+    segments = await entity.async_get_segments()
+    assert len(segments) == 2
+    assert segments[0].id == 0
+    assert segments[0].name == "Konyha"
+    assert segments[1].id == 1
+    assert segments[1].name == "Folyosó"
+
+    await entity.async_clean_segments(["0", "1"])
+    entity.coordinator.api.clean_rooms.assert_called_once_with(
+        "ABC123456", map_id=5, room_ids=[0, 1]
+    )

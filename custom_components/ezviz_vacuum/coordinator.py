@@ -276,30 +276,22 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                 else DEFAULT_POLL_INTERVAL
             ).total_seconds()
             try:
-                if cached and now - cached[0] < map_refresh_interval:
-                    layers = cached[1]
-                else:
+                need_render = not cached or now - cached[0] >= map_refresh_interval
+                if need_render:
                     layers = {}
                     for layer in ("map", "region", "path"):
                         layers[layer] = await self.hass.async_add_executor_job(
                             self.api.fetch_map_layer, serial, layer, data.map_id
                         )
-                    image = await self.hass.async_add_executor_job(
-                        render_svg,
-                        build_layers(
-                            layers["map"], layers["region"], layers["path"]
-                        ),
-                    )
                     self._map_cache[cache_key] = (now, layers)
-                    if image and self.map_images.get(serial) != image:
-                        self.map_images[serial] = image
-                        self.map_image_updated[serial] = datetime.now(UTC)
+                else:
+                    layers = cached[1]
 
-                # Some EZVIZ accounts return room outlines in the map layer but
-                # omit RegionBasicInfo from the device feature payload.
+                # Extract and localize room names from the active map's region layer
                 region_rooms = layers.get("region", {}).get("room", [])
                 existing_names = dict(data.rooms)
                 rooms = []
+                lang = getattr(self.hass.config, "language", "hu") or "hu"
                 for room in region_rooms if isinstance(region_rooms, list) else []:
                     if not isinstance(room, dict):
                         continue
@@ -307,17 +299,31 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                         room_id = int(room["roomID"])
                     except (KeyError, TypeError, ValueError):
                         continue
-                    name = room.get("name") or existing_names.get(room_id)
-                    rooms.append((room_id, str(name or f"Room {room_id}")))
-                # RegionBasicInfo is the source of IDs used by the room-clean
-                # command. Map-layer room IDs are only a fallback for accounts
-                # that do not report that canonical room list.
-                if rooms and not data.rooms:
-                    devices[serial] = replace(
-                        data,
-                        rooms=tuple(rooms),
-                        capabilities=data.capabilities | {"rooms"},
+                    raw_name = room.get("roomName") or room.get("name")
+                    name = (
+                        self.api._resolve_room_name(raw_name, str(room_id), lang)
+                        if raw_name
+                        else existing_names.get(room_id, f"Room {room_id}")
                     )
+                    rooms.append((room_id, str(name)))
+                if rooms and tuple(rooms) != data.rooms:
+                    devices[serial] = replace(
+                        devices.get(serial, data),
+                        rooms=tuple(rooms),
+                        capabilities=devices.get(serial, data).capabilities | {"rooms"},
+                    )
+
+                if need_render:
+                    image = await self.hass.async_add_executor_job(
+                        render_svg,
+                        build_layers(
+                            layers["map"], layers["region"], layers["path"]
+                        ),
+                        dict(rooms or data.rooms),
+                    )
+                    if image and self.map_images.get(serial) != image:
+                        self.map_images[serial] = image
+                        self.map_image_updated[serial] = datetime.now(UTC)
             except EzvizVacuumError as err:
                 _LOGGER.debug(
                     "Optional EZVIZ map unavailable for %s: %s",
