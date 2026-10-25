@@ -309,7 +309,10 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                         continue
                     name = room.get("name") or existing_names.get(room_id)
                     rooms.append((room_id, str(name or f"Room {room_id}")))
-                if rooms and tuple(rooms) != data.rooms:
+                # RegionBasicInfo is the source of IDs used by the room-clean
+                # command. Map-layer room IDs are only a fallback for accounts
+                # that do not report that canonical room list.
+                if rooms and not data.rooms:
                     devices[serial] = replace(
                         data,
                         rooms=tuple(rooms),
