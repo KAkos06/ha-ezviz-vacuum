@@ -21,7 +21,8 @@ async def async_setup_entry(
     coordinator = entry.runtime_data.coordinator
     async_add_entities(
         EzvizCarpetTurboSwitch(coordinator, serial)
-        for serial in coordinator.data
+        for serial, data in coordinator.data.items()
+        if "carpet_turbo" in data.capabilities
     )
 
 

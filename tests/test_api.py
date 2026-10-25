@@ -287,3 +287,27 @@ def test_cloud_success_does_not_hide_a_device_rejection(client_class) -> None:
 
     with pytest.raises(EzvizVacuumError, match="device code 0x00000001"):
         api.pause("ABC123456")
+
+
+def test_resolve_room_name_tokens_and_fallbacks() -> None:
+    # Hungarian localization
+    assert EzvizVacuumApi._resolve_room_name("#@ChuF#", "0", "hu") == "Konyha"
+    assert EzvizVacuumApi._resolve_room_name("#@GuoD#", "1", "hu") == "Folyosó"
+    assert EzvizVacuumApi._resolve_room_name("#@KeT#", "2", "hu") == "Nappali"
+    assert EzvizVacuumApi._resolve_room_name("#@WoS#", "3", "hu") == "Hálószoba"
+    assert EzvizVacuumApi._resolve_room_name("#@FangJ#1", "4", "hu") == "Szoba 1"
+
+    # English localization
+    assert EzvizVacuumApi._resolve_room_name("#@ChuF#", "0", "en") == "Kitchen"
+    assert EzvizVacuumApi._resolve_room_name("#@GuoD#", "1", "en") == "Passage"
+    assert EzvizVacuumApi._resolve_room_name("#@KeT#", "2", "en") == "Living Room"
+    assert EzvizVacuumApi._resolve_room_name("#@WoS#", "3", "en") == "Bedroom"
+    assert EzvizVacuumApi._resolve_room_name("#@FangJ#1", "4", "en") == "Room 1"
+
+    # Custom names are preserved
+    assert EzvizVacuumApi._resolve_room_name("Vendégszoba", "5", "hu") == "Vendégszoba"
+    assert EzvizVacuumApi._resolve_room_name("Office", "6", "en") == "Office"
+
+    # Fallback when raw name is None or blank
+    assert EzvizVacuumApi._resolve_room_name(None, "7", "hu") == "Szoba 7"
+    assert EzvizVacuumApi._resolve_room_name("", "7", "en") == "Room 7"

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
+from functools import partial
 from typing import cast
 
 from homeassistant.components.vacuum import (
@@ -20,6 +22,22 @@ from .entity import EzvizVacuumEntity
 from .models import normalize_task_state
 
 _LOGGER = logging.getLogger(__name__)
+
+try:
+    from homeassistant.components.vacuum import Segment
+except ImportError:
+
+    @dataclass(frozen=True, slots=True)
+    class Segment:
+        """Compatibility value for Home Assistant versions before segment API."""
+
+        id: int | str
+        name: str
+        group: str | None = None
+
+
+_CLEAN_AREA_FEATURE = getattr(VacuumEntityFeature, "CLEAN_AREA", VacuumEntityFeature(0))
+
 
 # Values are intentionally conservative and easy to extend from real fixtures.
 TASK_ACTIVITY_MAP: dict[str, VacuumActivity] = {
@@ -42,9 +60,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator = entry.runtime_data.coordinator
-    async_add_entities(
-        EzvizVacuum(coordinator, serial) for serial in coordinator.data
-    )
+    async_add_entities(EzvizVacuum(coordinator, serial) for serial in coordinator.data)
 
 
 class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
@@ -57,6 +73,7 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.STOP
         | VacuumEntityFeature.FAN_SPEED
+        | _CLEAN_AREA_FEATURE
     )
 
     def __init__(self, coordinator, serial: str) -> None:
@@ -77,7 +94,11 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
 
         if self.coordinator.settings_locked(self.serial):
             return VacuumEntityFeature(0)
-        return self._attr_supported_features
+        features = self._attr_supported_features
+        data = self.vacuum_data
+        if not data or not data.rooms:
+            features &= ~_CLEAN_AREA_FEATURE
+        return features
 
     @property
     def activity(self) -> VacuumActivity | None:
@@ -105,6 +126,45 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
     @property
     def fan_speed_list(self) -> list[str]:
         return list(FAN_SPEEDS)
+
+    async def async_get_segments(self) -> list[Segment]:
+        data = self.vacuum_data
+        return (
+            [Segment(id=room_id, name=name) for room_id, name in data.rooms]
+            if data
+            else []
+        )
+
+    async def async_clean_area(self, cleaning_area_id: list[str], **kwargs) -> None:
+        """Clean selected room IDs on older Home Assistant versions."""
+        del kwargs
+        await self._async_clean_room_ids(cleaning_area_id)
+
+    async def async_clean_segments(self, segment_ids: list[str], **kwargs) -> None:
+        """Clean segments selected through Home Assistant's area mapping."""
+        del kwargs
+        await self._async_clean_room_ids(segment_ids)
+
+    async def _async_clean_room_ids(self, room_ids: list[str]) -> None:
+        """Start a room clean for selected EZVIZ room IDs."""
+        data = self.vacuum_data
+        if not data or data.map_id is None or not data.rooms:
+            return
+        known_room_ids = {str(room_id) for room_id, _ in data.rooms}
+        selected = [int(value) for value in room_ids if str(value) in known_room_ids]
+        if not selected:
+            return
+        self._ensure_task_controls_unlocked()
+        command = partial(
+            self.coordinator.api.clean_rooms,
+            map_id=data.map_id,
+            room_ids=selected,
+        )
+        await self._async_execute_task_command(
+            command,
+            optimistic_state="cleaning",
+            charging=False,
+        )
 
     async def async_start(self) -> None:
         """Start a task, or resume it when the robot is paused."""

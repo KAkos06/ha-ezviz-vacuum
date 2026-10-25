@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable
 from dataclasses import replace
+from datetime import UTC, datetime
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -22,8 +23,11 @@ from .const import (
     SETTING_TRANSITION_GRACE_SECONDS,
     START_CONTROL_LOCK_SECONDS,
 )
+from .mapdata import build_layers
+from .maprender import render_svg
 from .models import (
     VacuumData,
+    masked_serial,
     normalize_task_state,
     task_state_is_active,
 )
@@ -54,6 +58,9 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
         ] = {}
         self._task_control_lock_until: dict[str, float] = {}
         self._task_control_lock_unsubs: dict[str, Callable[[], None]] = {}
+        self.map_images: dict[str, bytes] = {}
+        self.map_image_updated: dict[str, datetime] = {}
+        self._map_cache: dict[tuple[str, int], tuple[float, dict[str, Any]]] = {}
 
     def task_controls_locked(self, serial: str) -> bool:
         """Return whether task commands must currently be rejected."""
@@ -239,6 +246,7 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             raise UpdateFailed(str(err)) from err
         devices = self._merge_command_task_states(devices)
         devices = self._merge_command_settings(devices)
+        devices = await self._async_refresh_maps(devices)
         for serial, data in devices.items():
             previous_data = previous.get(serial)
             if task_state_is_active(data.task_state) and (
@@ -250,6 +258,78 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
             ):
                 self._set_start_control_lock(serial, "cleaning")
         self._set_poll_interval(devices)
+        return devices
+
+    async def _async_refresh_maps(
+        self, devices: dict[str, VacuumData]
+    ) -> dict[str, VacuumData]:
+        """Refresh optional maps and use their room IDs as a segment fallback."""
+        now = self.hass.loop.time()
+        for serial, data in devices.items():
+            if data.map_id is None or not data.available:
+                continue
+            cache_key = (serial, data.map_id)
+            cached = self._map_cache.get(cache_key)
+            map_refresh_interval = (
+                ACTIVE_POLL_INTERVAL
+                if task_state_is_active(data.task_state)
+                else DEFAULT_POLL_INTERVAL
+            ).total_seconds()
+            try:
+                need_render = not cached or now - cached[0] >= map_refresh_interval
+                if need_render:
+                    layers = {}
+                    for layer in ("map", "region", "path"):
+                        layers[layer] = await self.hass.async_add_executor_job(
+                            self.api.fetch_map_layer, serial, layer, data.map_id
+                        )
+                    self._map_cache[cache_key] = (now, layers)
+                else:
+                    layers = cached[1]
+
+                # Extract and localize room names from the active map's region layer
+                region_rooms = layers.get("region", {}).get("room", [])
+                existing_names = dict(data.rooms)
+                rooms = []
+                lang = getattr(self.hass.config, "language", "hu") or "hu"
+                for room in region_rooms if isinstance(region_rooms, list) else []:
+                    if not isinstance(room, dict):
+                        continue
+                    try:
+                        room_id = int(room["roomID"])
+                    except (KeyError, TypeError, ValueError):
+                        continue
+                    raw_name = room.get("roomName") or room.get("name")
+                    name = (
+                        self.api._resolve_room_name(raw_name, str(room_id), lang)
+                        if raw_name
+                        else existing_names.get(room_id, f"Room {room_id}")
+                    )
+                    rooms.append((room_id, str(name)))
+                if rooms and tuple(rooms) != data.rooms:
+                    devices[serial] = replace(
+                        devices.get(serial, data),
+                        rooms=tuple(rooms),
+                        capabilities=devices.get(serial, data).capabilities | {"rooms"},
+                    )
+
+                if need_render:
+                    image = await self.hass.async_add_executor_job(
+                        render_svg,
+                        build_layers(
+                            layers["map"], layers["region"], layers["path"]
+                        ),
+                        dict(rooms or data.rooms),
+                    )
+                    if image and self.map_images.get(serial) != image:
+                        self.map_images[serial] = image
+                        self.map_image_updated[serial] = datetime.now(UTC)
+            except EzvizVacuumError as err:
+                _LOGGER.debug(
+                    "Optional EZVIZ map unavailable for %s: %s",
+                    masked_serial(serial),
+                    err,
+                )
         return devices
 
     async def async_shutdown(self) -> None:

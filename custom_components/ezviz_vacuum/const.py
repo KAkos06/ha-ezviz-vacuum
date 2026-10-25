@@ -11,6 +11,7 @@ PLATFORMS = [
     "switch",
     "number",
     "button",
+    "image",
 ]
 
 CONF_REGION = "region"

@@ -12,7 +12,8 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     async_add_entities(
         EzvizConsumableResetButton(coordinator, serial, kind)
         for serial in coordinator.data
-        for kind in CONSUMABLES
+        for kind, (field, _) in CONSUMABLES.items()
+        if field in coordinator.data[serial].capabilities
     )
 
 

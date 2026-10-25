@@ -12,6 +12,13 @@ from . import EzvizVacuumRuntimeData
 from .api import AREA_UNITS, CLEAN_TIMES, FAN_SPEEDS, WATER_QUANTITIES
 from .entity import EzvizVacuumEntity
 
+CLEAN_MODE_OPTIONS = {
+    "sweep": "sweep",
+    "mop": "mop",
+    "sweep_and_mop": "sweepAndMop",
+    "sweep_then_mop": "sweepThenMop",
+}
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -21,13 +28,17 @@ async def async_setup_entry(
     coordinator = entry.runtime_data.coordinator
     entities: list[SelectEntity] = []
     for serial in coordinator.data:
+        data = coordinator.data[serial]
         entities.extend(
-            (
-                EzvizWaterQuantitySelect(coordinator, serial),
-                EzvizFanSpeedSelect(coordinator, serial),
-                EzvizCleanTimesSelect(coordinator, serial),
-                EzvizAreaUnitSelect(coordinator, serial),
+            entity
+            for key, entity in (
+                ("water_quantity", EzvizWaterQuantitySelect(coordinator, serial)),
+                ("fan_speed", EzvizFanSpeedSelect(coordinator, serial)),
+                ("clean_times", EzvizCleanTimesSelect(coordinator, serial)),
+                ("area_unit", EzvizAreaUnitSelect(coordinator, serial)),
+                ("clean_mode", EzvizCleanModeSelect(coordinator, serial)),
             )
+            if key in data.capabilities
         )
     async_add_entities(entities)
 
@@ -61,6 +72,45 @@ class EzvizAreaUnitSelect(EzvizVacuumEntity, SelectEntity):
             raise HomeAssistantError("Unsupported area unit")
         await self._async_execute_command(
             self.coordinator.api.set_area_unit, self.serial, option.replace("_", ".")
+        )
+
+
+class EzvizCleanModeSelect(EzvizVacuumEntity, SelectEntity):
+    """Select a cleaning mode when the robot exposes the feature."""
+
+    _attr_translation_key = "clean_mode"
+    _attr_options = list(CLEAN_MODE_OPTIONS)
+
+    def __init__(self, coordinator, serial: str) -> None:
+        super().__init__(coordinator, serial)
+        self._attr_unique_id = f"{serial}_clean_mode"
+
+    @property
+    def current_option(self) -> str | None:
+        data = self.vacuum_data
+        if data is None:
+            return None
+        return next(
+            (
+                option
+                for option, value in CLEAN_MODE_OPTIONS.items()
+                if value == data.clean_mode
+            ),
+            None,
+        )
+
+    @property
+    def available(self) -> bool:
+        return super().available and not self.coordinator.settings_locked(self.serial)
+
+    async def async_select_option(self, option: str) -> None:
+        self._ensure_settings_unlocked()
+        if option not in self.options:
+            raise HomeAssistantError("Unsupported cleaning mode")
+        await self._async_execute_command(
+            self.coordinator.api.set_clean_mode,
+            self.serial,
+            CLEAN_MODE_OPTIONS[option],
         )
 
 

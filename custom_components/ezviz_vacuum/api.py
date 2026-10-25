@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Mapping
 from dataclasses import replace
 from datetime import UTC, datetime
@@ -41,6 +42,7 @@ FAN_SPEEDS = ("quiet", "normal", "strong", "super")
 WATER_QUANTITIES = ("dry", "low", "middle", "high")
 CLEAN_TIMES = (1, 2)
 AREA_UNITS = ("m2", "sq.ft", "ping")
+CLEAN_MODES = ("sweep", "mop", "sweepAndMop", "sweepThenMop")
 CONSUMABLES = {
     "rotatingBrush": ("main_brush", "RotatingBrushWorkingTime"),
     "hepa": ("hepa", "HepaWorkingTime"),
@@ -48,6 +50,34 @@ CONSUMABLES = {
     "mop": ("mop", "MopWorkingTime"),
     "sensor": ("sensors", "SensorWorkingTime"),
 }
+MAP_LAYERS = {
+    "map": "sweepRuleMapVo",
+    "region": "sweepRuleRegionVo",
+    "path": "sweepRulePathVo",
+}
+ROOM_TOKEN_MAP: dict[str, dict[str, str]] = {
+    "ZhuW": {"en": "Master bedroom", "hu": "Fő hálószoba"},
+    "WoS": {"en": "Bedroom", "hu": "Hálószoba"},
+    "CiW": {"en": "Secondary bedroom", "hu": "Második hálószoba"},
+    "KeW": {"en": "Guest Room", "hu": "Vendégszoba"},
+    "ErT": {"en": "Kid's Room", "hu": "Gyerekszoba"},
+    "KeT": {"en": "Living Room", "hu": "Nappali"},
+    "CanT": {"en": "Dining Room", "hu": "Étkező"},
+    "ChuF": {"en": "Kitchen", "hu": "Konyha"},
+    "WeiS": {"en": "Washing room", "hu": "Fürdőszoba"},
+    "ShuF": {"en": "Study Room", "hu": "Dolgozószoba"},
+    "XuanG": {"en": "Hallway", "hu": "Előszoba"},
+    "GuoD": {"en": "Passage", "hu": "Folyosó"},
+    "YangT": {"en": "Balcony", "hu": "Erkély"},
+    "XiY": {"en": "Laundry room", "hu": "Mosókonyha"},
+    "JianS": {"en": "Fitness room", "hu": "Edzőszoba"},
+    "YuL": {"en": "Amusement Room", "hu": "Játékszoba"},
+    "ChongW": {"en": "Pet room", "hu": "Kisállat szoba"},
+    "ChuC": {"en": "Storage room", "hu": "Tároló"},
+    "YiM": {"en": "Cloakroom", "hu": "Gardrób"},
+    "FangJ": {"en": "Room", "hu": "Szoba"},
+}
+
 
 
 class EzvizVacuumError(Exception):
@@ -200,6 +230,11 @@ class EzvizVacuumApi:
                 ("area_unit", "SweeperMapMgr", "AreaUnitCfg"),
                 ("carpet_turbo_enabled", "SweeperCleanTask", "CarpetTurboCleanSwitch"),
                 *(
+                    [("clean_mode", "SweeperCleanTask", "SweepMopMode")]
+                    if "clean_mode" in data.capabilities
+                    else []
+                ),
+                *(
                     (field, "SweeperConsumable", item)
                     for field, item in CONSUMABLES.values()
                 ),
@@ -220,6 +255,8 @@ class EzvizVacuumApi:
                         value = value if value in AREA_UNITS else None
                     elif field == "carpet_turbo_enabled":
                         value = _setting_boolean(value)
+                    elif field == "clean_mode":
+                        value = value if value in CLEAN_MODES else None
                     else:
                         value = _consumable(value)
                     values[field] = value
@@ -368,6 +405,14 @@ class EzvizVacuumApi:
         )
         self._settings.pop(serial, None)
 
+    def set_clean_mode(self, serial: str, mode: str) -> None:
+        if mode not in CLEAN_MODES:
+            raise EzvizVacuumError("Unsupported cleaning mode")
+        self._put_iot_value(
+            IOT_FEATURE_ENDPOINT, serial, "SweeperCleanTask", "SweepMopMode", mode
+        )
+        self._settings.pop(serial, None)
+
     def _set_clean_config_value(
         self, serial: str, action: str, key: str, value: str | int
     ) -> None:
@@ -456,3 +501,80 @@ class EzvizVacuumApi:
         if type(map_id) is not int or map_id < 0:
             raise EzvizVacuumError("Active cleaning map is unavailable")
         return map_id
+
+    def fetch_map_layer(
+        self, serial: str, layer: str, map_id: int
+    ) -> Mapping[str, Any]:
+        """Fetch a read-only map layer from the same cloud session as the app."""
+        if layer not in MAP_LAYERS:
+            raise EzvizVacuumError("Unsupported map layer")
+        session = getattr(self._client, "_session", None)
+        token = getattr(self._client, "_token", None)
+        api_url = token.get("api_url") if isinstance(token, Mapping) else None
+        if session is None or not api_url:
+            raise EzvizVacuumConnectionError("EZVIZ cloud session is unavailable")
+        try:
+            with self._session_lock:
+                response = session.post(
+                    f"https://{api_url}/v3/sweeprobot/v3/rule/{layer}",
+                    params={"deviceSerial": serial.upper(), "mapId": int(map_id)},
+                    timeout=getattr(self._client, "_timeout", 25),
+                )
+            response.raise_for_status()
+            result = response.json()
+        except (PyEzvizError, RequestException, ValueError) as err:
+            raise self._translate_error(err) from err
+        if not isinstance(result, Mapping):
+            raise EzvizVacuumError("EZVIZ returned an invalid map response")
+        meta = result.get("meta")
+        code = meta.get("code") if isinstance(meta, Mapping) else None
+        if code not in (None, 0, 200, "0", "200"):
+            raise EzvizVacuumError(f"EZVIZ rejected map layer {layer}")
+        value = result.get(MAP_LAYERS[layer])
+        return value if isinstance(value, Mapping) else {}
+
+    @staticmethod
+    def _resolve_room_name(
+        raw_name: Any, room_id_str: str, lang: str = "hu"
+    ) -> str:
+        if not isinstance(raw_name, str) or not raw_name.strip():
+            prefix = "Szoba" if lang.startswith("hu") else "Room"
+            return f"{prefix} {room_id_str}"
+
+        raw_str = raw_name.strip()
+        match = re.fullmatch(r"#@([^#]+)#(.*)", raw_str)
+        if not match:
+            return raw_str
+
+        token_key = match.group(1)
+        suffix = match.group(2) or ""
+        token_info = ROOM_TOKEN_MAP.get(token_key)
+        target_lang = "hu" if lang.startswith("hu") else "en"
+
+        if token_info:
+            base_name = token_info.get(target_lang) or token_info.get("en", token_key)
+            if suffix:
+                return f"{base_name} {suffix}".strip()
+            return base_name
+
+        if suffix:
+            return f"{token_key} {suffix}".strip()
+        return token_key
+
+    def clean_rooms(self, serial: str, map_id: int, room_ids: list[int]) -> None:
+        """Start a room clean using the map and room IDs reported by EZVIZ."""
+        if not room_ids or any(type(room_id) is not int for room_id in room_ids):
+            raise EzvizVacuumError("Select at least one valid room")
+        self._request_iot(
+            "PUT",
+            IOT_ACTION_ENDPOINT,
+            serial,
+            "SweeperCleanTask",
+            "StartRegionClean",
+            {
+                "mapID": map_id,
+                "region": [
+                    {"regionType": "room", "roomID": room_id} for room_id in room_ids
+                ],
+            },
+        )

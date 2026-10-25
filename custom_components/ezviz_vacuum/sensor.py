@@ -151,6 +151,24 @@ async def async_setup_entry(
         EzvizVacuumSensor(coordinator, serial, description)
         for serial in coordinator.data
         for description in SENSORS
+        if description.key
+        not in {
+            "hepa_remaining",
+            "main_brush_remaining",
+            "side_brush_remaining",
+            "mop_remaining",
+            "sensor_cleaning_remaining",
+            "sensor_cleaning_used",
+        }
+        or {
+            "hepa_remaining": "hepa",
+            "main_brush_remaining": "main_brush",
+            "side_brush_remaining": "side_brush",
+            "mop_remaining": "mop",
+            "sensor_cleaning_remaining": "sensors",
+            "sensor_cleaning_used": "sensors",
+        }[description.key]
+        in coordinator.data[serial].capabilities
     ]
     async_add_entities(entities)
 
