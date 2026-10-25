@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from functools import partial
 from typing import cast
 
 from homeassistant.components.vacuum import (
@@ -154,10 +155,13 @@ class EzvizVacuum(EzvizVacuumEntity, StateVacuumEntity):
         if not selected:
             return
         self._ensure_task_controls_unlocked()
-        await self._async_execute_task_command(
+        command = partial(
             self.coordinator.api.clean_rooms,
-            data.map_id,
-            selected,
+            map_id=data.map_id,
+            room_ids=selected,
+        )
+        await self._async_execute_task_command(
+            command,
             optimistic_state="cleaning",
             charging=False,
         )
