@@ -126,7 +126,9 @@ not MQTT**).
 | Data | Refresh interval |
 | --- | --- |
 | Task state, task phase, task duration and standard cleaning settings while cleaning, paused, stopping or returning | 3 seconds |
+| Map image while the robot has an active task | 3 seconds |
 | Task data and standard cleaning settings while idle or docked | 15 seconds |
+| Map image while idle or docked | 15 seconds |
 | Battery, general device information, prompt volume, area display unit, carpet boost and maintenance counters | 30 seconds |
 
 These are polling intervals. Cloud response time and additional requests can

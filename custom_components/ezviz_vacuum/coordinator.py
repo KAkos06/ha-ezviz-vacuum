@@ -270,8 +270,13 @@ class EzvizVacuumCoordinator(DataUpdateCoordinator[dict[str, VacuumData]]):
                 continue
             cache_key = (serial, data.map_id)
             cached = self._map_cache.get(cache_key)
+            map_refresh_interval = (
+                ACTIVE_POLL_INTERVAL
+                if task_state_is_active(data.task_state)
+                else DEFAULT_POLL_INTERVAL
+            ).total_seconds()
             try:
-                if cached and now - cached[0] < 10:
+                if cached and now - cached[0] < map_refresh_interval:
                     layers = cached[1]
                 else:
                     layers = {}
